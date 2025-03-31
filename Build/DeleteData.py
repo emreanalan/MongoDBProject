@@ -19,18 +19,19 @@ def delete_last_x_days(collection_name, days):
         f"Deleted {result.deleted_count} records from '{collection_name}' that were inserted in the last {days} days.")
 
 
-# delete_last_x_days("KablocuAhmet", 9)  # Deletes data from the last 5 days in the 'KablocuAhmet' collection
-# delete_last_x_days("CableMan", 9)
-# delete_last_x_days("CableMan2", 9)
-# delete_last_x_days("CableMan3", 9)
-# delete_last_x_days("ToyMan", 9)
-# delete_last_x_days("ELectronicMan", 9)
-# delete_last_x_days("HomeELectricMan", 9)
-# delete_last_x_days("ELectricMan", 9)
-delete_last_x_days("Gold/TRY", 20)
-delete_last_x_days("Copper/TRY", 20)
-delete_last_x_days("Aluminum/TRY", 20)
-delete_last_x_days("Silver/TRY", 20)
-delete_last_x_days("EUR/TRY", 20)
-delete_last_x_days("USD/TRY", 20)
+def delete_date_range(collection_name, start_date_str, end_date_str):
+    collection = db[collection_name]
+    start_date = datetime.fromisoformat(start_date_str)
+    end_date = datetime.fromisoformat(end_date_str)
+
+    result = collection.delete_many({"Date": {"$gte": start_date, "$lte": end_date}})
+    print(f"Deleted {result.deleted_count} records from '{collection_name}' between {start_date.date()} and {end_date.date()}.")
+
+#delete_last_x_days("Copper/TRY", 20)
+#delete_last_x_days("Aluminum/TRY", 20)
+#delete_last_x_days("Silver/TRY", 20)
+#delete_last_x_days("EUR/TRY", 20)
+#delete_last_x_days("USD/TRY", 20)
+#delete_last_x_days("Gold/TRY", 20)
+delete_date_range("IKEA", "2025-03-20", "2025-03-25")
 
