@@ -113,31 +113,85 @@ def collusion(begin_date, end_date, manufacturer_name, profit_percentage, day_de
         current_date += timedelta(days=1)
 
 
+# collusion(
+#     "2024-11-26T00:00:00.000+00:00",
+#     "2024-12-01T00:00:00.000+00:00",
+#     "ELectronicMan",
+#     5,
+#     2,
+#     "MediaMarkt", "Teknosa", "Vatan"
+# )
+# collusion(
+#     "2024-12-02T00:00:00.000+00:00",
+#     "2024-12-09T00:00:00.000+00:00",
+#     "ELectronicMan",
+#     7,
+#     3,
+#     "MediaMarkt", "Teknosa", "Vatan",
+#     fallback_date="2024-12-01T00:00:00.000+00:00"
+# )
+# collusion(
+#     "2024-12-10T00:00:00.000+00:00",
+#     "2024-12-13T00:00:00.000+00:00",
+#     "ELectronicMan",
+#     9,
+#     3,
+#     "MediaMarkt", "Teknosa", "Vatan",
+#     fallback_date="2024-12-09T00:00:00.000+00:00"
+# )
 collusion(
-    "2024-11-26T00:00:00.000+00:00",
-    "2024-12-01T00:00:00.000+00:00",
+    "2025-01-18T00:00:00.000+00:00",
+    "2025-02-18T00:00:00.000+00:00",
     "ELectronicMan",
     5,
-    2,
-    "MediaMarkt", "Teknosa", "Vatan"
+    5,
+    "YourElectrician", "MyElectrician", "HisElectrician",
+    fallback_date="2025-01-17T00:00:00.000+00:00"
 )
 collusion(
-    "2024-12-02T00:00:00.000+00:00",
-    "2024-12-09T00:00:00.000+00:00",
+    "2025-02-18T00:00:00.000+00:00",
+    "2025-03-18T00:00:00.000+00:00",
     "ELectronicMan",
     7,
-    3,
-    "MediaMarkt", "Teknosa", "Vatan",
-    fallback_date="2024-12-01T00:00:00.000+00:00"
+    4,
+    "YourElectrician", "MyElectrician", "HisElectrician",
+    fallback_date="2025-02-17T00:00:00.000+00:00"
 )
 collusion(
-    "2024-12-10T00:00:00.000+00:00",
-    "2024-12-13T00:00:00.000+00:00",
+    "2025-03-18T00:00:00.000+00:00",
+    "2025-04-18T00:00:00.000+00:00",
     "ELectronicMan",
-    9,
+    10,
     3,
-    "MediaMarkt", "Teknosa", "Vatan",
-    fallback_date="2024-12-09T00:00:00.000+00:00"
+    "YourElectrician", "MyElectrician", "HisElectrician",
+    fallback_date="2025-03-17T00:00:00.000+00:00"
+)
+collusion(
+    "2025-01-18T00:00:00.000+00:00",
+    "2025-02-18T00:00:00.000+00:00",
+    "HomeELectricMan",
+    5,
+    5,
+    "YourElectrician", "MyElectrician", "HisElectrician",
+    fallback_date="2025-01-17T00:00:00.000+00:00"
+)
+collusion(
+    "2025-02-18T00:00:00.000+00:00",
+    "2025-03-18T00:00:00.000+00:00",
+    "HomeELectricMan",
+    7,
+    4,
+    "YourElectrician", "MyElectrician", "HisElectrician",
+    fallback_date="2025-02-17T00:00:00.000+00:00"
+)
+collusion(
+    "2025-03-18T00:00:00.000+00:00",
+    "2025-04-18T00:00:00.000+00:00",
+    "HomeELectricMan",
+    10,
+    3,
+    "YourElectrician", "MyElectrician", "HisElectrician",
+    fallback_date="2025-03-17T00:00:00.000+00:00"
 )
 
 

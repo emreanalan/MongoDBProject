@@ -1,4 +1,5 @@
 import pymongo
+import datetime
 
 client = pymongo.MongoClient(
     "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
@@ -20,9 +21,15 @@ def db_shop(manufacturer_name, shop_name, profit_percentage):
 
     last_date_shop = get_last_inserted_date(shop_collection)
 
+# Calculate for every data in manufacturer_name
     query = {}
     if last_date_shop:
         query = {'Date': {'$gt': last_date_shop}}
+
+    # Calculate 3 months ago
+    # three_months_ago = datetime.datetime.now() - datetime.timedelta(days=90)
+    #
+    # query = {'Date': {'$gte': three_months_ago}}
 
     cursor = manufacturer_collection.find(query)
 
@@ -104,3 +111,6 @@ db_shop("ELectronicMan", "Teknosa", 10)
 db_shop("HomeELectricMan", "Teknosa", 10)
 db_shop("ELectronicMan", "Vatan", 7)
 db_shop("HomeELectricMan", "Vatan", 7)
+# db_shop("HomeELectricMan", "YourElectrician", 5)
+# db_shop("HomeELectricMan", "MyElectrician", 5)
+# db_shop("HomeELectricMan", "HisElectrician", 5)
