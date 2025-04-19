@@ -145,26 +145,25 @@ collusion(
     "ELectronicMan",
     5,
     5,
-    "YourElectrician", "MyElectrician", "HisElectrician",
-    fallback_date="2025-01-17T00:00:00.000+00:00"
+    "YourElectrician", "MyElectrician", "HisElectrician"
 )
 collusion(
-    "2025-02-18T00:00:00.000+00:00",
+    "2025-02-19T00:00:00.000+00:00",
     "2025-03-18T00:00:00.000+00:00",
     "ELectronicMan",
     7,
     4,
     "YourElectrician", "MyElectrician", "HisElectrician",
-    fallback_date="2025-02-17T00:00:00.000+00:00"
+    fallback_date="2025-02-18T00:00:00.000+00:00"
 )
 collusion(
-    "2025-03-18T00:00:00.000+00:00",
+    "2025-03-19T00:00:00.000+00:00",
     "2025-04-18T00:00:00.000+00:00",
     "ELectronicMan",
     10,
     3,
     "YourElectrician", "MyElectrician", "HisElectrician",
-    fallback_date="2025-03-17T00:00:00.000+00:00"
+    fallback_date="2025-03-18T00:00:00.000+00:00"
 )
 collusion(
     "2025-01-18T00:00:00.000+00:00",
@@ -172,26 +171,25 @@ collusion(
     "HomeELectricMan",
     5,
     5,
-    "YourElectrician", "MyElectrician", "HisElectrician",
-    fallback_date="2025-01-17T00:00:00.000+00:00"
+    "YourElectrician", "MyElectrician", "HisElectrician"
 )
 collusion(
-    "2025-02-18T00:00:00.000+00:00",
+    "2025-02-19T00:00:00.000+00:00",
     "2025-03-18T00:00:00.000+00:00",
     "HomeELectricMan",
     7,
     4,
     "YourElectrician", "MyElectrician", "HisElectrician",
-    fallback_date="2025-02-17T00:00:00.000+00:00"
+    fallback_date="2025-02-18T00:00:00.000+00:00"
 )
 collusion(
-    "2025-03-18T00:00:00.000+00:00",
+    "2025-03-19T00:00:00.000+00:00",
     "2025-04-18T00:00:00.000+00:00",
     "HomeELectricMan",
     10,
     3,
     "YourElectrician", "MyElectrician", "HisElectrician",
-    fallback_date="2025-03-17T00:00:00.000+00:00"
+    fallback_date="2025-03-18T00:00:00.000+00:00"
 )
 
 
