@@ -121,10 +121,10 @@ def collusion(begin_date, end_date, manufacturer_name, leader_profit_percentage,
 # (Sana örnek inputlar da hazırladım!)
 # -------------------------------------------------------
 
-# YourElectrician lider, diğerleri takipçi
+#YourElectrician lider, diğerleri takipçi
 collusion(
-    "2025-01-18",
-    "2025-02-18",
+    "2025-01-01",
+    "2025-02-01",
     "ELectronicMan",
     leader_profit_percentage=5,
     follower_profit_percentage=5,
@@ -134,8 +134,8 @@ collusion(
 )
 
 collusion(
-    "2025-02-19",
-    "2025-03-18",
+    "2025-02-02",
+    "2025-03-01",
     "ELectronicMan",
     leader_profit_percentage=7,
     follower_profit_percentage=7,
@@ -146,8 +146,8 @@ collusion(
 )
 
 collusion(
-    "2025-03-19",
-    "2025-04-18",
+    "2025-03-02",
+    "2025-04-20",
     "ELectronicMan",
     leader_profit_percentage=10,
     follower_profit_percentage=10,
@@ -157,10 +157,9 @@ collusion(
     fallback_date="2025-03-18"
 )
 
-# HomeElectricMan için aynısını tekrar yapalım
 collusion(
-    "2025-01-18",
-    "2025-02-18",
+    "2025-01-01",
+    "2025-02-01",
     "HomeELectricMan",
     leader_profit_percentage=5,
     follower_profit_percentage=5,
@@ -170,8 +169,8 @@ collusion(
 )
 
 collusion(
-    "2025-02-19",
-    "2025-03-18",
+    "2025-02-02",
+    "2025-03-01",
     "HomeELectricMan",
     leader_profit_percentage=7,
     follower_profit_percentage=7,
@@ -182,8 +181,8 @@ collusion(
 )
 
 collusion(
-    "2025-03-19",
-    "2025-04-18",
+    "2025-03-02",
+    "2025-04-20",
     "HomeELectricMan",
     leader_profit_percentage=10,
     follower_profit_percentage=10,

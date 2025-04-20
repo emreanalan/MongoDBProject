@@ -1,11 +1,11 @@
 import subprocess
 
 files_to_run = [
-    "Al_GD_Cop_fetching.py",
-    "Production.py",
-    #"Manufacturer.py",
-    "FastUpdateMan.py",
-    #"Shops.py"
+    # "Al_GD_Cop_fetching.py",
+    # "Production.py",
+    # #"Manufacturer.py",
+    # "FastUpdateMan.py",
+    # #"Shops.py"
 ]
 
 for file in files_to_run:

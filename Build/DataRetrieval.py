@@ -80,7 +80,6 @@ def fetch_price_data(start_date: str, end_date: str):
         print(f"No data found between {start_date} and {end_date}.")
         return pd.DataFrame(columns=['shop_id', 'product_name', 'date', 'price'])
 
-
 def calculate_daily_percentage_change(df: pd.DataFrame) -> pd.DataFrame:
     """
     Calculates the daily percentage price change for each shop and product.
@@ -105,7 +104,6 @@ def calculate_daily_percentage_change(df: pd.DataFrame) -> pd.DataFrame:
     df['daily_change'] = df['daily_change'].fillna(0)
 
     return df
-
 
 def fetch_price_data_from_collection(collection_name: str, start_date: str, end_date: str):
     start = datetime.strptime(start_date, "%Y-%m-%d")
@@ -146,8 +144,6 @@ def fetch_price_data_from_collection(collection_name: str, start_date: str, end_
         print(f"No data found for collection {collection_name} between {start_date} and {end_date}.")
         return pd.DataFrame(columns=['shop_id', 'product_name', 'date', 'price'])
 
-
-
 def fetch_manufacturer_data(collection_name: str, start_date: str, end_date: str) -> pd.DataFrame:
     """
     Belirtilen manufacturer collection'ından ürün fiyatlarını getirir.
@@ -187,7 +183,6 @@ def fetch_manufacturer_data(collection_name: str, start_date: str, end_date: str
     else:
         print(f"No data found for manufacturer {collection_name} between {start_date} and {end_date}.")
         return pd.DataFrame(columns=['shop_id', 'product_name', 'date', 'price'])
-
 
 def fetch_shop_data(collection_name: str, start_date: str, end_date: str) -> pd.DataFrame:
     """
@@ -247,7 +242,6 @@ def fetch_shop_data(collection_name: str, start_date: str, end_date: str) -> pd.
         print(f"No data found for shop {collection_name} between {start_date} and {end_date}.")
         return pd.DataFrame(columns=['shop_id', 'product_name', 'date', 'price'])
 
-
 def fetch_all_manufacturers():
     """
     Veritabanındaki manufacturerları (üretici koleksiyonlarını) getirir.
@@ -261,7 +255,6 @@ def fetch_all_manufacturers():
 
     return manufacturers
 
-
 def fetch_shops_for_manufacturer(manufacturer_name):
     collection_names = db.list_collection_names()
     shop_candidates = []
@@ -271,22 +264,19 @@ def fetch_shops_for_manufacturer(manufacturer_name):
             continue
 
         collection = db[collection_name]
-        sample_doc = collection.find_one()
-        if not sample_doc:
-            continue
+        documents = collection.find({}, {"_id": 0}).sort("Date", -1).limit(90)
 
-        expected_field = manufacturer_name + " Products"
-        if expected_field in sample_doc:
-            shop_candidates.append(collection_name)
+        for doc in documents:
+            if manufacturer_name + " Products" in doc.keys():
+                shop_candidates.append(collection_name)
+                break  # Bir kere bulduysa yeter, diğer belgeleri taramasın
 
     return shop_candidates
 
-
-
-def fetch_price_data_from_shop(shop_name: str, start_date: str, end_date: str):
+def fetch_price_data_from_shop(shop_name: str, manufacturer_name: str, start_date: str, end_date: str):
     """
-    Fetches product prices between dates from a specific shop collection.
-    Dynamically finds all manufacturer product fields (e.g., ELectronicMan Products, CableMan Products).
+    Fetches product prices between dates from a specific shop collection,
+    only for the specified manufacturer's products (e.g., only 'ELectronicMan Products').
     """
     start = datetime.strptime(start_date, "%Y-%m-%d")
     end = datetime.strptime(end_date, "%Y-%m-%d")
@@ -303,23 +293,24 @@ def fetch_price_data_from_shop(shop_name: str, start_date: str, end_date: str):
         if base_date is None:
             continue
 
-        # --- Yeni: Her belge içinde "Products" geçen tüm alanları ara
-        for key in doc.keys():
-            if "Products" in key:
-                products = doc[key]
-                for i in range(1, 30):
-                    prod_key = f"Product {i}"
-                    price_key = f"Product {i} Price"
-                    if prod_key in products and price_key in products:
-                        product_name = products[prod_key]
-                        price_str = products[price_key].replace(" TL", "").replace(",", "")
-                        price = float(price_str)
-                        all_data.append({
-                            "shop_id": shop_name,
-                            "product_name": product_name,
-                            "date": base_date,
-                            "price": price
-                        })
+        # DİKKAT: Sadece doğru manufacturer'ın ürünlerini oku
+        manufacturer_products_field = f"{manufacturer_name} Products"
+
+        if manufacturer_products_field in doc:
+            products = doc[manufacturer_products_field]
+            for i in range(1, 30):
+                prod_key = f"Product {i}"
+                price_key = f"Product {i} Price"
+                if prod_key in products and price_key in products:
+                    product_name = products[prod_key]
+                    price_str = products[price_key].replace(" TL", "").replace(",", "")
+                    price = float(price_str)
+                    all_data.append({
+                        "shop_id": shop_name,
+                        "product_name": product_name,
+                        "date": base_date,
+                        "price": price
+                    })
 
     if all_data:
         final_df = pd.DataFrame(all_data)
@@ -338,52 +329,54 @@ def calculate_profit_relative_to_manufacturer(shop_df: pd.DataFrame, manufacture
 
     # Ortak tarihler
     common_dates = shop_avg.index.intersection(manu_avg.index)
+    if common_dates.empty:
+        return pd.Series(dtype=float)
 
     profit_series = ((shop_avg[common_dates] / manu_avg[common_dates]) - 1) * 100
     return profit_series
 
-def find_profit_change_dates(shop_df, manufacturer_df, threshold=0.5):
+def find_profit_change_dates(shop_df: pd.DataFrame, manufacturer_df: pd.DataFrame, threshold: float = 0.5) -> list:
     """
-    Bir shop'ın manufacturer'a göre profit değişimlerini tespit eder.
+    Bir shop'ın, üretici fiyatlarına göre kâr yüzdesindeki anlamlı değişim tarihlerini tespit eder.
 
-    Parametreler:
-    - shop_df: Shop'a ait fiyat verileri (DataFrame: ['date', 'price'])
-    - manufacturer_df: Manufacturer fiyat verileri (DataFrame: ['date', 'price'])
-    - threshold: Değişim yüzdesi algılamak için minimum değişim eşiği (%)
+    Args:
+        shop_df (pd.DataFrame): Shop verisi, ['date', 'price'] kolonlarını içermelidir.
+        manufacturer_df (pd.DataFrame): Üretici verisi, ['date', 'price'] kolonlarını içermelidir.
+        threshold (float): Yüzdelik değişim için eşik değeri (varsayılan %2).
 
-    Döndürür:
-    - List of (değişim tarihi, değişim yüzdesi, artış/azalış)
+    Returns:
+        List[Tuple[pd.Timestamp, float]]: (değişim tarihi, değişim yüzdesi) listesi
     """
+    # Eğer boş veri varsa direkt çık
+    if shop_df.empty or manufacturer_df.empty:
+        return []
 
-    # Ortalama fiyatlar
-    shop_avg = shop_df.groupby("date")["price"].mean()
-    manu_avg = manufacturer_df.groupby("date")["price"].mean()
+    # Ortalama fiyatları günlük bazda al
+    shop_avg = shop_df.groupby('date')['price'].mean()
+    manu_avg = manufacturer_df.groupby('date')['price'].mean()
 
-    # Ortak tarihler
+    # Ortak tarihleri bul
     common_dates = shop_avg.index.intersection(manu_avg.index)
-
     if len(common_dates) == 0:
         return []
 
-    # Profit yüzdesi hesapla
+    # Ortak tarihlerdeki fiyatlarla profit yüzdesi hesapla
     profit_series = ((shop_avg[common_dates] / manu_avg[common_dates]) - 1) * 100
+    profit_series = profit_series.sort_index()
 
-    changes = []
-    prev_profit = None
+    # Günlük değişimleri bul
+    profit_change = profit_series.diff().fillna(0)
 
-    for date, profit in profit_series.items():
-        if prev_profit is not None:
-            diff = profit - prev_profit
-            if abs(diff) >= threshold:  # Eşik değerinden büyük değişim varsa
-                direction = "artış" if diff > 0 else "azalış"
-                changes.append((date, diff, direction))
-        prev_profit = profit
+    # Anlamlı değişimlerin olduğu tarihleri filtrele
+    significant_changes = []
+    for date, change in profit_change.items():
+        if abs(change) >= threshold:
+            significant_changes.append((date, change))
 
-    return changes
-
+    return significant_changes
 
 def find_profit_changes_with_magnitude(shop_name, manufacturer_name, start_date, end_date, threshold=1.0):
-    shop_df = fetch_price_data_from_shop(shop_name, start_date, end_date)
+    shop_df = fetch_price_data_from_shop(shop_name, manufacturer_name, start_date, end_date)
     manufacturer_df = fetch_manufacturer_data(manufacturer_name, start_date, end_date)
 
     if shop_df.empty or manufacturer_df.empty:
@@ -408,78 +401,47 @@ def find_profit_changes_with_magnitude(shop_name, manufacturer_name, start_date,
     return changes
 
 
-
-# #
-# df_prices = fetch_price_data("2025-01-18", "2025-04-18")
-# print(df_prices)
+# start_date = "2025-01-01"
+# end_date = "2025-04-20"
+# threshold = 1.99  # Yüzde 2 eşik
 #
-#
-# df_prices = fetch_price_data("2025-01-18", "2025-04-18")
-# df_with_changes = calculate_daily_percentage_change(df_prices)
-#
-# print(df_with_changes.head())
-# print(df_with_changes.shape)
-# print(df_with_changes.sample(10))  # Rastgele 10 satır göster
-# print(df_with_changes[df_with_changes['daily_change'] != 0].head(10))  # Değişim olan ürünlerden 10 tanesini göster
-
-# # Sadece "ELectronicMan" verisini çekelim:
-# df_YourElectrician = fetch_price_data_from_collection("YourElectrician", "2025-01-18", "2025-04-18")
-# print(df_YourElectrician.head(50))  # İlk 10 satırı göster
-# print(df_YourElectrician.shape)     # Kaç satır veri geldiğini göster
-#
-#
-# collection = db["YourElectrician"]
-# sample_doc = collection.find_one()
-# print(sample_doc)
-
-
-# df_manufacturer = fetch_manufacturer_data("ELectronicMan", "2025-01-18", "2025-04-18")
-# print(df_manufacturer.head())
-# print(df_manufacturer.shape)
-#
-#
-# for shop in ["YourElectrician", "MyElectrician", "HisElectrician"]:
-#     df_shop = fetch_shop_data(shop, "2025-01-18", "2025-04-18")
-#     print(f"{shop} - {df_shop.shape}")
-
 # manufacturers = fetch_all_manufacturers()
-# print("Manufacturers:", manufacturers)
 #
-# for manu in manufacturers:
-#     shops = fetch_shops_for_manufacturer(manu)
-#     print(f"{manu} için shops:", shops)
-
-# df_your_shop = fetch_price_data_from_shop("YourElectrician", "2025-01-18", "2025-04-18")
-# print(df_your_shop.head())
-# print(df_your_shop.shape)
+# for manufacturer in manufacturers:
+#     print(f"\n=== Manufacturer: {manufacturer} ===")
 #
-# df_migros = fetch_price_data_from_shop("MIGROS", "2025-01-01", "2025-05-01")
-# print(df_migros.shape)
-# print(df_migros.head())
-
-# change_dates = find_profit_changes_with_magnitude(
-#     shop_name="YourElectrician",
-#     manufacturer_name="ELectronicMan",
-#     start_date="2025-01-23",
-#     end_date="2025-04-18"
-# )
+#     manufacturer_df = fetch_manufacturer_data(manufacturer, start_date, end_date)
+#     if manufacturer_df.empty:
+#         print(f"{manufacturer} için üretici verisi bulunamadı. Atlanıyor.")
+#         continue
 #
-# print("Profit değişimi olan tarihler:", change_dates)
+#     shop_list = fetch_shops_for_manufacturer(manufacturer)
+#     print(f"Shoplar: {shop_list}")
 #
-# change_dates = find_profit_changes_with_magnitude(
-#     shop_name="MyElectrician",
-#     manufacturer_name="ELectronicMan",
-#     start_date="2025-01-23",
-#     end_date="2025-04-18"
-# )
+#     for shop in shop_list:
+#         print(f"\n--- Shop: {shop} ---")
 #
-# print("Profit değişimi olan tarihler:", change_dates)
+#         shop_df = fetch_price_data_from_shop(shop, manufacturer, start_date, end_date)
+#         if shop_df.empty:
+#             print(f"{shop} için veri bulunamadı. Atlanıyor.")
+#             continue
 #
-# change_dates = find_profit_changes_with_magnitude(
-#     shop_name="HisElectrician",
-#     manufacturer_name="ELectronicMan",
-#     start_date="2025-01-23",
-#     end_date="2025-04-18"
-# )
+#         # --- Profit Hesaplama ---
+#         profit_series = calculate_profit_relative_to_manufacturer(shop_df, manufacturer_df)
+#         if profit_series.empty:
+#             print(f"{shop} için profit serisi oluşturulamadı.")
+#             continue
 #
-# print("Profit değişimi olan tarihler:", change_dates)
+#         print(f"Profit Serisi (ilk 5 satır):\n{profit_series.head()}")
+#
+#         # --- Değişim Tarihleri ---
+#         changes = find_profit_change_dates(shop_df, manufacturer_df, threshold=threshold)
+#
+#         if not changes:
+#             print("\n✅ Profit yüzdesi sabit, değişim yok.")
+#         else:
+#             print("\n⚠️ Değişim tespit edildi:")
+#             for date, change in changes:
+#                 change_type = "artış" if change > 0 else "azalış"
+#                 print(f"Date: {date.strftime('%Y-%m-%d')}, {change_type}, Change: {change:.2f}%")
+#

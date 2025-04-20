@@ -99,18 +99,102 @@ def db_shop(manufacturer_name, shop_name, profit_percentage):
             print(f"No changes detected for {shop_name} on {date}. Record is up to date.")
 
 
-db_shop("CableMan", "IKEA", 13)
-db_shop("CableMan", "KablocuAhmet", 5)
-db_shop("CableMan", "A101", 7)
-db_shop("CableMan", "MIGROS", 10)
-db_shop("ToyMan", "ToyzSHop", 10)
-db_shop("CableMan", "ToyzSHop", 10)
-db_shop("ELectronicMan", "MediaMarkt", 15)
-db_shop("HomeELectricMan", "MediaMarkt", 15)
-db_shop("ELectronicMan", "Teknosa", 10)
-db_shop("HomeELectricMan", "Teknosa", 10)
-db_shop("ELectronicMan", "Vatan", 7)
-db_shop("HomeELectricMan", "Vatan", 7)
+def db_shop_dateInterval(manufacturer_name, shop_name, profit_percentage, start_date, end_date):
+    manufacturer_collection = db[manufacturer_name]
+    shop_collection = db[shop_name]
+
+    start_date = datetime.datetime.strptime(start_date, "%Y-%m-%d") if isinstance(start_date, str) else start_date
+    end_date = datetime.datetime.strptime(end_date, "%Y-%m-%d") if isinstance(end_date, str) else end_date
+
+    query = {"Date": {"$gte": start_date, "$lte": end_date}}
+    cursor = manufacturer_collection.find(query).sort("Date", pymongo.ASCENDING)
+
+    for record in cursor:
+        date = record['Date']
+
+        existing_shop_record = shop_collection.find_one({"Date": date})
+
+        product_group = f"{manufacturer_name} Products"
+
+        if existing_shop_record:
+            # Eğer kayıt varsa, Product Group var mı kontrol et
+            if product_group in existing_shop_record:
+                print(f"⚠️ {product_group} already exists for {shop_name} on {date}. Skipping.")
+                continue
+            else:
+                # Product group yoksa ➔ sadece yeni group'u ekle
+                new_products = {}
+                product_keys = [key for key in record.keys() if key.startswith("Product ")]
+
+                product_counter = 1
+                for key in product_keys:
+                    if "Price" in key:
+                        price = float(record[key].replace(" TL", "").replace(",", ""))
+                        new_price = price * (1 + profit_percentage / 100)
+
+                        new_products[f"Product {product_counter}"] = record.get(f"Product {product_counter}")
+                        new_products[f"Product {product_counter} Price"] = f"{new_price:,.2f} TL"
+                        product_counter += 1
+
+                shop_collection.update_one(
+                    {"_id": existing_shop_record["_id"]},
+                    {"$set": {product_group: new_products}}
+                )
+                print(f"✅ Added {product_group} to {shop_name} on {date}.")
+
+        else:
+            # Eğer hiç kayıt yoksa ➔ yeni kayıt oluştur
+            shop_record = {
+                "Date": date,
+                "Profit Percentage": profit_percentage,
+                "Store Type": shop_name,
+                "Description": f"Product prices for {shop_name} as of {date}.",
+            }
+
+            new_products = {}
+            product_keys = [key for key in record.keys() if key.startswith("Product ")]
+            product_counter = 1
+
+            for key in product_keys:
+                if "Price" in key:
+                    price = float(record[key].replace(" TL", "").replace(",", ""))
+                    new_price = price * (1 + profit_percentage / 100)
+
+                    new_products[f"Product {product_counter}"] = record.get(f"Product {product_counter}")
+                    new_products[f"Product {product_counter} Price"] = f"{new_price:,.2f} TL"
+                    product_counter += 1
+
+            shop_record[product_group] = new_products
+
+            shop_collection.insert_one(shop_record)
+            print(f"✅ Inserted new record for {shop_name} on {date} with {product_group}.")
+
+    print(f"🏁 All products processed for {shop_name} between {start_date.date()} and {end_date.date()}.")
+
+db_shop_dateInterval("CableMan", "IKEA", 13, start_date="2025-01-01", end_date="2025-04-20")
+db_shop_dateInterval("ToyMan", "IKEA", 13, start_date="2025-01-01", end_date="2025-04-20")
+db_shop_dateInterval("ELectricMan", "IKEA", 13, start_date="2025-01-01", end_date="2025-04-20")
+
+db_shop_dateInterval("CableMan", "KablocuAhmet", 5, start_date="2025-01-01", end_date="2025-04-20")
+
+db_shop_dateInterval("CableMan", "A101", 7, start_date="2025-01-01", end_date="2025-04-20")
+db_shop_dateInterval("ToyMan", "A101", 7, start_date="2025-01-01", end_date="2025-04-20")
+
+db_shop_dateInterval("CableMan", "MIGROS", 10, start_date="2025-01-01", end_date="2025-04-20")
+db_shop_dateInterval("ToyMan", "MIGROS", 10, start_date="2025-01-01", end_date="2025-04-20")
+db_shop_dateInterval("HomeELectricMan", "MIGROS", 10, start_date="2025-01-01", end_date="2025-04-20")
+
+db_shop_dateInterval("ToyMan", "ToyzSHop", 10, start_date="2025-01-01", end_date="2025-04-20")
+
+db_shop_dateInterval("ELectronicMan", "MediaMarkt", 15, start_date="2025-01-01", end_date="2025-04-20")
+db_shop_dateInterval("HomeELectricMan", "MediaMarkt", 15, start_date="2025-01-01", end_date="2025-04-20")
+
+db_shop_dateInterval("ELectronicMan", "Teknosa", 10, start_date="2025-01-01", end_date="2025-04-20")
+db_shop_dateInterval("HomeELectricMan", "Teknosa", 10, start_date="2025-01-01", end_date="2025-04-20")
+
+db_shop_dateInterval("ELectronicMan", "Vatan", 7, start_date="2025-01-01", end_date="2025-04-20")
+db_shop_dateInterval("HomeELectricMan", "Vatan", 7, start_date="2025-01-01", end_date="2025-04-20")
+
 # db_shop("HomeELectricMan", "YourElectrician", 5)
 # db_shop("HomeELectricMan", "MyElectrician", 5)
 # db_shop("HomeELectricMan", "HisElectrician", 5)

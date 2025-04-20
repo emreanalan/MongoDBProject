@@ -33,5 +33,19 @@ def delete_date_range(collection_name, start_date_str, end_date_str):
 #delete_last_x_days("EUR/TRY", 20)
 #delete_last_x_days("USD/TRY", 20)
 #delete_last_x_days("Gold/TRY", 20)
-delete_date_range("IKEA", "2025-03-20", "2025-03-25")
+# delete_date_range("IKEA", "2025-01-01", "2025-04-20")
+# delete_date_range("A101", "2025-01-01", "2025-04-20")
+# delete_date_range("MIGROS", "2025-01-01", "2025-04-20")
+# delete_date_range("MediaMarkt", "2025-01-01", "2025-04-20")
+# delete_date_range("Teknosa", "2025-01-01", "2025-04-20")
+# delete_date_range("ToyMan", "2025-01-01", "2025-04-20")
+# delete_date_range("KablocuAhmet", "2025-01-01", "2025-04-20")
+# delete_date_range("ToyzSHop", "2025-01-01", "2025-04-20")
+# delete_date_range("Vatan", "2025-01-01", "2025-04-20")
+delete_date_range("MyElectrician", "2025-01-01", "2025-04-20")
+delete_date_range("YourElectrician", "2025-01-01", "2025-04-20")
+delete_date_range("HisElectrician", "2025-01-01", "2025-04-20")
+
+
+
 

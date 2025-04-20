@@ -1,7 +1,13 @@
 import pandas as pd
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
-from DataRetrieval import fetch_price_data_from_shop, fetch_manufacturer_data
+from DataRetrieval import (
+    fetch_all_manufacturers,
+    fetch_shops_for_manufacturer,
+    fetch_price_data_from_shop,
+    fetch_manufacturer_data,
+    find_profit_change_dates,
+)
 
 def calculate_profit_relative_to_manufacturer(shop_df: pd.DataFrame, manufacturer_df: pd.DataFrame) -> pd.Series:
     """
@@ -27,7 +33,7 @@ def create_shop_features(shop_list: list, manufacturer: str, start_date: str, en
 
     shop_profits = {}
     for shop in shop_list:
-        shop_df = fetch_price_data_from_shop(shop, start_date, end_date)
+        shop_df = fetch_price_data_from_shop(shop, manufacturer, start_date, end_date)
         if shop_df.empty:
             print(f"No data found for shop {shop}.")
             continue
@@ -142,70 +148,175 @@ def detect_leader_follower(shop_profits, date_index, max_day_difference=10):
 
 def detect_real_leader_follower(change_dates_dict, max_day_difference=10):
     """
-    Her değişim dalgası için leader-follower ilişkilerini tespit eder.
-
-    Parametreler:
-    - change_dates_dict: {shop_name: [timestamp1, timestamp2, ...]} şeklinde değişim günleri
-    - max_day_difference: Lider ile takipçi arasındaki maksimum gün farkı
-
-    Döndürür:
-    - relations: (leader, follower, leader_date, follower_date) listesi
+    Mağazalar arasında lider-takipçi ilişkisini tespit eder.
+    Sadece pozitif gecikmeler (delay > 0) lider-takipçi ilişkisi kabul edilir.
     """
-    relations = []
+    relationships = []
 
-    # Bütün değişim tarihlerini birleştir
-    all_change_dates = []
-    for dates in change_dates_dict.values():
-        all_change_dates.extend(dates)
+    shops = list(change_dates_dict.keys())
 
-    # Tekrar edenleri sil, sırala
-    unique_change_dates = sorted(set(all_change_dates))
+    for i in range(len(shops)):
+        leader_shop = shops[i]
+        leader_changes = change_dates_dict[leader_shop]
 
-    for change_date in unique_change_dates:
-        # Bu change_date için kimler değişmiş, onu bul
-        changes_on_date = []
-        for shop, dates in change_dates_dict.items():
-            for d in dates:
-                if abs((d - change_date).days) <= max_day_difference:
-                    changes_on_date.append((shop, d))
+        for leader_date in leader_changes:
+            for j in range(len(shops)):
+                if i == j:
+                    continue  # Kendisiyle karşılaştırma yapma
 
-        # Eğer en az 2 kişi değiştiyse, ilişki kur
-        if len(changes_on_date) >= 2:
-            # En erken değişim yapanı bul
-            changes_on_date.sort(key=lambda x: x[1])  # tarihe göre sırala
-            leader_shop, leader_date = changes_on_date[0]
+                follower_shop = shops[j]
+                follower_changes = change_dates_dict[follower_shop]
 
-            for follower_shop, follower_date in changes_on_date[1:]:
-                if leader_shop != follower_shop:
-                    relations.append((leader_shop, follower_shop, leader_date, follower_date))
+                for follower_date in follower_changes:
+                    delay = (follower_date - leader_date).days
 
-    return relations
+                    # 🔥 Burada kritik değişiklik yaptık:
+                    if 0 < delay <= max_day_difference:
+                        relationships.append((leader_shop, follower_shop, leader_date, follower_date))
+                        break  # Bir eşleşme bulunca diğer lider tarihine geç
 
+    return relationships
 
+def detect_simultaneous_shops(shop_profits, similarity_threshold=0.98):
+    """
+    Aynı anda hareket eden (profit sabit ilerleyen) shopları tespit eder.
 
+    Returns:
+    - simultaneous_pairs: (shop1, shop2, date, profit)
+    - isolated_shops: (shop, date, profit)
+    """
+    simultaneous_pairs = []
+    isolated_shops = []
 
-# change_dates_dict = {
-#     "YourElectrician": [pd.Timestamp('2025-02-19'), pd.Timestamp('2025-03-19')],
-#     "MyElectrician": [pd.Timestamp('2025-02-23'), pd.Timestamp('2025-03-22')],
-#     "HisElectrician": [pd.Timestamp('2025-02-23'), pd.Timestamp('2025-03-22')]
-# }
+    shops = list(shop_profits.keys())
+
+    for i in range(len(shops)):
+        shop_i = shops[i]
+        profits_i = shop_profits[shop_i]
+
+        if profits_i.empty:
+            continue
+
+        found_pair = False
+
+        for j in range(i + 1, len(shops)):
+            shop_j = shops[j]
+            profits_j = shop_profits[shop_j]
+
+            if profits_j.empty:
+                continue
+
+            # Ortalama similarity hesapla
+            common_dates = profits_i.index.intersection(profits_j.index)
+
+            if len(common_dates) == 0:
+                continue
+
+            diff = (profits_i[common_dates] - profits_j[common_dates]).abs()
+            mean_diff = diff.mean()
+
+            if mean_diff <= (1 - similarity_threshold) * 100:  # Örneğin 2% farklılık toleransı
+                date = common_dates[0]
+                profit = profits_i[date]
+                simultaneous_pairs.append((shop_i, shop_j, date, profit))
+                found_pair = True
+
+        if not found_pair:
+            date = profits_i.index[0]
+            profit = profits_i.iloc[0]
+            isolated_shops.append((shop_i, date, profit))
+
+    return simultaneous_pairs, isolated_shops
+
+# start_date = "2025-01-01"
+# end_date = "2025-04-20"
 #
-# # Fonksiyonu çağır
-# relations = detect_real_leader_follower(change_dates_dict, max_day_difference=10)
+# print("\n=== FULL AUTOMATED LEADER-FOLLOWER DETECTION ===\n")
 #
-# # Sonuçları yazdır
-# print("\n=== Leader-Follower İlişkileri ===")
-# for leader, follower, leader_date, follower_date in relations:
-#     print(f"{follower} follows {leader} (Leader Date: {leader_date.date()}, Follower Date: {follower_date.date()})")
+# manufacturers = fetch_all_manufacturers()
 #
-# # Genel lider özeti çıkar
-# leader_summary = {}
-# for leader, follower, _, _ in relations:
-#     if leader not in leader_summary:
-#         leader_summary[leader] = []
-#     leader_summary[leader].append(follower)
+# for manufacturer in manufacturers:
+#     print(f"\n=== Manufacturer: {manufacturer} ===")
 #
-# print("\n=== Genel Lider- Takipçiler Özeti ===")
-# for leader, followers in leader_summary.items():
-#     unique_followers = list(set(followers))  # Tekrarlamaları kaldır
-#     print(f"Leader -> {leader} | Followers -> {', '.join(unique_followers)}")
+#     shop_list = fetch_shops_for_manufacturer(manufacturer)
+#     if not shop_list:
+#         print(f"{manufacturer} için shop bulunamadı. Atlanıyor.")
+#         continue
+#
+#     change_dates_dict = {}
+#     shop_profits = {}
+#
+#     for shop in shop_list:
+#         shop_df = fetch_price_data_from_shop(shop, manufacturer, start_date, end_date)
+#         manufacturer_df = fetch_manufacturer_data(manufacturer, start_date, end_date)
+#
+#         if shop_df.empty or manufacturer_df.empty:
+#             print(f"{shop} için yeterli veri yok. Atlanıyor.")
+#             continue
+#
+#         # Profit serisi
+#         profit_series = calculate_profit_relative_to_manufacturer(shop_df, manufacturer_df)
+#
+#         # Shop profits to be used later for simultaneous detection
+#         shop_profits[shop] = profit_series
+#
+#         # Değişim günlerini bul
+#         change_dates = []
+#         profit_diff = profit_series.diff().fillna(0)
+#
+#         for date, diff in profit_diff.items():
+#             if abs(diff) >= 1.99:  # Threshold olarak 1.99 kullanıyoruz
+#                 change_dates.append(date)
+#
+#         if change_dates:
+#             change_dates_dict[shop] = change_dates
+#
+#     if not change_dates_dict:
+#         print(f"{manufacturer} için değişim tespit edilemedi.")
+#     else:
+#         print("\nDetected Change Dates:")
+#         for shop, dates in change_dates_dict.items():
+#             print(f"{shop}: {[d.strftime('%Y-%m-%d') for d in dates]}")
+#
+#         # Leader-follower ilişkileri
+#         relations = detect_real_leader_follower(change_dates_dict, max_day_difference=7)
+#
+#         if not relations:
+#             print("\nNo Leader-Follower relations found.")
+#         else:
+#             print("\nLeader-Follower Relations:")
+#             for leader, follower, leader_date, follower_date in relations:
+#                 print(f"{follower} follows {leader} | Leader Change: {leader_date.date()}, Follower Change: {follower_date.date()}")
+#
+#     ## --- BURADAN SONRA KALAN 2 FONKSİYONUN TESTLERİ BAŞLIYOR ---
+#
+#     print("\n[Extra Feature Test] Cosine Similarity and Feature Matrix")
+#
+#     if len(shop_profits) >= 2:
+#         # create_shop_features kullanımı
+#         X, y = create_shop_features(shop_list, manufacturer, start_date, end_date, max_delay_days=7)
+#
+#         if X is not None and y is not None:
+#             print("Feature Matrix (X):")
+#             print(X)
+#             print("Labels (y):")
+#             print(y)
+#         else:
+#             print("Feature matrix oluşturulamadı.")
+#
+#         # detect_simultaneous_shops kullanımı
+#         simultaneous_pairs, isolated_shops = detect_simultaneous_shops(shop_profits, similarity_threshold=0.98)
+#
+#         print("\nSimultaneous Pairs:")
+#         for shop1, shop2, date, profit in simultaneous_pairs:
+#             print(f"{shop1} & {shop2} simultaneous at {date.date()} with profit: {profit}")
+#
+#         print("\nIsolated Shops:")
+#         for shop, date, profit in isolated_shops:
+#             print(f"{shop} isolated at {date.date()} with profit: {profit}")
+#
+#     else:
+#         print("Shop verisi yeterli değil. Feature ve Simultaneous Testler atlandı.")
+#
+# print("\n=== COMPLETED ALL TESTS ===")
+

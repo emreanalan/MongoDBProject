@@ -1,223 +1,136 @@
+# CollusionDetector.py
+
+from DataRetrieval import (
+    fetch_all_manufacturers,
+    fetch_shops_for_manufacturer,
+    fetch_price_data_from_shop,
+    fetch_manufacturer_data,
+)
+from ShopFeatureEngineering import (
+    detect_real_leader_follower,
+    calculate_profit_relative_to_manufacturer,
+)
 import pandas as pd
-import numpy as np
-from sklearn.metrics.pairwise import cosine_similarity
-from scipy.signal import correlate
-from datetime import timedelta
 
-from DataRetrieval import fetch_price_data, calculate_daily_percentage_change
+start_date = "2025-01-01"
+end_date = "2025-04-20"
+threshold = 1.99  # Change detection threshold
 
-def compute_product_based_cosine_similarity(df: pd.DataFrame, similarity_threshold=0.75, max_delay_days=7):
-    """
-    Computes leader-follower relationships between shops for each product based on daily price changes.
+print("\n=== FULL AUTOMATED COLLUSION DETECTION REPORT ===\n")
 
-    Args:
-    - df (pd.DataFrame): DataFrame with ['shop_id', 'product_name', 'date', 'daily_change']
-    - similarity_threshold (float): minimum cosine similarity to accept as similar (default 0.75)
-    - max_delay_days (int): maximum delay (in days) tolerated between leader and follower (default 7)
+manufacturers = fetch_all_manufacturers()
 
-    Returns:
-    - List[Dict]: [{'product_name': X, 'leader_shop': Y, 'follower_shop': Z, 'similarity': S, 'delay_days': D}, ...]
-    """
-    results = []
+for manufacturer in manufacturers:
+    print(f"\n=== Manufacturer: {manufacturer} ===")
 
-    # Step 1: Get unique products
-    products = df['product_name'].unique()
+    shop_list = fetch_shops_for_manufacturer(manufacturer)
+    if not shop_list:
+        print(f"{manufacturer} için shop bulunamadı.\n")
+        continue
 
-    for product in products:
-        # Step 2: Filter data for this product
-        product_df = df[df['product_name'] == product]
+    print(f"\nShoplar: {shop_list}\n")
 
-        # Pivot to create a matrix: rows = date, columns = shop_id, values = daily_change
-        pivot_table = product_df.pivot_table(index='date', columns='shop_id', values='daily_change')
+    change_dates_dict = {}
+    all_profit_series = {}
 
-        # Drop shops that have too many NaNs
-        pivot_table = pivot_table.dropna(axis=1, thresh=int(0.7 * len(pivot_table)))  # Keep only shops with at least 70% data
+    for shop in shop_list:
+        shop_df = fetch_price_data_from_shop(shop, manufacturer, start_date, end_date)
+        manufacturer_df = fetch_manufacturer_data(manufacturer, start_date, end_date)
 
-        if pivot_table.shape[1] < 2:
-            continue  # Skip if less than 2 shops left
+        if shop_df.empty or manufacturer_df.empty:
+            continue
 
-        # Fill missing values with 0 (no change = 0)
-        pivot_table = pivot_table.fillna(0)
+        profit_series = calculate_profit_relative_to_manufacturer(shop_df, manufacturer_df)
+        all_profit_series[shop] = profit_series
 
-        # Step 3: Compute cosine similarity
-        cosine_sim = cosine_similarity(pivot_table.T)  # Transpose because we want shop-to-shop
-        shop_ids = pivot_table.columns.tolist()
+        profit_diff = profit_series.diff().fillna(0)
+        change_dates = [date for date, diff in profit_diff.items() if abs(diff) >= threshold]
 
-        # Step 4: Find leader-follower pairs
-        for i in range(len(shop_ids)):
-            for j in range(len(shop_ids)):
-                if i == j:
-                    continue  # Skip same shop
+        if change_dates:
+            change_dates_dict[shop] = change_dates
 
-                similarity = cosine_sim[i, j]
+    if not change_dates_dict:
+        print("Değişim tespit edilemedi, Leader-Follower analizi yapılamadı.\n")
 
-                if similarity >= similarity_threshold:
-                    # Step 5: Compute delay between shops using cross-correlation
-                    series_i = pivot_table.iloc[:, i].values
-                    series_j = pivot_table.iloc[:, j].values
+        print("=== Isolated Shops ===")
+        for shop in shop_list:
+            profit_series = all_profit_series.get(shop, None)
+            if profit_series is not None and not profit_series.empty:
+                first_date = profit_series.index[0]
+                first_profit = profit_series.iloc[0]
+                print(f"{shop} isolated (First profit: {first_profit:.2f}%, Date: {first_date.date()})")
+            else:
+                print(f"{shop} isolated (No profit data available)")
+    else:
+        relations = detect_real_leader_follower(change_dates_dict, max_day_difference=7)
 
-                    corr = correlate(series_j, series_i, mode='full')  # Cross-correlation
-                    lag_array = np.arange(-len(series_i) + 1, len(series_j))
-                    delay_in_days = lag_array[np.argmax(corr)]
+        if relations:
+            print("\n=== Leader-Follower İlişkileri ===")
+            for leader, follower, leader_date, follower_date in relations:
+                delay_days = (follower_date - leader_date).days
+                sign = "+" if delay_days >= 0 else "-"
 
-                    if abs(delay_in_days) <= max_delay_days:
-                        # Record the leader-follower relationship
-                        results.append({
-                            'product_name': product,
-                            'leader_shop': shop_ids[i],
-                            'follower_shop': shop_ids[j],
-                            'similarity': round(float(similarity), 4),
-                            'delay_days': int(delay_in_days)
-                        })
+                # Önce profit seriesi al
+                leader_series = all_profit_series.get(leader, pd.Series(dtype=float))
+                follower_series = all_profit_series.get(follower, pd.Series(dtype=float))
 
-    return results
+                # Leader değişimi
+                leader_profit_before = leader_series[leader_series.index < leader_date].iloc[-1] if (
+                            leader_series.index < leader_date).any() else "N/A"
+                leader_profit_after = leader_series.get(leader_date, "N/A")
 
+                # Follower değişimi
+                follower_profit_before = follower_series[follower_series.index < follower_date].iloc[-1] if (
+                            follower_series.index < follower_date).any() else "N/A"
+                follower_profit_after = follower_series.get(follower_date, "N/A")
 
-def compute_shop_based_cosine_similarity(df: pd.DataFrame, target_shops: list, similarity_threshold=0.75, max_delay_days=7):
-    """
-    Computes cosine similarity and delay between given shops based on all product daily changes combined.
+                # Güzel formatla
+                def format_profit(p):
+                    return f"{p:.2f}%" if isinstance(p, (int, float)) else "N/A"
 
-    Args:
-    - df (pd.DataFrame): Must contain ['shop_id', 'product_name', 'date', 'daily_change']
-    - target_shops (list): List of shop_ids to compare (e.g., ["YourElectrician", "MyElectrician", "HisElectrician"])
-    - similarity_threshold (float): Cosine similarity threshold (default 0.75)
-    - max_delay_days (int): Maximum delay in days tolerated (default 7)
+                leader_change = f"{format_profit(leader_profit_before)} → {format_profit(leader_profit_after)}"
+                follower_change = f"{format_profit(follower_profit_before)} → {format_profit(follower_profit_after)}"
 
-    Returns:
-    - List[Dict]: [{'leader_shop': Y, 'follower_shop': Z, 'similarity': S, 'delay_days': D}]
-    """
-    results = []
+                print(
+                    f"{follower} follows {leader} "
+                    f"(Leader Date: {leader_date.date()}, Follower Date: {follower_date.date()}, "
+                    f"Delay: {sign}{abs(delay_days)} Days, "
+                    f"Leader Profit: {leader_change}, Follower Profit: {follower_change})"
+                )
 
-    # Filter only target shops
-    target_df = df[df['shop_id'].isin(target_shops)]
+            # --- Genel Özet ---
+            leader_summary = {}
+            for leader, follower, _, _ in relations:
+                if leader not in leader_summary:
+                    leader_summary[leader] = []
+                leader_summary[leader].append(follower)
 
-    # Pivot: rows = date, columns = shop_id, values = average daily change across all products
-    pivot_table = target_df.groupby(['date', 'shop_id'])['daily_change'].mean().unstack()
+            print("\n=== Genel Lider-Takipçiler Özeti ===")
+            for leader, followers in leader_summary.items():
+                unique_followers = sorted(set(followers))
+                print(f"Leader -> {leader} | Followers -> {', '.join(unique_followers)}")
+        else:
+            print("Leader-Follower ilişkisi bulunamadı.\n")
 
-    # Drop shops with too many missing values
-    pivot_table = pivot_table.dropna(axis=1, thresh=int(0.7 * len(pivot_table)))  # Keep shops with at least 70% data
+        # --- İlişkili Shoplar ---
+        related_shops = set()
+        for leader, follower, _, _ in relations:
+            related_shops.add(leader)
+            related_shops.add(follower)
 
-    if pivot_table.shape[1] < 2:
-        print("Not enough shops after cleaning.")
-        return []
+        isolated_shops = [shop for shop in shop_list if shop not in related_shops]
 
-    # Fill missing values with 0
-    pivot_table = pivot_table.fillna(0)
+        if isolated_shops:
+            print("\n=== Isolated Shops ===")
+            for shop in isolated_shops:
+                profit_series = all_profit_series.get(shop, None)
+                if profit_series is not None and not profit_series.empty:
+                    first_date = profit_series.index[0]
+                    first_profit = profit_series.iloc[0]
+                    print(f"{shop} isolated (First profit: {first_profit:.2f}%, Date: {first_date.date()})")
+                else:
+                    print(f"{shop} isolated (No profit data available)")
 
-    # Compute cosine similarity
-    cosine_sim = cosine_similarity(pivot_table.T)
-    shop_ids = pivot_table.columns.tolist()
+    print("\n" + "="*70)
 
-    for i in range(len(shop_ids)):
-        for j in range(len(shop_ids)):
-            if i == j:
-                continue
-
-            similarity = cosine_sim[i, j]
-
-            if similarity >= similarity_threshold:
-                # Cross-correlation for delay
-                series_i = pivot_table.iloc[:, i].values
-                series_j = pivot_table.iloc[:, j].values
-
-                corr = correlate(series_j, series_i, mode='full')
-                lag_array = np.arange(-len(series_i) + 1, len(series_j))
-                delay_in_days = lag_array[np.argmax(corr)]
-
-                if abs(delay_in_days) <= max_delay_days:
-                    results.append({
-                        'leader_shop': shop_ids[i],
-                        'follower_shop': shop_ids[j],
-                        'similarity': round(float(similarity), 4),
-                        'delay_days': int(delay_in_days)
-                    })
-
-    return results
-
-
-def compute_product_price_similarity(df: pd.DataFrame, target_shops: list, similarity_threshold=0.75):
-    """
-    Computes cosine similarity between shops based on product price levels (more tolerant).
-
-    Args:
-    - df: ['shop_id', 'product_name', 'date', 'price']
-    - target_shops: Shops to compare
-    - similarity_threshold: Similarity threshold
-
-    Returns:
-    - List[Dict]: [{'leader_shop': Y, 'follower_shop': Z, 'similarity': S}]
-    """
-    results = []
-
-    target_df = df[df['shop_id'].isin(target_shops)]
-
-    # Pivot: rows = product_name, columns = shop_id, values = latest price
-    latest_prices = target_df.sort_values('date').groupby(['product_name', 'shop_id']).last().reset_index()
-    pivot_table = latest_prices.pivot_table(index='product_name', columns='shop_id', values='price')
-
-    # --- Toleransı arttırıyoruz (%30 yeter)
-    # pivot_table = pivot_table.dropna(axis=1, thresh=int(0.1 * len(pivot_table)))
-
-    if pivot_table.shape[1] < 2:
-        print("Not enough shops after cleaning (product-level check).")
-        return []
-
-    # --- Eksik ürünleri ortalama fiyatla dolduruyoruz
-    pivot_table = pivot_table.fillna(pivot_table.mean())
-
-    # --- Normalization: price seviyesini eşitliyoruz
-    pivot_table = (pivot_table - pivot_table.mean()) / pivot_table.std()
-
-    # --- Cosine Similarity hesaplama
-    cosine_sim = cosine_similarity(pivot_table.T)
-    shop_ids = pivot_table.columns.tolist()
-
-    for i in range(len(shop_ids)):
-        for j in range(len(shop_ids)):
-            if i == j:
-                continue
-
-            similarity = cosine_sim[i, j]
-
-            if similarity >= similarity_threshold:
-                results.append({
-                    'leader_shop': shop_ids[i],
-                    'follower_shop': shop_ids[j],
-                    'similarity': round(float(similarity), 4)
-                })
-
-    return results
-
-
-
-
-
-# 1. Fetch and process data
-df_prices = fetch_price_data("2025-01-23", "2025-04-17")
-df_with_changes = calculate_daily_percentage_change(df_prices)
-
-# Define shops
-target_shops = ["YourElectrician", "MyElectrician", "HisElectrician"]
-
-# # 2. Find collusion
-# collusion_results = compute_product_based_cosine_similarity(df_with_changes)
-#
-# # 3. Print results
-# for result in collusion_results:
-#     print(result)
-#
-#
-# # Define shops
-# target_shops = ["YourElectrician", "MyElectrician", "HisElectrician"]
-#
-# # Detect collusion
-# shop_collusion_results = compute_shop_based_cosine_similarity(df_with_changes, target_shops)
-#
-# # Print results
-# for result in shop_collusion_results:
-#     print(result)
-
-# Detect collusion based on product prices
-shop_price_collusion_results = compute_product_price_similarity(df_prices, target_shops)
-for result in shop_price_collusion_results:
-    print(result)
+print("\n=== COMPLETED FULL COLLUSION REPORT ===\n")
