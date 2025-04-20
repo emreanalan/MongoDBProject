@@ -54,35 +54,37 @@ pip install pymongo yfinance selenium scikit-learn pandas numpy matplotlib
 
 ```
 MongoDBProject/
-├── Al_GD_Cop_fetching.py             
-├── EUR_TRY_Fetching.py               
-├── Others_Fetching.py                
-├── asgari.py                         
-├── electric.py                       
-├── dogalgaz.py                       
-├── Production.py                     
-├── Manufacturer.py                   
-├── Distributor.py                    
-├── ProductsCollection.py             
-├── Shops.py                          
-├── Shop.py                           
-├── Cheater.py                        
-├── CheaterWithDateInterval.py        
-├── CollusionDetection.py             
-├── CollusionShop.py                  
-├── NewCollusionShop.py               
-├── FraudDetection.py                 
-├── FraudDetectionWithProfit.py       
-├── FeatureEngineering.py             
-├── ModelTraining.py                  
-├── ShopFeatureEngineering.py         
-├── DataRetrieval.py                  
-├── DataUpdater.py                    
-├── DeleteData.py                     
-├── Tests.py                          
-├── Utils.py                          
-├── MongoDbConnect.py                 
-└── README.md                         
+├── build/
+│   ├── Al_GD_Cop_fetching.py
+│   ├── EUR_TRY_Fetching.py
+│   ├── Others_Fetching.py
+│   ├── asgari.py
+│   ├── electric.py
+│   ├── dogalgaz.py
+│   ├── Cheater.py
+│   ├── CheaterWithDateInterval.py
+│   ├── CollusionDetection.py
+│   ├── CollusionShop.py
+│   ├── NewCollusionShop.py
+│   ├── DataRetrieval.py
+│   ├── DataUpdater.py
+│   ├── DeleteData.py
+│   ├── Distributor.py
+│   ├── Manufacturer.py
+│   ├── MongoDbConnect.py
+│   ├── Production.py
+│   ├── ProductsCollection.py
+│   ├── Shops.py
+│   ├── Shop.py
+│   ├── FastUpdateMan.py
+│   ├── FraudDetection.py
+│   ├── FraudDetectionWithProfit.py
+│   ├── FeatureEngineering.py
+│   ├── ShopFeatureEngineering.py
+│   ├── ModelTraining.py
+│   ├── Utils.py
+│   ├── Tests.py
+├── README.md                        
 ```
 
 ---
