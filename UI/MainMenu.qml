@@ -24,7 +24,7 @@ ApplicationWindow {
                 ListElement { name: "Shop Management"; idNum: 3 }
                 ListElement { name: "Collusion Detection"; idNum: 4 }
                 ListElement { name: "Fraud Detection"; idNum: 5 }
-                ListElement { name: "Historical Data Management"; idNum: 9 }
+                ListElement { name: "Historical Data Management"; idNum: 6 }
             }
 
             delegate: Rectangle {

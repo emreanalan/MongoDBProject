@@ -401,8 +401,8 @@ def find_profit_changes_with_magnitude(shop_name, manufacturer_name, start_date,
     return changes
 
 
-# start_date = "2025-01-01"
-# end_date = "2025-04-20"
+start_date = "2025-01-01"
+end_date = "2025-04-20"
 # threshold = 1.99  # Yüzde 2 eşik
 #
 # manufacturers = fetch_all_manufacturers()
@@ -445,3 +445,8 @@ def find_profit_changes_with_magnitude(shop_name, manufacturer_name, start_date,
 #                 change_type = "artış" if change > 0 else "azalış"
 #                 print(f"Date: {date.strftime('%Y-%m-%d')}, {change_type}, Change: {change:.2f}%")
 #
+
+
+
+
+

@@ -2,26 +2,38 @@ import sys
 import os
 from PySide6.QtWidgets import QApplication
 from PySide6.QtQml import QQmlApplicationEngine
-from PySide6.QtCore import QUrl, QObject
+from PySide6.QtCore import QUrl
 
-from QTSynchronizers.backend import Backend
+from QTSynchronizers.MainMenuQTSynchronizer import Backend
+from QTSynchronizers.DynamicProductHandlingQTSynchronizer import DynamicProductHandlingQTSynchronizer
+from QTSynchronizers.CollusionDetectionQTSynchronizer import CollusionDetectionQTSynchronizer
 
-if __name__ == "__main__":
-    app = QApplication(sys.argv)
-    engine = QQmlApplicationEngine()
+app = QApplication(sys.argv)
+engine = QQmlApplicationEngine()
 
-    backend = Backend()
-    engine.rootContext().setContextProperty("backend", backend)
+# Dynamic Handler: DynamicProductHandling işlemleri için
+dynamicHandler = DynamicProductHandlingQTSynchronizer(engine)
 
-    qml_file = os.path.join(os.path.dirname(__file__), "ui", "main.qml")
-    engine.load(QUrl.fromLocalFile(qml_file))
+# Collusion Handler: Collusion Detection işlemleri için
+collusionHandler = CollusionDetectionQTSynchronizer(engine)
 
-    if not engine.rootObjects():
-        print("QML load failed.")
-        sys.exit(-1)
+# Backend Handler: Ana menü kontrolü
+backend = Backend(engine, dynamicHandler)
 
-    # Main window için kapanış kontrolü
-    window = engine.rootObjects()[0]
-    window.destroyed.connect(app.quit) # <-- bu satırı ekle!
+# QML'den erişebileceğimiz contextProperty'ler
+engine.rootContext().setContextProperty("backend", backend)
+engine.rootContext().setContextProperty("dynamicHandler", dynamicHandler)
+engine.rootContext().setContextProperty("collusionHandler", collusionHandler)
 
-    sys.exit(app.exec())
+# Ana Menü QML yükle
+qml_file = os.path.join(os.path.dirname(__file__), "UI", "MainMenu.qml")
+engine.load(QUrl.fromLocalFile(os.path.abspath(qml_file)))
+
+if not engine.rootObjects():
+    print("Ana Menü yüklenemedi!")
+    sys.exit(-1)
+
+backend.main_window = engine.rootObjects()[0]
+dynamicHandler.main_window = backend.main_window  # DynamicHandler ana pencereyi bilsin
+
+sys.exit(app.exec())
