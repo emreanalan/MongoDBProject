@@ -66,4 +66,8 @@ def db_shop_with_cheater_interval(manufacturer_name, shop_name, start_date_str, 
         current_date += timedelta(days=1)
 
 # Örnek kullanım:
-db_shop_with_cheater_interval("CableMan", "IKEA", "2025-03-20", "2025-03-25", 3)
+# db_shop_with_cheater_interval("CableMan", "IKEA", "2025-03-20", "2025-03-25", 3)
+
+# db_shop_with_cheater_interval("CableMan", "FraudShop", "2025-02-01", "2025-03-01", 3)
+# db_shop_with_cheater_interval("ToyMan", "FraudShop", "2025-03-01", "2025-04-01", 5)
+db_shop_with_cheater_interval("ELectricMan", "FraudShop", "2025-04-01", "2025-04-20", 7)

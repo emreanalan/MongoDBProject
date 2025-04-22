@@ -1,13 +1,12 @@
 import pymongo
 import pandas as pd
 from datetime import datetime
-
 # MongoDB connection
 client = pymongo.MongoClient(
     "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client["Final_Project"]
 
-
+collection = db["your_collection_name"]
 # collection_names = db.list_collection_names()
 #
 # for collection_name in collection_names:
@@ -401,8 +400,33 @@ def find_profit_changes_with_magnitude(shop_name, manufacturer_name, start_date,
     return changes
 
 
-start_date = "2025-01-01"
-end_date = "2025-04-20"
+
+def fetch_price_data_all_shops_products():
+    """
+    Tüm üreticilerin shoplarındaki ürün fiyat verilerini toplar.
+    DataFrame döner: shop, product, date, price
+    """
+    all_data = []
+
+    manufacturers = fetch_all_manufacturers()
+    for manufacturer in manufacturers:
+        shops = fetch_shops_for_manufacturer(manufacturer)
+        for shop in shops:
+            shop_data = fetch_price_data_from_shop(shop, manufacturer, "2020-01-01", "2030-01-01")
+            if not shop_data.empty:
+                for idx, row in shop_data.iterrows():
+                    all_data.append({
+                        'shop': shop,
+                        'product': row['product_name'],
+                        'date': pd.to_datetime(row['date']),
+                        'price': row['price']
+                    })
+
+    df = pd.DataFrame(all_data)
+    return df
+
+# start_date = "2025-01-01"
+# end_date = "2025-04-20"
 # threshold = 1.99  # Yüzde 2 eşik
 #
 # manufacturers = fetch_all_manufacturers()
@@ -445,8 +469,8 @@ end_date = "2025-04-20"
 #                 change_type = "artış" if change > 0 else "azalış"
 #                 print(f"Date: {date.strftime('%Y-%m-%d')}, {change_type}, Change: {change:.2f}%")
 #
-
-
+#
+#
 
 
 

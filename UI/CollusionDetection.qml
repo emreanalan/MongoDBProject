@@ -24,21 +24,34 @@ ApplicationWindow {
                 id: startDateField
                 placeholderText: "Start Date (YYYY-MM-DD)"
                 text: "2025-01-01"
-                Layout.fillWidth: true
+                Layout.preferredWidth: 200  // Daha dar
             }
 
             TextField {
                 id: endDateField
                 placeholderText: "End Date (YYYY-MM-DD)"
                 text: "2025-04-20"
-                Layout.fillWidth: true
+                Layout.preferredWidth: 200  // Daha dar
             }
 
             Button {
                 text: "Detect Collusion"
-                Layout.preferredWidth: 150
+                Layout.preferredWidth: 180  // Biraz dar
                 onClicked: {
                     collusionHandler.detectCollusion(startDateField.text, endDateField.text)
+                }
+            }
+
+            // Boşluk bırakıyoruz ➔ Sağdaki butonu ayırıyor
+            Item {
+                Layout.fillWidth: true
+            }
+
+            Button {
+                text: "Main Menu"
+                Layout.preferredWidth: 150
+                onClicked: {
+                    collusionHandler.goBackToMainMenu()
                 }
             }
         }

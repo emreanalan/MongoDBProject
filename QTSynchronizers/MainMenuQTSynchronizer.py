@@ -2,10 +2,12 @@ from PySide6.QtCore import QObject, Slot, QUrl
 import os
 
 class Backend(QObject):
-    def __init__(self, engine, dynamicHandler):
+    def __init__(self, engine, dynamicHandler, collusionHandler, profitCalculationHandler):
         super().__init__()
         self.engine = engine
         self.dynamicHandler = dynamicHandler
+        self.collusionHandler = collusionHandler
+        self.profitCalculationHandler = profitCalculationHandler
         self.main_window = None
         self.feature_windows = {}
 
@@ -17,7 +19,6 @@ class Backend(QObject):
             self.main_window.hide()
 
         if feature_id not in self.feature_windows:
-            # Eğer o feature daha yüklenmemişse, yükle
             self.loadFeatureWindow(feature_id)
 
         feature_window = self.feature_windows.get(feature_id)
@@ -34,10 +35,10 @@ class Backend(QObject):
         if self.main_window:
             self.main_window.show()
 
-
     def loadFeatureWindow(self, feature_id):
         qml_file_map = {
             1: "DynamicProductHandling.qml",
+            2: "ProfitCalculation.qml",
             4: "CollusionDetection.qml"
         }
 
@@ -55,10 +56,19 @@ class Backend(QObject):
             self.feature_windows[feature_id] = new_window
             print(f"Feature {feature_id} başarıyla yüklendi.")
 
+            new_window.show()
+
             if feature_id == 1:
                 self.dynamicHandler.dynamic_window = new_window
             if feature_id == 4:
-                self.dynamicHandler.dynamic_window = new_window
+                self.collusionHandler.collusion_window = new_window
+            if feature_id == 2:
+                self.profitCalculationHandler.profitCalculation_window = new_window
+        else:
+            print(f"Feature {feature_id} yüklenemedi!")
+
+
+
 
 
 

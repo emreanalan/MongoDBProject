@@ -42,9 +42,11 @@ def delete_date_range(collection_name, start_date_str, end_date_str):
 # delete_date_range("KablocuAhmet", "2025-01-01", "2025-04-20")
 # delete_date_range("ToyzSHop", "2025-01-01", "2025-04-20")
 # delete_date_range("Vatan", "2025-01-01", "2025-04-20")
-delete_date_range("MyElectrician", "2025-01-01", "2025-04-20")
-delete_date_range("YourElectrician", "2025-01-01", "2025-04-20")
-delete_date_range("HisElectrician", "2025-01-01", "2025-04-20")
+# delete_date_range("MyElectrician", "2025-01-01", "2025-04-20")
+# delete_date_range("YourElectrician", "2025-01-01", "2025-04-20")
+# delete_date_range("HisElectrician", "2025-01-01", "2025-04-20")
+delete_date_range("FraudShop", "2025-01-01", "2025-04-20")
+
 
 
 

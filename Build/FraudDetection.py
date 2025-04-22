@@ -1,115 +1,117 @@
-import pymongo
+# FraudDetector.py
+
 from datetime import datetime, timedelta
-
-client = pymongo.MongoClient(
-    "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+import pandas as pd
+import numpy as np
+from DataRetrieval import (
+    fetch_all_manufacturers,
+    fetch_shops_for_manufacturer,
+    fetch_price_data_from_shop,
+    fetch_manufacturer_data,
 )
-db = client["Final_Project"]
 
-REFERENCE_COLLECTION = "Products"
-TOTAL_THRESHOLD_PERCENTAGE = 32.5
-MANUFACTURER_MARGIN = 15
+PRICE_DIFF_THRESHOLD = 6  # %10 fark varsa şüpheli
+PRICE_CHANGE_THRESHOLD = 1.99  # %2 değişim varsa tarih değişimi kabul edilecek
+START_DATE = "2025-01-01"
+END_DATE = "2025-04-20"
 
+def find_middle_date(start_date, end_date):
+    delta = end_date - start_date
+    middle_date = start_date + timedelta(days=delta.days // 2)
+    return middle_date
 
-def clean_price(price_str):
-    return float(price_str.replace(" TL", "").replace(",", "")) if isinstance(price_str, str) else price_str
+def percentage_difference(base, new):
+    if base == 0:
+        return 0
+    return abs((new - base) / base) * 100
 
+print("\n=== FULL AUTOMATED FRAUD DETECTION REPORT ===\n")
 
-def detect_fraudulent_shops(start_date_str, end_date_str):
-    start_date = datetime.fromisoformat(start_date_str)
-    end_date = datetime.fromisoformat(end_date_str)
+manufacturers = fetch_all_manufacturers()
 
-    fraudulent_shops = {}
-    current_date = start_date
+for manufacturer in manufacturers:
+    print(f"\n=== Manufacturer: {manufacturer} ===\n")
 
-    while current_date <= end_date:
-        ref_record = db[REFERENCE_COLLECTION].find_one({"Date": current_date})
-        if not ref_record:
-            current_date += timedelta(days=1)
+    shop_list = fetch_shops_for_manufacturer(manufacturer)
+    if not shop_list:
+        continue
+
+    print(f"Shoplar: {shop_list}\n")
+
+    manufacturer_df = fetch_manufacturer_data(manufacturer, START_DATE, END_DATE)
+    if manufacturer_df.empty:
+        continue
+
+    all_products = manufacturer_df['product_name'].unique()
+
+    for shop in shop_list:
+        shop_df = fetch_price_data_from_shop(shop, manufacturer, START_DATE, END_DATE)
+        if shop_df.empty:
             continue
 
-        product_map = {}
-        for key in ref_record:
-            if key.startswith("Product ") and "Price" not in key:
-                product_number = key.split(" ")[1]
-                product_name = ref_record[key]
-                product_price_key = f"Product {product_number} Price"
-                if product_price_key in ref_record:
-                    product_price = clean_price(ref_record[product_price_key])
-                    product_map[product_name] = product_price
+        detected_frauds = []
 
-        for shop_name in db.list_collection_names():
-            if shop_name in [REFERENCE_COLLECTION, "system.indexes"]:
+        for product in all_products:
+            shop_product_data = shop_df[shop_df['product_name'] == product]
+            if shop_product_data.empty:
                 continue
 
-            shop_record = db[shop_name].find_one({"Date": current_date})
-            if not shop_record:
+            shop_prices = shop_product_data[['date', 'price']].set_index('date').sort_index()
+
+            if shop_prices.empty or len(shop_prices) < 2:
                 continue
 
-            for key in shop_record:
-                if key.endswith("Products"):
-                    product_group = shop_record[key]
-                    for product_key in product_group:
-                        if product_key.endswith("Price"):
-                            product_number = product_key.replace("Product ", "").replace(" Price", "")
-                            product_name_key = f"Product {product_number}"
+            # Fiyat değişimlerini bul
+            price_diff = shop_prices['price'].diff().fillna(0)
+            price_change_percentage = (price_diff / shop_prices['price'].shift(1)).fillna(0) * 100
 
-                            if product_name_key not in product_group:
-                                continue
+            significant_changes = price_change_percentage[abs(price_change_percentage) >= PRICE_CHANGE_THRESHOLD].index
 
-                            product_name = product_group[product_name_key]
-                            if product_name not in product_map:
-                                continue
+            if len(significant_changes) == 0:
+                continue
 
-                            shop_price = clean_price(product_group[product_key])
-                            base_price = product_map[product_name]
-                            percentage_diff = ((shop_price - base_price) / base_price) * 100
+            start_date = significant_changes[0]
+            end_date = significant_changes[1] if len(significant_changes) > 1 else shop_prices.index[-1]
 
-                            if percentage_diff > TOTAL_THRESHOLD_PERCENTAGE:
-                                # Üretici fiyat kontrolü
-                                manufacturer_collections = [name for name in db.list_collection_names() if product_name in name or name.endswith("Man")]
-                                responsible = "Unknown"
+            middle_date = find_middle_date(start_date, end_date)
 
-                                for manufacturer_name in manufacturer_collections:
-                                    manufacturer_record = db[manufacturer_name].find_one({"Date": current_date})
-                                    if not manufacturer_record:
-                                        continue
+            # Normal fiyat: tüm shoplardan alınacak
+            all_shops_prices = []
 
-                                    for mkey in manufacturer_record:
-                                        if mkey.endswith("Price") and manufacturer_record.get(f"Product {product_number}") == product_name:
-                                            manufacturer_price = clean_price(manufacturer_record[mkey])
-                                            reduced_price = manufacturer_price / (1 + MANUFACTURER_MARGIN / 100)
+            for s in shop_list:
+                s_df = fetch_price_data_from_shop(s, manufacturer, START_DATE, END_DATE)
+                if s_df.empty:
+                    continue
 
-                                            if reduced_price > base_price * 1.05:
-                                                responsible = "Manufacturer"
-                                            else:
-                                                responsible = "Shop"
-                                            break
-                                    if responsible != "Unknown":
-                                        break
+                s_product_data = s_df[(s_df['product_name'] == product) & (s_df['date'] == middle_date)]
+                if not s_product_data.empty:
+                    all_shops_prices.append(s_product_data['price'].values[0])
 
-                                if shop_name not in fraudulent_shops:
-                                    fraudulent_shops[shop_name] = {}
+            if not all_shops_prices:
+                continue
 
-                                if product_name not in fraudulent_shops[shop_name]:
-                                    fraudulent_shops[shop_name][product_name] = {
-                                        "dates": [],
-                                        "max_percentage_above": 0,
-                                        "responsible": responsible
-                                    }
+            avg_normal_price = np.mean(all_shops_prices)
 
-                                fraudulent_shops[shop_name][product_name]["dates"].append(str(current_date.date()))
-                                if percentage_diff > fraudulent_shops[shop_name][product_name]["max_percentage_above"]:
-                                    fraudulent_shops[shop_name][product_name]["max_percentage_above"] = round(percentage_diff, 2)
+            # Fraud shop middle date fiyatı
+            fraud_price_data = shop_df[(shop_df['product_name'] == product) & (shop_df['date'] == middle_date)]
+            if fraud_price_data.empty:
+                continue
 
-        current_date += timedelta(days=1)
+            fraud_price = fraud_price_data['price'].values[0]
 
-    return fraudulent_shops
+            # Fiyat farkı
+            price_diff = percentage_difference(avg_normal_price, fraud_price)
 
+            if price_diff >= PRICE_DIFF_THRESHOLD:
+                detected_frauds.append((product, avg_normal_price, fraud_price, start_date, end_date))
 
-# Örnek kullanım:
-if __name__ == "__main__":
-    result = detect_fraudulent_shops("2025-03-01", "2025-03-26")
+        if detected_frauds:
+            print(f"⚠️ Şüpheli fiyat tespit edildi:")
+            print(f"- Shop: {shop}")
+            for product, normal_price, fraud_price, start_date, end_date in detected_frauds:
+                print(
+                    f"  - Start Date: {start_date.date()} / End Date: {end_date.date()}\n"
+                    f"    Normal Product [{product}] Price: {normal_price:.2f} TL --> Fraud Product [{product}] Price: {fraud_price:.2f} TL"
+                )
 
-    import json
-    print(json.dumps(result, indent=2, ensure_ascii=False))
+print("\n=== COMPLETED FULL FRAUD REPORT ===\n")

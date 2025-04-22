@@ -171,30 +171,36 @@ def db_shop_dateInterval(manufacturer_name, shop_name, profit_percentage, start_
 
     print(f"🏁 All products processed for {shop_name} between {start_date.date()} and {end_date.date()}.")
 
-db_shop_dateInterval("CableMan", "IKEA", 13, start_date="2025-01-01", end_date="2025-04-20")
-db_shop_dateInterval("ToyMan", "IKEA", 13, start_date="2025-01-01", end_date="2025-04-20")
-db_shop_dateInterval("ELectricMan", "IKEA", 13, start_date="2025-01-01", end_date="2025-04-20")
-
-db_shop_dateInterval("CableMan", "KablocuAhmet", 5, start_date="2025-01-01", end_date="2025-04-20")
-
-db_shop_dateInterval("CableMan", "A101", 7, start_date="2025-01-01", end_date="2025-04-20")
-db_shop_dateInterval("ToyMan", "A101", 7, start_date="2025-01-01", end_date="2025-04-20")
-
-db_shop_dateInterval("CableMan", "MIGROS", 10, start_date="2025-01-01", end_date="2025-04-20")
-db_shop_dateInterval("ToyMan", "MIGROS", 10, start_date="2025-01-01", end_date="2025-04-20")
-db_shop_dateInterval("HomeELectricMan", "MIGROS", 10, start_date="2025-01-01", end_date="2025-04-20")
-
-db_shop_dateInterval("ToyMan", "ToyzSHop", 10, start_date="2025-01-01", end_date="2025-04-20")
-
-db_shop_dateInterval("ELectronicMan", "MediaMarkt", 15, start_date="2025-01-01", end_date="2025-04-20")
-db_shop_dateInterval("HomeELectricMan", "MediaMarkt", 15, start_date="2025-01-01", end_date="2025-04-20")
-
-db_shop_dateInterval("ELectronicMan", "Teknosa", 10, start_date="2025-01-01", end_date="2025-04-20")
-db_shop_dateInterval("HomeELectricMan", "Teknosa", 10, start_date="2025-01-01", end_date="2025-04-20")
-
-db_shop_dateInterval("ELectronicMan", "Vatan", 7, start_date="2025-01-01", end_date="2025-04-20")
-db_shop_dateInterval("HomeELectricMan", "Vatan", 7, start_date="2025-01-01", end_date="2025-04-20")
+# db_shop_dateInterval("CableMan", "IKEA", 13, start_date="2025-01-01", end_date="2025-04-20")
+# db_shop_dateInterval("ToyMan", "IKEA", 13, start_date="2025-01-01", end_date="2025-04-20")
+# db_shop_dateInterval("ELectricMan", "IKEA", 13, start_date="2025-01-01", end_date="2025-04-20")
+#
+# db_shop_dateInterval("CableMan", "KablocuAhmet", 5, start_date="2025-01-01", end_date="2025-04-20")
+#
+# db_shop_dateInterval("CableMan", "A101", 7, start_date="2025-01-01", end_date="2025-04-20")
+# db_shop_dateInterval("ToyMan", "A101", 7, start_date="2025-01-01", end_date="2025-04-20")
+#
+# db_shop_dateInterval("CableMan", "MIGROS", 10, start_date="2025-01-01", end_date="2025-04-20")
+# db_shop_dateInterval("ToyMan", "MIGROS", 10, start_date="2025-01-01", end_date="2025-04-20")
+# db_shop_dateInterval("HomeELectricMan", "MIGROS", 10, start_date="2025-01-01", end_date="2025-04-20")
+#
+# db_shop_dateInterval("ToyMan", "ToyzSHop", 10, start_date="2025-01-01", end_date="2025-04-20")
+#
+# db_shop_dateInterval("ELectronicMan", "MediaMarkt", 15, start_date="2025-01-01", end_date="2025-04-20")
+# db_shop_dateInterval("HomeELectricMan", "MediaMarkt", 15, start_date="2025-01-01", end_date="2025-04-20")
+#
+# db_shop_dateInterval("ELectronicMan", "Teknosa", 10, start_date="2025-01-01", end_date="2025-04-20")
+# db_shop_dateInterval("HomeELectricMan", "Teknosa", 10, start_date="2025-01-01", end_date="2025-04-20")
+#
+# db_shop_dateInterval("ELectronicMan", "Vatan", 7, start_date="2025-01-01", end_date="2025-04-20")
+# db_shop_dateInterval("HomeELectricMan", "Vatan", 7, start_date="2025-01-01", end_date="2025-04-20")
 
 # db_shop("HomeELectricMan", "YourElectrician", 5)
 # db_shop("HomeELectricMan", "MyElectrician", 5)
 # db_shop("HomeELectricMan", "HisElectrician", 5)
+
+db_shop_dateInterval("ELectricMan", "FraudShop", 5, start_date="2025-02-01", end_date="2025-03-31")
+# db_shop_dateInterval("ToyMan", "FraudShop", 5, start_date="2025-02-01", end_date="2025-02-28")
+# db_shop_dateInterval("ToyMan", "FraudShop", 5, start_date="2025-04-02", end_date="2025-04-20")
+# db_shop_dateInterval("CableMan", "FraudShop", 5, start_date="2025-03-02", end_date="2025-03-31")
+# db_shop_dateInterval("CableMan", "FraudShop", 5, start_date="2025-04-01", end_date="2025-04-20")
