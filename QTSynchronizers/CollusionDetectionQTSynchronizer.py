@@ -1,7 +1,7 @@
 # QTSynchronizers/CollusionDetectionQTSynchronizer.py
 
 from PySide6.QtCore import QObject, Slot, Property, QStringListModel, QThread
-from QTSynchronizers.CollusionWorker import CollusionWorker
+from QTSynchronizers.Workers.CollusionWorker import CollusionWorker
 
 class CollusionDetectionQTSynchronizer(QObject):
     def __init__(self, engine):
@@ -48,6 +48,9 @@ class CollusionDetectionQTSynchronizer(QObject):
         self.worker.finished.connect(self.worker.deleteLater)
         self.worker_thread.finished.connect(self.worker_thread.deleteLater)
 
+        # İşlem bittiğinde ek iş yapılacaksa (örneğin popup kapama)
+        self.worker.finished.connect(self._onWorkerFinished)
+
         # Thread çalışınca worker başlasın
         self.worker_thread.started.connect(self.worker.run)
 
@@ -76,3 +79,7 @@ class CollusionDetectionQTSynchronizer(QObject):
         if self.main_window:
             print("Showing main window...")
             self.main_window.show()
+
+    @Slot()
+    def _onWorkerFinished(self):
+        self.closePopup.emit()

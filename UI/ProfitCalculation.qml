@@ -12,7 +12,43 @@ ApplicationWindow {
 
     Component.onCompleted: {
         profitCalculationHandler.loadManufacturers()
-        profitCalculationHandler.loadUniqueShops()
+        profitCalculationHandler.closePopup.connect(loadingPopup.close)
+    }
+
+    // Loading Popup
+    Popup {
+        id: loadingPopup
+        modal: true
+        focus: true
+        dim: true
+        width: 300
+        height: 150
+        closePolicy: Popup.NoAutoClose
+        anchors.centerIn: parent
+
+        Rectangle {
+            anchors.fill: parent
+            color: "#002b36"
+            radius: 10
+
+            Column {
+                anchors.centerIn: parent
+                spacing: 10
+
+                BusyIndicator {
+                    running: true
+                }
+
+                Text {
+                    id: loadingText
+                    text: "Processing, please wait..."
+                    color: "white"
+                    font.pixelSize: 14
+                    wrapMode: Text.WordWrap
+                    horizontalAlignment: Text.AlignHCenter
+                }
+            }
+        }
     }
 
     ColumnLayout {
@@ -46,26 +82,34 @@ ApplicationWindow {
                 id: manufacturerCombo
                 Layout.fillWidth: true
                 model: profitCalculationHandler.manufacturerModel
+                textRole: "display"
                 contentItem: Text {
                     text: parent.currentText
-                    color: "white"
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
                 }
-                onCurrentIndexChanged: {
-                    profitCalculationHandler.loadShopsForManufacturer(manufacturerCombo.currentText)
+                onActivated: {
+                    console.log("Activated:", manufacturerCombo.currentText)
+                    if (manufacturerCombo.currentText !== "") {
+                        loadingText.text = "Loading shops for " + manufacturerCombo.currentText + "..."
+                        loadingPopup.open()
+                        profitCalculationHandler.loadShopsForManufacturer(manufacturerCombo.currentText)
+                    }
                 }
             }
-
             ComboBox {
                 id: shopCombo
                 Layout.fillWidth: true
                 model: profitCalculationHandler.shopModel
+                textRole: "display"
                 contentItem: Text {
                     text: parent.currentText
-                    color: "white"
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignHCenter
+                }
+                onActivated: {
+                    console.log("Selected shop:", shopCombo.currentText)
+                    // Eğer ileride bir işlem yapılacaksa burada çağrılır
                 }
             }
 

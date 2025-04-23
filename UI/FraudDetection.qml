@@ -3,16 +3,18 @@ import QtQuick.Controls 2.15
 import QtQuick.Layouts 1.15
 
 ApplicationWindow {
-    id: collusionDetectionWindow
+    id: fraudDetectionWindow
     visible: true
-    width: 1000
-    height: 700
-    title: "Collusion Detection"
+    width: 1200
+    height: 800
+    title: "Fraud Detection"
     color: "#003333"
 
     Connections {
-    target: collusionHandler
-    onClosePopup: loadingPopup.close()
+        target: FraudHandler
+        function onClosePopup() {
+            loadingPopup.close()
+        }
     }
 
     // Loading Popup
@@ -56,43 +58,58 @@ ApplicationWindow {
         spacing: 10
         anchors.margins: 20
 
-        // Üstte tarih inputları ve buton
-        RowLayout {
-            spacing: 10
+        GridLayout {
+            columns: 5
+            columnSpacing: 10
+            rowSpacing: 10
             Layout.fillWidth: true
 
+            // Row 1
+            Text { text: "Start Date:"; color: "white" }
             TextField {
                 id: startDateField
-                placeholderText: "Start Date (YYYY-MM-DD)"
+                placeholderText: "YYYY-MM-DD"
                 text: "2025-01-01"
-                Layout.preferredWidth: 200  // Daha dar
+                Layout.preferredWidth: 150
             }
-
-            TextField {
-                id: endDateField
-                placeholderText: "End Date (YYYY-MM-DD)"
-                text: "2025-04-20"
-                Layout.preferredWidth: 200  // Daha dar
-            }
-
             Button {
-                text: "Detect Collusion"
-                Layout.preferredWidth: 180  // Biraz dar
+                text: "Detect ML Fraud"
                 onClicked: {
-                    collusionHandler.detectCollusion(startDateField.text, endDateField.text)
+                    loadingText.text = "Working on Detect ML Fraud, please wait..."
+                    loadingPopup.open()
+                    FraudHandler.detectMLFraud(startDateField.text, endDateField.text)
                 }
             }
-
-            // Boşluk bırakıyoruz ➔ Sağdaki butonu ayırıyor
-            Item {
-                Layout.fillWidth: true
-            }
-
+            Item { Layout.fillWidth: true }
             Button {
                 text: "Main Menu"
+                onClicked: FraudHandler.goBackToMainMenu()
+            }
+
+            // Row 2
+            Text { text: "End Date:"; color: "white" }
+            TextField {
+                id: endDateField
+                placeholderText: "YYYY-MM-DD"
+                text: "2025-04-20"
                 Layout.preferredWidth: 150
+            }
+            Button {
+                text: "Detect Rule-Based Fraud"
                 onClicked: {
-                    collusionHandler.goBackToMainMenu()
+                    //loadingText.text = "Working on Detect Rule-Based Fraud, please wait..."
+                    //loadingPopup.open()
+                    FraudHandler.detectRuleFraud(startDateField.text, endDateField.text, maxProfitField.text)
+                }
+            }
+            RowLayout {
+                spacing: 5
+                Text { text: "Maks Profit:"; color: "white" }
+                TextField {
+                    id: maxProfitField
+                    placeholderText: "%"
+                    text: "6"
+                    Layout.preferredWidth: 30
                 }
             }
         }
@@ -115,7 +132,7 @@ ApplicationWindow {
                     anchors.right: parent.right
 
                     Repeater {
-                        model: collusionHandler.outputModel
+                        model: FraudHandler.outputModel
 
                         Text {
                             text: model.display
@@ -129,4 +146,6 @@ ApplicationWindow {
             }
         }
     }
+
+    Component.onCompleted: FraudHandler.closePopup.connect(loadingPopup.close)
 }

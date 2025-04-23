@@ -2,11 +2,12 @@ from PySide6.QtCore import QObject, Slot, QUrl
 import os
 
 class Backend(QObject):
-    def __init__(self, engine, dynamicHandler, collusionHandler, profitCalculationHandler):
+    def __init__(self, engine, dynamicHandler, collusionHandler, FraudHandler, profitCalculationHandler):
         super().__init__()
         self.engine = engine
         self.dynamicHandler = dynamicHandler
         self.collusionHandler = collusionHandler
+        self.FraudHandler = FraudHandler
         self.profitCalculationHandler = profitCalculationHandler
         self.main_window = None
         self.feature_windows = {}
@@ -39,6 +40,7 @@ class Backend(QObject):
         qml_file_map = {
             1: "DynamicProductHandling.qml",
             2: "ProfitCalculation.qml",
+            5: "FraudDetection.qml",
             4: "CollusionDetection.qml"
         }
 
@@ -64,6 +66,8 @@ class Backend(QObject):
                 self.collusionHandler.collusion_window = new_window
             if feature_id == 2:
                 self.profitCalculationHandler.profitCalculation_window = new_window
+            if feature_id == 5:
+                self.FraudHandler.fraud_window = new_window
         else:
             print(f"Feature {feature_id} yüklenemedi!")
 

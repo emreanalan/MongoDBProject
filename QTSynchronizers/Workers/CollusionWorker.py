@@ -1,11 +1,10 @@
-# QTSynchronizers/CollusionWorker.py
-
 from PySide6.QtCore import QObject, Signal, Slot
 import pandas as pd
 import sys
 import os
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Build')))
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..', 'Build')))
 from DataRetrieval import fetch_all_manufacturers, fetch_shops_for_manufacturer, fetch_price_data_from_shop, fetch_manufacturer_data
 from ShopFeatureEngineering import detect_real_leader_follower, calculate_profit_relative_to_manufacturer
 
@@ -37,11 +36,27 @@ class CollusionWorker(QObject):
             change_dates_dict = {}
             all_profit_series = {}
 
-            for shop in shop_list:
-                shop_df = fetch_price_data_from_shop(shop, manufacturer, self.start_date, self.end_date)
-                manufacturer_df = fetch_manufacturer_data(manufacturer, self.start_date, self.end_date)
+            manufacturer_df = fetch_manufacturer_data(manufacturer, self.start_date, self.end_date)
+            if manufacturer_df.empty:
+                continue
 
-                if shop_df.empty or manufacturer_df.empty:
+            # === Shop verilerini paralel olarak çek ===
+            shop_data_cache = {}
+            with ThreadPoolExecutor() as executor:
+                future_to_shop = {
+                    executor.submit(fetch_price_data_from_shop, shop, manufacturer, self.start_date, self.end_date): shop
+                    for shop in shop_list
+                }
+                for future in as_completed(future_to_shop):
+                    shop = future_to_shop[future]
+                    try:
+                        shop_data_cache[shop] = future.result()
+                    except Exception as e:
+                        self.newOutput.emit(f"{shop} verisi çekilirken hata: {e}")
+                        shop_data_cache[shop] = pd.DataFrame()
+
+            for shop, shop_df in shop_data_cache.items():
+                if shop_df.empty:
                     continue
 
                 profit_series = calculate_profit_relative_to_manufacturer(shop_df, manufacturer_df)
