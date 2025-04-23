@@ -5,8 +5,8 @@ import QtQuick.Layouts 1.15
 ApplicationWindow {
     id: collusionDetectionWindow
     visible: true
-    width: 1000
-    height: 700
+    width: 1200
+    height: 1000
     title: "Collusion Detection"
     color: "#003333"
 

@@ -59,7 +59,7 @@ ApplicationWindow {
         // === ÜSTTE İKİ SATIR (2 Row, 5 Column GridLayout) ===
         GridLayout {
             id: topGrid
-            columns: 5
+            columns: 6
             rowSpacing: 10
             columnSpacing: 10
             Layout.fillWidth: true
@@ -89,7 +89,6 @@ ApplicationWindow {
                     horizontalAlignment: Text.AlignHCenter
                 }
                 onActivated: {
-                    console.log("Activated:", manufacturerCombo.currentText)
                     if (manufacturerCombo.currentText !== "") {
                         loadingText.text = "Loading shops for " + manufacturerCombo.currentText + "..."
                         loadingPopup.open()
@@ -97,6 +96,7 @@ ApplicationWindow {
                     }
                 }
             }
+
             ComboBox {
                 id: shopCombo
                 Layout.fillWidth: true
@@ -108,16 +108,31 @@ ApplicationWindow {
                     horizontalAlignment: Text.AlignHCenter
                 }
                 onActivated: {
-                    console.log("Selected shop:", shopCombo.currentText)
-                    // Eğer ileride bir işlem yapılacaksa burada çağrılır
+                    if (shopCombo.currentText !== "") {
+                        loadingText.text = "Loading products for " + shopCombo.currentText + "..."
+                        loadingPopup.open()
+                        profitCalculationHandler.loadProductsForShop(manufacturerCombo.currentText, shopCombo.currentText)
+                    }
+                }
+            }
+
+            ComboBox {
+                id: productCombo
+                Layout.fillWidth: true
+                model: profitCalculationHandler.productModel
+                textRole: "display"
+                contentItem: Text {
+                    text: parent.currentText
+                    verticalAlignment: Text.AlignVCenter
+                    horizontalAlignment: Text.AlignHCenter
                 }
             }
 
             Button {
-                text: "General Stats"
+                text: "Main Menu"
                 Layout.fillWidth: true
                 onClicked: {
-                    profitCalculationHandler.showGeneralStats()
+                    profitCalculationHandler.goBackToMainMenu()
                 }
             }
 
@@ -136,7 +151,7 @@ ApplicationWindow {
             }
 
             Button {
-                text: "Calculate Manufacturer Profit"
+                text: "Manufacturer Stats"
                 Layout.fillWidth: true
                 onClicked: {
                     profitCalculationHandler.calculateProfitForManufacturer(
@@ -148,7 +163,7 @@ ApplicationWindow {
             }
 
             Button {
-                text: "Calculate Shop Profit"
+                text: "Shop Stats"
                 Layout.fillWidth: true
                 onClicked: {
                     profitCalculationHandler.calculateProfitForShop(
@@ -161,10 +176,24 @@ ApplicationWindow {
             }
 
             Button {
-                text: "Main Menu"
+                text: "Product Stats"
                 Layout.fillWidth: true
                 onClicked: {
-                    profitCalculationHandler.goBackToMainMenu()
+                    profitCalculationHandler.showProductStats(
+                        startDateField.text,
+                        endDateField.text,
+                        manufacturerCombo.currentText,
+                        shopCombo.currentText,
+                        productCombo.currentText
+                    )
+                }
+            }
+
+            Button {
+                text: "General Stats"
+                Layout.fillWidth: true
+                onClicked: {
+                    profitCalculationHandler.showGeneralStats()
                 }
             }
         }
@@ -181,20 +210,39 @@ ApplicationWindow {
                 anchors.fill: parent
                 clip: true
 
-                ListView {
-                    id: outputListView
+                Column {
                     width: parent.width
-                    model: profitCalculationHandler.outputModel
+                    spacing: 8
 
-                    delegate: Text {
-                        text: model.display
-                        color: "White"
-                        wrapMode: Text.WrapAnywhere
-                        font.pixelSize: 14
+                    // TEXT ÇIKTILARI
+                    ListView {
+                        id: outputListView
+                        width: parent.width
+                        model: profitCalculationHandler.outputModel
+                        delegate: Text {
+                            text: model.display
+                            color: "White"
+                            wrapMode: Text.WrapAnywhere
+                            font.pixelSize: 14
+                            anchors.horizontalCenter: parent.horizontalCenter
+                        }
+                    }
+
+                    // GRAFİK GÖRSELİ
+                    Image {
+                        id: chartView
+                        source: chartImagePath
+                        visible: chartImagePath !== ""
+                        fillMode: Image.PreserveAspectFit
+                        width: parent.width
+                        height: 400
                         anchors.horizontalCenter: parent.horizontalCenter
+                        cache: false
                     }
                 }
             }
         }
+
+
     }
 }

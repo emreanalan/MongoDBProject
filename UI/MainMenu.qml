@@ -20,7 +20,7 @@ ApplicationWindow {
         Repeater {
             model: ListModel {
                 ListElement { name: "Dynamic Product Handling"; idNum: 1 }
-                ListElement { name: "Profit Calculation"; idNum: 2 }
+                ListElement { name: "General Stats"; idNum: 2 }
                 ListElement { name: "Shop Management"; idNum: 3 }
                 ListElement { name: "Collusion Detection"; idNum: 4 }
                 ListElement { name: "Fraud Detection"; idNum: 5 }

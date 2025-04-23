@@ -6,7 +6,6 @@ client = pymongo.MongoClient(
     "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client["Final_Project"]
 
-collection = db["your_collection_name"]
 # collection_names = db.list_collection_names()
 #
 # for collection_name in collection_names:
@@ -399,8 +398,6 @@ def find_profit_changes_with_magnitude(shop_name, manufacturer_name, start_date,
 
     return changes
 
-
-
 def fetch_price_data_all_shops_products():
     """
     Tüm üreticilerin shoplarındaki ürün fiyat verilerini toplar.
@@ -424,6 +421,29 @@ def fetch_price_data_all_shops_products():
 
     df = pd.DataFrame(all_data)
     return df
+
+def fetch_products_for_shop(manufacturer_name, shop_name):
+    """
+    Verilen mağazaya (koleksiyon) ve üreticiye göre, o üreticiye ait ürün isimlerini döndürür.
+    """
+
+    if shop_name not in db.list_collection_names():
+        return []
+
+    collection = db[shop_name]
+
+    # Örnek: "CableMan Products" gibi nested bir key olacak şekilde eriş
+    manufacturer_key = f"{manufacturer_name} Products"
+
+    products = set()
+
+    for doc in collection.find({manufacturer_key: {"$exists": True}}, {manufacturer_key: 1}):
+        prod_block = doc.get(manufacturer_key, {})
+        for key, value in prod_block.items():
+            if "Product" in key and "Price" not in key:
+                products.add(value)
+
+    return list(products)
 
 # start_date = "2025-01-01"
 # end_date = "2025-04-20"
