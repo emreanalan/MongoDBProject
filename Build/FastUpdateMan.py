@@ -1,11 +1,12 @@
 import pymongo
+import random
 
 client = pymongo.MongoClient(
     "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 )
 
-db = client["Final_Project"]
-
+db = client["DataSet"]
+profit_percentage = random.randint(2, 12)
 def get_last_inserted_date(collection):
     last_record = collection.find_one(sort=[("Date", pymongo.DESCENDING)])
     if last_record:
@@ -93,10 +94,18 @@ def manufacturerProductionRate(manufacturer_name, production_rate, *product_name
     db_manufacturer(manufacturer_name, profit_percentage, *product_names)
 #db_manufacturer("CableMan", "low", "CopperCable 1m", "GoldCable 1m", "USBCable", "SilverCable 1m")
 
-db_manufacturer("CableMan", 15, "CopperCable 1m", "GoldCable 1m", "USBCable", "SilverCable 1m")
-db_manufacturer("CableMan2", 10, "CopperCable 1m", "GoldCable 1m", "USBCable", "SilverCable 1m")
-db_manufacturer("CableMan3", 20, "CopperCable 1m", "GoldCable 1m", "USBCable", "SilverCable 1m")
-db_manufacturer("ToyMan", 10, "Toy_Car", "Toy_AliminumGun", "Toy_TeddyBear", "GamePad")
-db_manufacturer("ELectronicMan", 15, "Laptop", "Smartphone", "Tablet", "Smart Watch", "Gaming Mouse", "Television", "Camera")
-db_manufacturer("HomeELectricMan", 10, "Electric Fan", "Microwave", "Vacuum Cleaner", "Air Conditioner", "Refrigerator", "Electric Kettle", "Blender")
-db_manufacturer("ELectricMan", 15, "Printer")
+# db_manufacturer("CableMan", 15, "CopperCable 1m", "GoldCable 1m", "USBCable", "SilverCable 1m")
+# db_manufacturer("CableMan2", 10, "CopperCable 1m", "GoldCable 1m", "USBCable", "SilverCable 1m")
+# db_manufacturer("CableMan3", 20, "CopperCable 1m", "GoldCable 1m", "USBCable", "SilverCable 1m")
+# db_manufacturer("ToyMan", 10, "Toy_Car", "Toy_AliminumGun", "Toy_TeddyBear", "GamePad")
+# db_manufacturer("ELectronicMan", 15, "Laptop", "Smartphone", "Tablet", "Smart Watch", "Gaming Mouse", "Television", "Camera")
+# db_manufacturer("HomeELectricMan", 10, "Electric Fan", "Microwave", "Vacuum Cleaner", "Air Conditioner", "Refrigerator", "Electric Kettle", "Blender")
+# db_manufacturer("ELectricMan", 15, "Printer")
+
+all_products = [f"Product {i}" for i in range(1, 501)]
+
+for i in range(25):
+    manufacturer_name = f"Man{i+1}"
+    assigned_products = all_products[i*20 : (i+1)*20]
+    profit_percentage = random.randint(2, 12)
+    db_manufacturer(manufacturer_name, profit_percentage, *assigned_products)

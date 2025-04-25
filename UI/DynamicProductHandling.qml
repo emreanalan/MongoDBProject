@@ -154,15 +154,6 @@ ApplicationWindow {
     // COMPONENTS ==========================
 
     Component {
-        id: addProductForm
-        Label {
-            text: "Add Product Screen"
-            color: "white"
-            anchors.centerIn: parent
-        }
-    }
-
-    Component {
         id: addManufacturerForm
         Label {
             text: "Add Manufacturer Screen"
@@ -312,5 +303,114 @@ ApplicationWindow {
 
         }
     }
+/*
+    Component {
+        id: addProductForm
 
+        Rectangle {
+            color: "#004d40"
+            anchors.fill: parent
+            property var materialInputs: {}
+
+            ColumnLayout {
+                anchors.fill: parent
+                anchors.margins: 20
+                spacing: 10
+
+                Label {
+                    text: "Product Name:"
+                    color: "white"
+                }
+
+                TextField {
+                    id: productNameField
+                    placeholderText: "Enter product name..."
+                    Layout.fillWidth: true
+                }
+
+                Flickable {
+                    Layout.fillWidth: true
+                    Layout.fillHeight: true
+                    minimumHeight: 300
+                    contentHeight: columnContent.height
+                    clip: true
+
+                    Column {
+                        id: columnContent
+                        spacing: 10
+                        Layout.fillWidth: true
+
+                        property var materials: [
+                            "Aluminum 1Kg", "Copper 1Kg", "Gold 1Kg", "Silver 1Kg",
+                            "Ham_Petrol_Fiyati 1L", "Elektrik_Ucreti 1kW", "Asgari_Ucret 1 iş günü",
+                            "Dogal_Gaz 100m^3", "USD", "EUR"
+                        ]
+
+                        Repeater {
+                            model: materials
+                            delegate: RowLayout {
+                                spacing: 10
+                                Label {
+                                    text: modelData
+                                    color: "white"
+                                    width: 200
+                                }
+
+                                TextField {
+                                    id: tf
+                                    width: 100
+                                    placeholderText: "0.0"
+                                    inputMethodHints: Qt.ImhFormattedNumbersOnly
+
+                                    Component.onCompleted: {
+                                        addProductForm.materialInputs[modelData] = tf
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+                RowLayout {
+                    Layout.alignment: Qt.AlignRight
+                    spacing: 10
+
+                    BusyIndicator {
+                        id: loadingIndicator
+                        running: false
+                        visible: false
+                    }
+
+                    Button {
+                        text: "Create Product"
+                        onClicked: {
+                            let productName = productNameField.text.trim();
+                            if (productName === "") {
+                                console.log("Product name is required.");
+                                return;
+                            }
+
+                            let materials = {};
+                            for (let key in addProductForm.materialInputs) {
+                                let value = parseFloat(addProductForm.materialInputs[key].text);
+                                if (!isNaN(value)) {
+                                    materials[key] = value;
+                                }
+                            }
+
+                            loadingIndicator.running = true;
+                            loadingIndicator.visible = true;
+
+                            dynamicHandler.createProduct(productName, materials);
+
+                            Qt.callLater(() => {
+                                loadingIndicator.running = false;
+                                loadingIndicator.visible = false;
+                            });
+                        }
+                    }
+                }
+            }
+        }
+    } */
 }

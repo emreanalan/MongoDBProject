@@ -8,13 +8,14 @@ client = pymongo.MongoClient(
     "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 
 # Step 2: Select your database and collection for each commodity
-db = client["Final_Project"]
+db = client["DataSet"]
 
 collections = {
     "Gold": db["Gold/TRY"],
     "Copper": db["Copper/TRY"],
     "Aluminum": db["Aluminum/TRY"],
-    "Silver": db["Silver/TRY"]
+    "Silver": db["Silver/TRY"],
+    "Brent": db["Brent/TRY"]
 }
 
 # Commodity Tickers
@@ -22,7 +23,8 @@ tickers = {
     "Gold": "GC=F",      # Gold (Global prices in USD per ounce)
     "Copper": "HG=F",    # Copper (Global prices in USD per pound)
     "Aluminum": "ALI=F", # Aluminum (Global prices in USD per ton)
-    "Silver": "SI=F"     # Silver (Global prices in USD per ounce)
+    "Silver": "SI=F",    # Silver (Global prices in USD per ounce)
+    "Brent": "BZ=F"
 }
 
 # Step 3: Fetch the current USD/TRY exchange rate
@@ -68,7 +70,7 @@ def fetch_and_insert_data(commodity, ticker, usd_to_try):
             new_data = commodity_history  # No records in DB, insert everything
 
         # Step 6: Generate a complete date range for the last year
-        date_range = pd.date_range(start=datetime.now() - pd.DateOffset(years=1), end=datetime.now())
+        date_range = pd.date_range(start=datetime(2025, 1, 1), end=datetime.now())
 
         # Step 7: Prepare the new data, filling missing dates with the last available price
         if not new_data.empty:
@@ -92,6 +94,8 @@ def fetch_and_insert_data(commodity, ticker, usd_to_try):
                         record['Price'] = f"{(latest_price / 0.453592 * usd_to_try):,.2f} TL"
                     elif commodity == "Silver":
                         record['Price'] = f"{(latest_price * 32.1507 * usd_to_try):,.2f} TL"
+                    elif commodity == "Brent":
+                        record['Price'] = f"{(latest_price * usd_to_try):,.2f} TL"
                     else:
                         record['Price'] = f"{(latest_price / 1000 * usd_to_try):,.2f} TL"
 

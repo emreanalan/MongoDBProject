@@ -6,6 +6,7 @@ import os
 # DataRetrieval dosyasını Build klasöründen çekiyoruz
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'Build')))
 from DataRetrieval import fetch_all_manufacturers, fetch_manufacturer_data, fetch_shops_for_manufacturer, fetch_all_manufacturers
+from Production import insert_daily_costs
 
 class DynamicProductHandlingQTSynchronizer(QObject):
     def __init__(self, engine):
@@ -104,4 +105,17 @@ class DynamicProductHandlingQTSynchronizer(QObject):
 
         self._productListModel.setStringList(unique_shops)
 
+    @Slot("QVariantMap")
+    def createProduct(self, product_name, material_dict):
+        print("Creating product with materials:")
+        for key, value in material_dict.items():
+            print(f"  {key}: {value}")
+
+        # Burada kullanıcıdan ürün adı isteyebilirsin (şimdilik örnek):
+        product_name = "Custom_Product"
+
+        # insert_daily_costs fonksiyonu çağrılıyor
+        insert_daily_costs(product_name, material_dict)
+
+        print(f"Product '{product_name}' successfully inserted.")
 
