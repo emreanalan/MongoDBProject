@@ -4,7 +4,10 @@ from datetime import datetime, timedelta
 
 # MongoDB bağlantısı
 client = pymongo.MongoClient(
-    "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    serverSelectionTimeoutMS=300000,  # 5 dakika
+    socketTimeoutMS=600000,            # 10 dakika
+    connectTimeoutMS=300000
 )
 db = client["DataSet"]
 
@@ -43,7 +46,7 @@ all_dates = [start_date + timedelta(days=i) for i in range(115)]
 # === 4. Shop DataSet Oluşturma ===
 print("🚀 ShopsDataSet oluşturuluyor...\n")
 
-for shop_num in range(1, 91):
+for shop_num in range(341, 371):
     shop_name = f"Shop {shop_num}"
     shop_collection = db[shop_name]
 

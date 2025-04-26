@@ -173,7 +173,10 @@ from copy import deepcopy
 
 # === MongoDB Bağlantısı === #
 client = pymongo.MongoClient(
-    "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    serverSelectionTimeoutMS=300000,  # 5 dakika
+    socketTimeoutMS=600000,            # 10 dakika
+    connectTimeoutMS=300000
 )
 db = client["DataSet"]
 
@@ -235,7 +238,7 @@ def create_collusion_groups(shop_start, shop_end):
     return groups
 
 # === COLLUSION GROUPS OLUŞTUR === #
-collusion_groups = create_collusion_groups(91, 160)
+collusion_groups = create_collusion_groups(371, 400)
 
 # === Collusion Shop Verileri Üret === #
 print("🚀 Collusion ShopsDataSet oluşturuluyor...\n")
@@ -360,7 +363,11 @@ for group_num, group_shops in enumerate(collusion_groups, start=1):
 
             follower_bulk_ops.append(pymongo.UpdateOne({"Date": current_date}, {"$set": doc}, upsert=True))
 
-        db[follower_shop].bulk_write(follower_bulk_ops)
+        # === Bulk Write işlemini küçük parçalara ayır ===
+        batch_size = 30  # Maksimum 30 işlem bir seferde
+        for i in range(0, len(follower_bulk_ops), batch_size):
+            batch = follower_bulk_ops[i:i + batch_size]
+            db[follower_shop].bulk_write(batch)
 
 print("\n✅ Tüm Collusion Shops başarıyla ultra hızlı oluşturuldu!")
 
