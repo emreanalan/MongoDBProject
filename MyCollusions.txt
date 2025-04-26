@@ -1,0 +1,111 @@
+"C:\Users\emrea\Desktop\FINAL PROJECT\mongodb_env\Scripts\python.exe" "C:\Users\emrea\Desktop\FINAL PROJECT\MongoDBProject\Build\CollusionShopsDataSet.py"
+🚀 Collusion Grubu: Shop 126 ➔ ['Shop 144', 'Shop 153']
+
+Shop 126 collusion grubu --> ['Man10', 'Man17']
+Delayler: {'Shop 144': 1, 'Shop 153': 3}
+Zam Günleri: ['2025-01-15', '2025-02-04', '2025-02-15', '2025-03-06', '2025-03-23']
+✅ Shop 126 grubu tamamlandı.
+🚀 Collusion Grubu: Shop 115 ➔ ['Shop 134', 'Shop 122', 'Shop 98', 'Shop 104']
+
+Shop 115 collusion grubu --> ['Man1', 'Man15']
+Delayler: {'Shop 134': 4, 'Shop 122': 7, 'Shop 98': 7, 'Shop 104': 1}
+Zam Günleri: ['2025-01-11', '2025-02-02', '2025-03-31', '2025-04-14']
+✅ Shop 115 grubu tamamlandı.
+🚀 Collusion Grubu: Shop 109 ➔ ['Shop 138', 'Shop 110', 'Shop 100', 'Shop 159']
+
+Shop 109 collusion grubu --> ['Man10', 'Man23', 'Man25']
+Delayler: {'Shop 138': 5, 'Shop 110': 1, 'Shop 100': 6, 'Shop 159': 4}
+Zam Günleri: ['2025-02-06', '2025-02-24', '2025-03-06', '2025-03-20', '2025-03-29']
+✅ Shop 109 grubu tamamlandı.
+🚀 Collusion Grubu: Shop 146 ➔ ['Shop 113', 'Shop 137']
+
+Shop 146 collusion grubu --> ['Man2', 'Man9']
+Delayler: {'Shop 113': 5, 'Shop 137': 7}
+Zam Günleri: ['2025-02-25', '2025-03-19', '2025-03-31', '2025-04-15', '2025-04-23']
+✅ Shop 146 grubu tamamlandı.
+🚀 Collusion Grubu: Shop 139 ➔ ['Shop 118', 'Shop 106', 'Shop 97', 'Shop 94']
+
+Shop 139 collusion grubu --> ['Man21', 'Man18']
+Delayler: {'Shop 118': 5, 'Shop 106': 4, 'Shop 97': 2, 'Shop 94': 1}
+Zam Günleri: ['2025-01-09', '2025-01-18', '2025-02-19', '2025-03-12', '2025-04-11']
+✅ Shop 139 grubu tamamlandı.
+🚀 Collusion Grubu: Shop 116 ➔ ['Shop 148', 'Shop 156', 'Shop 99', 'Shop 143']
+
+Shop 116 collusion grubu --> ['Man13', 'Man7']
+Delayler: {'Shop 148': 3, 'Shop 156': 4, 'Shop 99': 7, 'Shop 143': 3}
+Zam Günleri: ['2025-01-27', '2025-02-16', '2025-03-22', '2025-04-07']
+✅ Shop 116 grubu tamamlandı.
+🚀 Collusion Grubu: Shop 112 ➔ ['Shop 160', 'Shop 141']
+
+Shop 112 collusion grubu --> ['Man22', 'Man12']
+Delayler: {'Shop 160': 3, 'Shop 141': 1}
+Zam Günleri: ['2025-02-09', '2025-03-04', '2025-03-17', '2025-04-09']
+✅ Shop 112 grubu tamamlandı.
+🚀 Collusion Grubu: Shop 124 ➔ ['Shop 145', 'Shop 96', 'Shop 135']
+
+Shop 124 collusion grubu --> ['Man24', 'Man13', 'Man4']
+Delayler: {'Shop 145': 5, 'Shop 96': 1, 'Shop 135': 4}
+Zam Günleri: ['2025-01-20', '2025-02-16', '2025-02-25', '2025-03-16', '2025-04-02', '2025-04-22']
+✅ Shop 124 grubu tamamlandı.
+🚀 Collusion Grubu: Shop 151 ➔ ['Shop 149', 'Shop 93', 'Shop 123']
+
+Shop 151 collusion grubu --> ['Man21', 'Man23', 'Man11']
+Delayler: {'Shop 149': 4, 'Shop 93': 7, 'Shop 123': 3}
+Zam Günleri: ['2025-01-28', '2025-02-15', '2025-03-08', '2025-03-29', '2025-04-10', '2025-04-19']
+✅ Shop 151 grubu tamamlandı.
+🚀 Collusion Grubu: Shop 140 ➔ ['Shop 136', 'Shop 142']
+
+Shop 140 collusion grubu --> ['Man4', 'Man25', 'Man23']
+Delayler: {'Shop 136': 1, 'Shop 142': 6}
+Zam Günleri: ['2025-01-19', '2025-03-24', '2025-04-01', '2025-04-13']
+✅ Shop 140 grubu tamamlandı.
+🚀 Collusion Grubu: Shop 131 ➔ ['Shop 92', 'Shop 108', 'Shop 158']
+
+Shop 131 collusion grubu --> ['Man6', 'Man14', 'Man21']
+Delayler: {'Shop 92': 1, 'Shop 108': 1, 'Shop 158': 6}
+Zam Günleri: ['2025-01-21', '2025-02-27', '2025-03-27', '2025-04-05']
+✅ Shop 131 grubu tamamlandı.
+🚀 Collusion Grubu: Shop 119 ➔ ['Shop 132', 'Shop 154']
+
+Shop 119 collusion grubu --> ['Man6', 'Man15']
+Delayler: {'Shop 132': 7, 'Shop 154': 4}
+Zam Günleri: ['2025-01-15', '2025-02-18', '2025-03-26']
+✅ Shop 119 grubu tamamlandı.
+🚀 Collusion Grubu: Shop 129 ➔ ['Shop 127', 'Shop 117', 'Shop 120']
+
+Shop 129 collusion grubu --> ['Man12', 'Man17', 'Man19']
+Delayler: {'Shop 127': 6, 'Shop 117': 3, 'Shop 120': 5}
+Zam Günleri: ['2025-01-22', '2025-01-31', '2025-02-09', '2025-02-18', '2025-03-07', '2025-03-27']
+✅ Shop 129 grubu tamamlandı.
+🚀 Collusion Grubu: Shop 101 ➔ ['Shop 121', 'Shop 155', 'Shop 105']
+
+Shop 101 collusion grubu --> ['Man16', 'Man19']
+Delayler: {'Shop 121': 2, 'Shop 155': 7, 'Shop 105': 3}
+Zam Günleri: ['2025-01-24', '2025-02-25', '2025-03-08', '2025-03-16', '2025-04-01', '2025-04-19']
+✅ Shop 101 grubu tamamlandı.
+🚀 Collusion Grubu: Shop 103 ➔ ['Shop 114', 'Shop 147']
+
+Shop 103 collusion grubu --> ['Man8', 'Man9']
+Delayler: {'Shop 114': 7, 'Shop 147': 3}
+Zam Günleri: ['2025-01-16', '2025-02-02', '2025-03-22', '2025-04-07', '2025-04-19']
+✅ Shop 103 grubu tamamlandı.
+🚀 Collusion Grubu: Shop 91 ➔ ['Shop 152', 'Shop 133']
+
+Shop 91 collusion grubu --> ['Man16', 'Man2']
+Delayler: {'Shop 152': 4, 'Shop 133': 2}
+Zam Günleri: ['2025-01-09', '2025-02-18', '2025-03-02', '2025-03-19', '2025-04-02', '2025-04-20']
+✅ Shop 91 grubu tamamlandı.
+🚀 Collusion Grubu: Shop 128 ➔ ['Shop 107', 'Shop 111', 'Shop 102', 'Shop 150']
+
+Shop 128 collusion grubu --> ['Man7', 'Man18']
+Delayler: {'Shop 107': 2, 'Shop 111': 1, 'Shop 102': 7, 'Shop 150': 2}
+Zam Günleri: ['2025-01-08', '2025-02-26', '2025-03-20']
+✅ Shop 128 grubu tamamlandı.
+🚀 Collusion Grubu: Shop 125 ➔ ['Shop 157', 'Shop 130']
+
+Shop 125 collusion grubu --> ['Man13', 'Man20']
+Delayler: {'Shop 157': 7, 'Shop 130': 5}
+Zam Günleri: ['2025-01-08', '2025-02-03', '2025-02-21', '2025-03-20', '2025-04-10']
+✅ Shop 125 grubu tamamlandı.
+
+Process finished with exit code 0

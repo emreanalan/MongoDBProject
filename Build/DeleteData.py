@@ -51,7 +51,7 @@ def delete_date_range(collection_name, start_date_str, end_date_str):
 
 
 # Product 1'den Product 500'e kadar olan collectionları sil
-for i in range(31, 40):
+for i in range(1, 161):
     collection_name = f"Shop {i}"
     if collection_name in db.list_collection_names():
         db.drop_collection(collection_name)

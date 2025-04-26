@@ -1,5 +1,6 @@
 import pymongo
-from datetime import timedelta
+from datetime import datetime, timedelta
+import random
 
 # MongoDB bağlantısı
 client = pymongo.MongoClient(
@@ -426,13 +427,54 @@ def full_collusion_test_based_on_leader_price_change(leader_shop, follower_shops
 
     print("\n✅ PRICE-CHANGE-BASED Full Test Tamamlandı.")
 
+def detect_price_changes(shop_col):
+    records = list(shop_col.find({}).sort("Date", 1))
+    previous_prices = {}
+    changes = []
 
+    for record in records:
+        date = record["Date"]
+
+        for manu_key in [k for k in record.keys() if k.endswith("Products")]:
+            products = record[manu_key]
+            product_numbers = sorted(
+                [int(k.split()[1]) for k in products.keys() if k.startswith("Product ") and "Price" not in k]
+            )
+
+            for num in product_numbers:
+                pname = products.get(f"Product {num}")
+                pprice_str = products.get(f"Product {num} Price")
+
+                if not pname or not pprice_str:
+                    continue
+
+                pprice = float(pprice_str.replace(",", "").replace(" TL", ""))
+
+                if pname not in previous_prices:
+                    previous_prices[pname] = pprice
+                    continue
+
+                last_price = previous_prices[pname]
+
+                if abs(pprice - last_price) > 0.01:
+                    changes.append((date, pname))
+                    previous_prices[pname] = pprice
+
+    return changes
+
+# === Gelişmiş Full Collusion Test Fonksiyonu ===
 def advanced_full_collusion_test(leader_shop, follower_shops, follower_delays):
     """
     Lider ve followerların tüm price change günlerini bulur ve delay uyumluluğunu kontrol eder.
     """
 
-    # --- Bağlantılar ---
+    # --- MongoDB bağlantısı (BU şart!) ---
+    client = pymongo.MongoClient(
+        "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    )
+    db = client["DataSet"]
+
+    # --- Koleksiyonlar ---
     leader_col = db[leader_shop]
     follower_cols = {shop: db[shop] for shop in follower_shops}
 
@@ -474,43 +516,112 @@ def advanced_full_collusion_test(leader_shop, follower_shops, follower_delays):
 
     print("\n✅ Gelişmiş Full Collusion Testi Tamamlandı.")
 
-def detect_price_changes(collection):
-    """
-    Verilen shop collection'ı için ürün bazında price change günlerini bulur.
-    Dönüş: [(date, product_name), ...]
-    """
+
+def test_shop_prices(shop_name):
+    client = pymongo.MongoClient(
+        "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    )
+    db = client["DataSet"]
+    shop_col = db[shop_name]
+
+    print(f"\n📋 Test Başlıyor: {shop_name}\n{'='*50}\n")
+
+    # Tüm veriyi çekelim
+    all_records = list(shop_col.find({}).sort("Date", 1))
+
+    # Ürün bazlı son fiyatı saklıyoruz
     previous_prices = {}
-    changes = []
 
-    dates = list(collection.find({}, {"Date": 1}).sort("Date", 1))
-    dates = [d["Date"] for d in dates]
+    for record in all_records:
+        date = record["Date"].strftime("%Y-%m-%d")
 
-    for date in dates:
-        doc = collection.find_one({"Date": date})
-        if not doc:
-            continue
+        for manu_key in [k for k in record.keys() if k.endswith("Products")]:
+            products = record[manu_key]
 
-        for manu_key in [k for k in doc.keys() if k.endswith("Products")]:
-            manu_products = doc[manu_key]
+            product_numbers = sorted(
+                [int(k.split()[1]) for k in products.keys() if k.startswith("Product ") and "Price" not in k]
+            )
 
-            product_indices = sorted([
-                int(k.split()[1]) for k in manu_products.keys()
-                if k.startswith("Product ") and "Price" not in k
-            ])
+            for num in product_numbers:
+                pname = products.get(f"Product {num}")
+                pprice_str = products.get(f"Product {num} Price")
 
-            for idx in product_indices:
-                pname = manu_products.get(f"Product {idx}")
-                pprice = manu_products.get(f"Product {idx} Price")
-
-                if pname is None or pprice is None:
+                if not pname or not pprice_str:
                     continue
 
-                if pname in previous_prices and previous_prices[pname] != pprice:
-                    changes.append((date, pname))
+                pprice = float(pprice_str.replace(",", "").replace(" TL", ""))
 
-                previous_prices[pname] = pprice
+                if pname not in previous_prices:
+                    previous_prices[pname] = (pprice, date)
+                    continue
 
-    return changes
+                last_price, last_date = previous_prices[pname]
+
+                if abs(pprice - last_price) > 0.01:  # Değişim olmuş
+                    percent_change = ((pprice - last_price) / last_price) * 100
+
+                    print(f"🛒 Ürün: {pname}")
+                    print(f"📅 {last_date} tarihinde fiyatı: {last_price:,.2f} TL")
+                    print(f"📅 {date} tarihinde fiyatı: {pprice:,.2f} TL")
+                    print(f"🔺 Değişim: {percent_change:.2f}%")
+                    print("-" * 40)
+
+                    previous_prices[pname] = (pprice, date)
+
+    print(f"\n✅ Test tamamlandı: {shop_name}\n{'='*50}\n")
+
+def analyze_price_changes(shop_name):
+    import pymongo
+
+    client = pymongo.MongoClient(
+        "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+    )
+    db = client["DataSet"]
+    shop_col = db[shop_name]
+
+    all_records = list(shop_col.find({}).sort("Date", 1))
+
+    previous_prices = {}
+    change_days = set()
+
+    for record in all_records:
+        date = record["Date"].strftime("%Y-%m-%d")
+
+        for manu_key in [k for k in record.keys() if k.endswith("Products")]:
+            products = record[manu_key]
+
+            product_numbers = sorted(
+                [int(k.split()[1]) for k in products.keys() if k.startswith("Product ") and "Price" not in k]
+            )
+
+            for num in product_numbers:
+                pname = products.get(f"Product {num}")
+                pprice_str = products.get(f"Product {num} Price")
+
+                if not pname or not pprice_str:
+                    continue
+
+                pprice = float(pprice_str.replace(",", "").replace(" TL", ""))
+
+                if pname not in previous_prices:
+                    previous_prices[pname] = (pprice, date)
+                    continue
+
+                last_price, last_date = previous_prices[pname]
+
+                if abs(pprice - last_price) > 0.01:  # Değişim olmuş
+                    change_days.add(date)
+                    previous_prices[pname] = (pprice, date)
+
+    change_days = sorted(change_days)
+    print(f"\n📅 Toplam {len(change_days)} farklı değişim günü bulundu:")
+    for d in change_days:
+        print(f"🔸 {d}")
+
+
+# test_shop_prices("Shop 1")
+#
+# analyze_price_changes("Shop 1")
 
 
 
@@ -536,12 +647,12 @@ def detect_price_changes(collection):
 #     }
 # )
 
-# # # Kullanım:
-# leader_shop = "Shop 31"
-# follower_shops = ["Shop 32", "Shop 33"]
+# # Kullanım:
+# leader_shop = "Shop 125"
+# follower_shops = ["Shop 157", "Shop 130"]
 # follower_delays = {
-#     "Shop 32": 4,   # 3 gün delay
-#     "Shop 33": 3    # 6 gün delay
+#     "Shop 157": 7,   # 3 gün delay
+#     "Shop 130": 5    # 6 gün delay
 # }
 #
 # # Fonksiyonu çağır:
@@ -549,13 +660,134 @@ def detect_price_changes(collection):
 
 
 # Kullanım:
-leader_shop = "Shop 34"
-follower_shops = ["Shop 35", "Shop 36", "Shop 37"]
+leader_shop = "Shop 121"
+follower_shops = ["Shop 153", "Shop 134", "Shop 126"]
 follower_delays = {
-    "Shop 35": 2,   # 3 gün delay
-    "Shop 36": 7,   # 5 gün delay
-    "Shop 37": 1    # 6 gün delay
+    "Shop 153": 6,
+    "Shop 134": 5,
+    "Shop 126": 5
 }
 
-# Fonksiyonu çağır:
 advanced_full_collusion_test(leader_shop, follower_shops, follower_delays)
+
+
+# import pymongo
+# from datetime import datetime, timedelta
+#
+# # MongoDB bağlantısı
+# client = pymongo.MongoClient(
+#     "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+# )
+# db = client["DataSet"]
+#
+# # Tarihler
+# start_date = datetime(2025, 1, 1)
+# total_days = 115
+# dates = [start_date + timedelta(days=i) for i in range(total_days)]
+#
+# # Grup bilgileri
+# groups = [
+#     {
+#         "leader": "Shop 102",
+#         "followers": ["Shop 151", "Shop 128"],
+#         "zam_days": ['2025-01-11', '2025-01-19', '2025-02-11', '2025-02-20', '2025-03-03', '2025-03-30'],
+#         "delays": {"Shop 151": 6, "Shop 128": 2}
+#     },
+#     {
+#         "leader": "Shop 121",
+#         "followers": ["Shop 153", "Shop 134", "Shop 126"],
+#         "zam_days": ['2025-01-15', '2025-02-10', '2025-03-20', '2025-04-03', '2025-04-15', '2025-04-23'],
+#         "delays": {"Shop 153": 6, "Shop 134": 5, "Shop 126": 5}
+#     },
+#     {
+#         "leader": "Shop 130",
+#         "followers": ["Shop 109", "Shop 152", "Shop 129", "Shop 119"],
+#         "zam_days": ['2025-01-28', '2025-02-13', '2025-04-13'],
+#         "delays": {"Shop 109": 1, "Shop 152": 2, "Shop 129": 3, "Shop 119": 1}
+#     },
+#     {
+#         "leader": "Shop 131",
+#         "followers": ["Shop 105", "Shop 160", "Shop 124", "Shop 156"],
+#         "zam_days": ['2025-01-09', '2025-01-22', '2025-02-27', '2025-03-23', '2025-04-23'],
+#         "delays": {"Shop 105": 6, "Shop 160": 6, "Shop 124": 7, "Shop 156": 1}
+#     }
+# ]
+#
+# def test_collusion_groups(groups):
+#     for group_idx, group in enumerate(groups, start=1):
+#         leader = group["leader"]
+#         followers = group["followers"]
+#         zam_days = [datetime.strptime(d, "%Y-%m-%d") for d in group["zam_days"]]
+#         delays = group["delays"]
+#
+#         print(f"\n🔵 Grup {group_idx}: {leader} liderliğinde {len(followers)} follower")
+#
+#         leader_col = db[leader]
+#         leader_prices = list(leader_col.find({}).sort("Date", 1))
+#
+#         # Lider fiyat veritabanı
+#         leader_prices_by_date = {r["Date"]: {} for r in leader_prices}
+#
+#         for record in leader_prices:
+#             date = record["Date"]
+#             for manu_key in [k for k in record.keys() if k.endswith("Products")]:
+#                 products = record[manu_key]
+#                 product_numbers = sorted([int(k.split()[1]) for k in products.keys() if k.startswith("Product ") and "Price" not in k])
+#
+#                 for num in product_numbers:
+#                     pname = products.get(f"Product {num}")
+#                     pprice_str = products.get(f"Product {num} Price")
+#
+#                     if pname and pprice_str:
+#                         pprice = float(pprice_str.replace(",", "").replace(" TL", ""))
+#                         leader_prices_by_date[date][pname] = pprice
+#
+#         # Follower fiyat veritabanı
+#         for follower in followers:
+#             follower_col = db[follower]
+#             follower_prices = list(follower_col.find({}).sort("Date", 1))
+#             follower_prices_by_date = {r["Date"]: {} for r in follower_prices}
+#
+#             for record in follower_prices:
+#                 date = record["Date"]
+#                 for manu_key in [k for k in record.keys() if k.endswith("Products")]:
+#                     products = record[manu_key]
+#                     product_numbers = sorted([int(k.split()[1]) for k in products.keys() if k.startswith("Product ") and "Price" not in k])
+#
+#                     for num in product_numbers:
+#                         pname = products.get(f"Product {num}")
+#                         pprice_str = products.get(f"Product {num} Price")
+#
+#                         if pname and pprice_str:
+#                             pprice = float(pprice_str.replace(",", "").replace(" TL", ""))
+#                             follower_prices_by_date[date][pname] = pprice
+#
+#             print(f"\n🔎 Follower: {follower} (Delay: {delays[follower]} gün)")
+#
+#             # Şimdi zam günü sonrası eşleşme kontrolü yapalım
+#             for zam_day in zam_days:
+#                 leader_zam_prices = leader_prices_by_date.get(zam_day, {})
+#                 follower_check_day = zam_day + timedelta(days=delays[follower])
+#                 follower_prices_that_day = follower_prices_by_date.get(follower_check_day, {})
+#
+#                 if not leader_zam_prices:
+#                     print(f"⚠️ Lider zam günü verisi yok: {zam_day.strftime('%Y-%m-%d')}")
+#                     continue
+#                 if not follower_prices_that_day:
+#                     print(f"⚠️ Follower fiyat günü eksik: {follower_check_day.strftime('%Y-%m-%d')}")
+#                     continue
+#
+#                 for pname, leader_price in leader_zam_prices.items():
+#                     follower_price = follower_prices_that_day.get(pname)
+#
+#                     if follower_price is None:
+#                         print(f"❌ {pname} ürün follower'da bulunamadı {follower_check_day.strftime('%Y-%m-%d')}")
+#                         continue
+#
+#                     if abs(follower_price - leader_price) < 0.01:
+#                         print(f"✅ {pname}: {follower_check_day.strftime('%Y-%m-%d')} fiyat doğru ({follower_price:,.2f} TL)")
+#                     else:
+#                         print(f"⚠️ {pname}: {follower_check_day.strftime('%Y-%m-%d')} beklenen {leader_price:,.2f} TL ama {follower_price:,.2f} TL")
+#
+# test_collusion_groups(groups)
+
