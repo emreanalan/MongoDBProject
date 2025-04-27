@@ -1,1 +1,30 @@
+# Sanal ortam klasörlerini ignore et
+venv/
 mongodb_env/
+
+# Python derleme dosyalarını ignore et
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Sanal ortam cache dosyalarını ignore et
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# VSCode proje ayar klasörünü ignore et (istersen)
+.vscode/
+.idea/
