@@ -22,7 +22,7 @@ collusion_shops = [f"Shop {i}" for i in range(371, 401)]
 test_shops = normal_shops + collusion_shops
 y_true = [0] * len(normal_shops) + [1] * len(collusion_shops)
 
-# === 5 Modeli Yükle === #
+# === 5 Modeli Yükle ve Ağırlıklarını Belirle === #
 model_paths = [
     "../Models/collusion_model.pkl",
     "../Models/collusion_model2.pkl",
@@ -30,6 +30,8 @@ model_paths = [
     "../Models/collusion_model4.pkl",
     "../Models/collusion_model5.pkl",
 ]
+model_weights = [1.0, 1.0, 1.0, 1.0, 1.0]  # 4. ve 5. modele daha fazla ağırlık verdik
+
 models = [joblib.load(path) for path in model_paths]
 
 # === Test Verisi Hazırlama === #
@@ -55,14 +57,21 @@ for model in models:
     preds = model.predict(X_test)
     all_preds.append(preds)
 
-all_preds = np.array(all_preds)  # Şekil: (5, num_samples)
+all_preds = np.array(all_preds)  # (5, num_samples)
 
-# === Ensemble Kararı Ver: En az 3 model "Collusion" diyorsa → Collusion === #
+# === Ensemble Kararı Ver: Ağırlıklı Oylama Sistemi === #
 final_preds = []
 
-for i in range(all_preds.shape[1]):
-    collusion_votes = np.sum(all_preds[:, i] == 1)
-    final_label = 1 if collusion_votes >= 3 else 0
+for i in range(all_preds.shape[1]):  # her shop için
+    weighted_vote = 0.0
+    for model_idx in range(len(models)):
+        if all_preds[model_idx, i] == 1:
+            weighted_vote += model_weights[model_idx]
+
+    total_weight = sum(model_weights)
+    threshold = total_weight / 2
+
+    final_label = 1 if weighted_vote >= threshold else 0
     final_preds.append(final_label)
 
 final_preds = np.array(final_preds)

@@ -88,6 +88,6 @@ print("📋 Classification Report:")
 print(classification_report(y_test, y_pred))
 
 # === Modeli Kaydet === #
-os.makedirs("./Models", exist_ok=True)  # Models klasörü yoksa oluşturur
-joblib.dump(model, "./Models/collusion_model5.pkl")
+os.makedirs("../Models", exist_ok=True)  # Models klasörü yoksa oluşturur
+joblib.dump(model, "../Models/collusion_model5.pkl")
 print("✅ Model başarıyla ./Models/collusion_model5.pkl olarak kaydedildi.")
