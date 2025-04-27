@@ -20,15 +20,15 @@ shop_names = [f"Shop {i}" for i in range(1, 341)]  # 1-340 arası
 X = []
 y = []
 
-# for shop in shop_names:
-#     collusion_label = 1 if int(shop.split()[1]) >= 171 else 0  # 171-340 arası collusion
-#     collection = db[shop]
-#     docs = list(collection.find({}, {"_id": 0}))  # Dökümanları liste olarak çekiyoruz
-#
-#     if docs:
-#         feature_vector = extract_features_from_shop(docs)
-#         X.append(feature_vector)
-#         y.append(collusion_label)
+for shop in shop_names:
+    collusion_label = 1 if int(shop.split()[1]) >= 171 else 0  # 171-340 arası collusion
+    collection = db[shop]
+    docs = list(collection.find({}, {"_id": 0}))  # Dökümanları liste olarak çekiyoruz
+
+    if docs:
+        feature_vector = extract_features_from_shop(docs)
+        X.append(feature_vector)
+        y.append(collusion_label)
 
 # === Shopları Yükle === #
 # shop_names = [f"Shop {i}" for i in range(1, 341)]  # 1-340 arası hepsi
@@ -46,21 +46,17 @@ y = []
 #         X.append(feature_vector)
 #         y.append(collusion_label)
 
-# === Shopları Yükle === #
-shop_names = [f"Shop {i}" for i in range(1, 341)]  # 1-340 arası hepsi
-X = []
-y = []
 
-for shop in shop_names:
-    shop_num = int(shop.split()[1])
-    collusion_label = 1 if shop_num >= 298 else 0  # 298 ve sonrası collusion
-    collection = db[shop]
-    docs = list(collection.find({}, {"_id": 0}))
-
-    if docs:
-        feature_vector = extract_features_from_shop(docs)
-        X.append(feature_vector)
-        y.append(collusion_label)
+# for shop in shop_names:
+#     shop_num = int(shop.split()[1])
+#     collusion_label = 1 if shop_num >= 298 else 0  # 298 ve sonrası collusion
+#     collection = db[shop]
+#     docs = list(collection.find({}, {"_id": 0}))
+#
+#     if docs:
+#         feature_vector = extract_features_from_shop(docs)
+#         X.append(feature_vector)
+#         y.append(collusion_label)
 
 
 
@@ -88,6 +84,6 @@ print("📋 Classification Report:")
 print(classification_report(y_test, y_pred))
 
 # === Modeli Kaydet === #
-os.makedirs("./Models", exist_ok=True)  # Models klasörü yoksa oluşturur
-joblib.dump(model, "./Models/collusion_model5.pkl")
-print("✅ Model başarıyla ./Models/collusion_model5.pkl olarak kaydedildi.")
+os.makedirs("../Models", exist_ok=True)  # Models klasörü yoksa oluşturur
+joblib.dump(model, "../Models/collusion_model6.pkl")
+print("✅ Model başarıyla ./Models/collusion_model6.pkl olarak kaydedildi.")

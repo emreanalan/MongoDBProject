@@ -238,6 +238,7 @@ def create_collusion_groups(shop_start, shop_end):
     return groups
 
 # === COLLUSION GROUPS OLUŞTUR === #
+#collusion_groups = create_collusion_groups(171, 340)
 collusion_groups = create_collusion_groups(371, 400)
 
 # === Collusion Shop Verileri Üret === #

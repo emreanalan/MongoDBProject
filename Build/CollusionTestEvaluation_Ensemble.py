@@ -29,6 +29,7 @@ model_paths = [
     "../Models/collusion_model3.pkl",
     "../Models/collusion_model4.pkl",
     "../Models/collusion_model5.pkl",
+    "../Models/collusion_model6.pkl",
 ]
 models = [joblib.load(path) for path in model_paths]
 
