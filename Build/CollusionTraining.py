@@ -21,7 +21,7 @@ X = []
 y = []
 
 for shop in shop_names:
-    collusion_label = 1 if int(shop.split()[1]) >= 171 else 0  # 171-340 arası collusion
+    collusion_label = 1 if int(shop.split()[1]) < 171 else 0  # 171-340 arası collusion
     collection = db[shop]
     docs = list(collection.find({}, {"_id": 0}))  # Dökümanları liste olarak çekiyoruz
 
@@ -85,5 +85,5 @@ print(classification_report(y_test, y_pred))
 
 # === Modeli Kaydet === #
 os.makedirs("../Models", exist_ok=True)  # Models klasörü yoksa oluşturur
-joblib.dump(model, "../Models/collusion_model6.pkl")
-print("✅ Model başarıyla ./Models/collusion_model6.pkl olarak kaydedildi.")
+joblib.dump(model, "../Models/collusion_model10.pkl")
+print("✅ Model başarıyla ./Models/collusion_model10.pkl olarak kaydedildi.")

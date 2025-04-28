@@ -16,8 +16,11 @@ client = pymongo.MongoClient(
 db = client["DataSet"]
 
 # === Test Shopları === #
-normal_shops = [f"Shop {i}" for i in range(341, 371)]
-collusion_shops = [f"Shop {i}" for i in range(371, 401)]
+# normal_shops = [f"Shop {i}" for i in range(341, 361)]
+# collusion_shops = [f"Shop {i}" for i in range(361, 381)]
+normal_shops = [f"Shop {i}" for i in range(341, 361)] + [f"Shop {i}" for i in range(381, 391)]
+collusion_shops = [f"Shop {i}" for i in range(361, 381)] + [f"Shop {i}" for i in range(391, 401)]
+
 
 test_shops = normal_shops + collusion_shops
 y_true = [0] * len(normal_shops) + [1] * len(collusion_shops)
@@ -30,6 +33,10 @@ model_paths = [
     "../Models/collusion_model4.pkl",
     "../Models/collusion_model5.pkl",
     "../Models/collusion_model6.pkl",
+    "../Models/collusion_model7.pkl",
+    "../Models/collusion_model8.pkl",
+    "../Models/collusion_model9.pkl",
+    "../Models/collusion_model10.pkl",
 ]
 models = [joblib.load(path) for path in model_paths]
 
@@ -63,7 +70,7 @@ final_preds = []
 
 for i in range(all_preds.shape[1]):
     collusion_votes = np.sum(all_preds[:, i] == 1)
-    final_label = 1 if collusion_votes >= 3 else 0
+    final_label = 1 if collusion_votes >= 5 else 0
     final_preds.append(final_label)
 
 final_preds = np.array(final_preds)

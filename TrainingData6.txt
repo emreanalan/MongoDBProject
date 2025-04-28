@@ -1928,3 +1928,225 @@ weighted avg       0.77      0.77      0.77        60
 
 
 Process finished with exit code 0
+
+
+                                                            -- TEST 3 DATAS --
+
+"C:\Users\emrea\Desktop\FINAL PROJECT\mongodb_env\Scripts\python.exe" "C:\Users\emrea\Desktop\FINAL PROJECT\MongoDBProject\Build\ShopsDataSet.py"
+🔵 Products cache oluşturuluyor...
+✅ 57500 ürün kaydı cache'lendi.
+
+🔵 Manufacturers cache oluşturuluyor...
+  🔹 Man1 cache'leniyor...
+  🔹 Man2 cache'leniyor...
+  🔹 Man3 cache'leniyor...
+  🔹 Man4 cache'leniyor...
+  🔹 Man5 cache'leniyor...
+  🔹 Man6 cache'leniyor...
+  🔹 Man7 cache'leniyor...
+  🔹 Man8 cache'leniyor...
+  🔹 Man9 cache'leniyor...
+  🔹 Man10 cache'leniyor...
+  🔹 Man11 cache'leniyor...
+  🔹 Man12 cache'leniyor...
+  🔹 Man13 cache'leniyor...
+  🔹 Man14 cache'leniyor...
+  🔹 Man15 cache'leniyor...
+  🔹 Man16 cache'leniyor...
+  🔹 Man17 cache'leniyor...
+  🔹 Man18 cache'leniyor...
+  🔹 Man19 cache'leniyor...
+  🔹 Man20 cache'leniyor...
+  🔹 Man21 cache'leniyor...
+  🔹 Man22 cache'leniyor...
+  🔹 Man23 cache'leniyor...
+  🔹 Man24 cache'leniyor...
+  🔹 Man25 cache'leniyor...
+✅ 25 manufacturer cache'lendi.
+
+🚀 ShopsDataSet oluşturuluyor...
+
+🔵 Shop 371 için seçilen manufacturerlar: ['Man11', 'Man3', 'Man7']
+  📅 Shop 371 zam günleri: ['2025-02-18', '2025-02-22']
+✅ Shop 371 için 115 kayıt eklendi.
+
+🔵 Shop 372 için seçilen manufacturerlar: ['Man19', 'Man9', 'Man11']
+  📅 Shop 372 zam günleri: ['2025-01-25', '2025-01-31', '2025-04-11']
+✅ Shop 372 için 115 kayıt eklendi.
+
+🔵 Shop 373 için seçilen manufacturerlar: ['Man24', 'Man3']
+  📅 Shop 373 zam günleri: ['2025-02-07', '2025-03-13', '2025-04-17']
+✅ Shop 373 için 115 kayıt eklendi.
+
+🔵 Shop 374 için seçilen manufacturerlar: ['Man8', 'Man23']
+  📅 Shop 374 zam günleri: ['2025-01-15', '2025-02-11']
+✅ Shop 374 için 115 kayıt eklendi.
+
+🔵 Shop 375 için seçilen manufacturerlar: ['Man23', 'Man14']
+  📅 Shop 375 zam günleri: ['2025-01-06', '2025-02-01']
+✅ Shop 375 için 115 kayıt eklendi.
+
+🔵 Shop 376 için seçilen manufacturerlar: ['Man25', 'Man24', 'Man14']
+  📅 Shop 376 zam günleri: ['2025-03-27', '2025-04-07', '2025-04-18']
+✅ Shop 376 için 115 kayıt eklendi.
+
+🔵 Shop 377 için seçilen manufacturerlar: ['Man8', 'Man19', 'Man14']
+  📅 Shop 377 zam günleri: ['2025-01-29', '2025-01-30', '2025-02-03', '2025-02-15', '2025-02-23']
+✅ Shop 377 için 115 kayıt eklendi.
+
+🔵 Shop 378 için seçilen manufacturerlar: ['Man24', 'Man12', 'Man23']
+  📅 Shop 378 zam günleri: ['2025-01-31', '2025-03-15', '2025-03-20']
+✅ Shop 378 için 115 kayıt eklendi.
+
+🔵 Shop 379 için seçilen manufacturerlar: ['Man3', 'Man18', 'Man12']
+  📅 Shop 379 zam günleri: ['2025-01-06', '2025-03-06', '2025-03-30', '2025-04-12']
+✅ Shop 379 için 115 kayıt eklendi.
+
+🔵 Shop 380 için seçilen manufacturerlar: ['Man16', 'Man5']
+  📅 Shop 380 zam günleri: ['2025-01-21', '2025-01-25', '2025-02-02', '2025-03-19', '2025-04-10']
+✅ Shop 380 için 115 kayıt eklendi.
+
+🔵 Shop 381 için seçilen manufacturerlar: ['Man19', 'Man10']
+  📅 Shop 381 zam günleri: ['2025-03-10', '2025-03-29', '2025-04-11', '2025-04-14']
+✅ Shop 381 için 115 kayıt eklendi.
+
+🔵 Shop 382 için seçilen manufacturerlar: ['Man23', 'Man11']
+  📅 Shop 382 zam günleri: ['2025-01-30', '2025-01-31', '2025-02-04', '2025-03-14', '2025-04-02']
+✅ Shop 382 için 115 kayıt eklendi.
+
+🔵 Shop 383 için seçilen manufacturerlar: ['Man11', 'Man15', 'Man13']
+  📅 Shop 383 zam günleri: ['2025-02-09', '2025-02-15', '2025-02-25']
+✅ Shop 383 için 115 kayıt eklendi.
+
+🔵 Shop 384 için seçilen manufacturerlar: ['Man3', 'Man15', 'Man7']
+  📅 Shop 384 zam günleri: ['2025-01-06', '2025-01-09', '2025-03-02', '2025-03-18', '2025-04-05']
+✅ Shop 384 için 115 kayıt eklendi.
+
+🔵 Shop 385 için seçilen manufacturerlar: ['Man9', 'Man24', 'Man25']
+  📅 Shop 385 zam günleri: ['2025-02-15', '2025-03-01', '2025-03-06', '2025-04-15']
+✅ Shop 385 için 115 kayıt eklendi.
+
+🔵 Shop 386 için seçilen manufacturerlar: ['Man21', 'Man24', 'Man11']
+  📅 Shop 386 zam günleri: ['2025-01-06', '2025-01-20', '2025-02-24', '2025-03-04']
+✅ Shop 386 için 115 kayıt eklendi.
+
+🔵 Shop 387 için seçilen manufacturerlar: ['Man6', 'Man8']
+  📅 Shop 387 zam günleri: ['2025-01-07', '2025-02-02', '2025-02-04', '2025-04-05', '2025-04-09']
+✅ Shop 387 için 115 kayıt eklendi.
+
+🔵 Shop 388 için seçilen manufacturerlar: ['Man8', 'Man18']
+  📅 Shop 388 zam günleri: ['2025-02-13', '2025-03-16', '2025-03-18']
+✅ Shop 388 için 115 kayıt eklendi.
+
+🔵 Shop 389 için seçilen manufacturerlar: ['Man4', 'Man15']
+  📅 Shop 389 zam günleri: ['2025-02-27', '2025-03-15']
+✅ Shop 389 için 115 kayıt eklendi.
+
+🔵 Shop 390 için seçilen manufacturerlar: ['Man4', 'Man8']
+  📅 Shop 390 zam günleri: ['2025-02-20', '2025-03-07', '2025-03-31']
+✅ Shop 390 için 115 kayıt eklendi.
+
+🔵 Shop 391 için seçilen manufacturerlar: ['Man2', 'Man4', 'Man24']
+  📅 Shop 391 zam günleri: ['2025-02-05', '2025-03-11']
+✅ Shop 391 için 115 kayıt eklendi.
+
+🔵 Shop 392 için seçilen manufacturerlar: ['Man16', 'Man4', 'Man15']
+  📅 Shop 392 zam günleri: ['2025-02-13', '2025-02-17', '2025-04-15', '2025-04-17']
+✅ Shop 392 için 115 kayıt eklendi.
+
+🔵 Shop 393 için seçilen manufacturerlar: ['Man18', 'Man6']
+  📅 Shop 393 zam günleri: ['2025-01-06', '2025-03-24', '2025-03-26', '2025-04-10']
+✅ Shop 393 için 115 kayıt eklendi.
+
+🔵 Shop 394 için seçilen manufacturerlar: ['Man22', 'Man6']
+  📅 Shop 394 zam günleri: ['2025-02-08', '2025-03-11', '2025-03-17', '2025-04-08']
+✅ Shop 394 için 115 kayıt eklendi.
+
+🔵 Shop 395 için seçilen manufacturerlar: ['Man2', 'Man14']
+  📅 Shop 395 zam günleri: ['2025-02-18', '2025-02-23']
+✅ Shop 395 için 115 kayıt eklendi.
+
+🔵 Shop 396 için seçilen manufacturerlar: ['Man3', 'Man7']
+  📅 Shop 396 zam günleri: ['2025-01-30', '2025-03-12', '2025-04-05', '2025-04-15']
+✅ Shop 396 için 115 kayıt eklendi.
+
+🔵 Shop 397 için seçilen manufacturerlar: ['Man17', 'Man14']
+  📅 Shop 397 zam günleri: ['2025-02-24', '2025-03-11']
+✅ Shop 397 için 115 kayıt eklendi.
+
+🔵 Shop 398 için seçilen manufacturerlar: ['Man7', 'Man21']
+  📅 Shop 398 zam günleri: ['2025-01-10', '2025-01-12', '2025-04-12', '2025-04-20']
+✅ Shop 398 için 115 kayıt eklendi.
+
+🔵 Shop 399 için seçilen manufacturerlar: ['Man17', 'Man23']
+  📅 Shop 399 zam günleri: ['2025-01-30', '2025-02-15', '2025-03-03', '2025-03-14']
+✅ Shop 399 için 115 kayıt eklendi.
+
+🔵 Shop 400 için seçilen manufacturerlar: ['Man20', 'Man3']
+  📅 Shop 400 zam günleri: ['2025-01-23', '2025-02-24', '2025-02-28']
+✅ Shop 400 için 115 kayıt eklendi.
+
+
+✅ Tüm ShopsDataSet kayıtları başarıyla tamamlandı!
+
+Process finished with exit code 0
+
+"C:\Users\emrea\Desktop\FINAL PROJECT\mongodb_env\Scripts\python.exe" "C:\Users\emrea\Desktop\FINAL PROJECT\MongoDBProject\Build\CollusionShopsDataSet.py"
+🔵 Products cache oluşturuluyor...
+✅ 57500 ürün kaydı cache'lendi.
+
+🔵 Manufacturer cache oluşturuluyor...
+✅ 25 manufacturer cache'lendi.
+
+🚀 Collusion ShopsDataSet oluşturuluyor...
+
+🔵 Grup 1:
+⭐ Lider: Shop 363
+🛒 Followerlar: ['Shop 358', 'Shop 367', 'Shop 368', 'Shop 343']
+📅 Zam Günleri: ['2025-01-08', '2025-02-16', '2025-03-25']
+⚙️ Gecikmeler: {'Shop 358': 6, 'Shop 367': 1, 'Shop 368': 6, 'Shop 343': 4}
+
+🔵 Grup 2:
+⭐ Lider: Shop 357
+🛒 Followerlar: ['Shop 349', 'Shop 369', 'Shop 370']
+📅 Zam Günleri: ['2025-02-07', '2025-03-22', '2025-04-10', '2025-04-24']
+⚙️ Gecikmeler: {'Shop 349': 1, 'Shop 369': 6, 'Shop 370': 7}
+
+🔵 Grup 3:
+⭐ Lider: Shop 344
+🛒 Followerlar: ['Shop 352', 'Shop 359', 'Shop 356']
+📅 Zam Günleri: ['2025-01-16', '2025-01-30', '2025-02-11', '2025-04-08']
+⚙️ Gecikmeler: {'Shop 352': 7, 'Shop 359': 5, 'Shop 356': 6}
+
+🔵 Grup 4:
+⭐ Lider: Shop 365
+🛒 Followerlar: ['Shop 366', 'Shop 354', 'Shop 345', 'Shop 364']
+📅 Zam Günleri: ['2025-02-01', '2025-02-25', '2025-04-15']
+⚙️ Gecikmeler: {'Shop 366': 1, 'Shop 354': 2, 'Shop 345': 1, 'Shop 364': 2}
+
+🔵 Grup 5:
+⭐ Lider: Shop 361
+🛒 Followerlar: ['Shop 341', 'Shop 350']
+📅 Zam Günleri: ['2025-01-29', '2025-02-24', '2025-03-11']
+⚙️ Gecikmeler: {'Shop 341': 4, 'Shop 350': 2}
+
+🔵 Grup 6:
+⭐ Lider: Shop 348
+🛒 Followerlar: ['Shop 362', 'Shop 347', 'Shop 353', 'Shop 360']
+📅 Zam Günleri: ['2025-01-08', '2025-03-15', '2025-04-08']
+⚙️ Gecikmeler: {'Shop 362': 1, 'Shop 347': 4, 'Shop 353': 7, 'Shop 360': 1}
+
+🔵 Grup 7:
+⭐ Lider: Shop 351
+🛒 Followerlar: ['Shop 346', 'Shop 342', 'Shop 355']
+📅 Zam Günleri: ['2025-01-11', '2025-02-21', '2025-03-27', '2025-04-05']
+⚙️ Gecikmeler: {'Shop 346': 4, 'Shop 342': 4, 'Shop 355': 7}
+
+
+✅ Tüm Collusion Shops başarıyla ultra hızlı oluşturuldu!
+
+Process finished with exit code 0
+
+
+                                                            -- TEST 3 --
+

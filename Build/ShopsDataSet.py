@@ -47,7 +47,8 @@ all_dates = [start_date + timedelta(days=i) for i in range(115)]
 print("🚀 ShopsDataSet oluşturuluyor...\n")
 
 #for shop_num in range(1, 171):
-for shop_num in range(341, 371):
+# for shop_num in range(381, 391):
+for shop_num in range(341, 361):
     shop_name = f"Shop {shop_num}"
     shop_collection = db[shop_name]
 
