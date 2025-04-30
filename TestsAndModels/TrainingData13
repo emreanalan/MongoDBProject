@@ -1169,3 +1169,23 @@
 ✅ Tüm veri seti başarıyla oluşturuldu!
 
 Process finished with exit code 0
+
+
+"C:\Users\emrea\Desktop\FINAL PROJECT\mongodb_env\Scripts\python.exe" "C:\Users\emrea\Desktop\FINAL PROJECT\MongoDBProject\Build\CollusionTraining.py"
+📊 Toplam veri: 400 örnek, 10 özellik
+📚 Pozitif label (Collusion) sayısı: 200
+
+✅ Test doğruluğu: 0.9000
+📋 Classification Report:
+              precision    recall  f1-score   support
+
+           0       0.94      0.85      0.89        40
+           1       0.86      0.95      0.90        40
+
+    accuracy                           0.90        80
+   macro avg       0.90      0.90      0.90        80
+weighted avg       0.90      0.90      0.90        80
+
+✅ Model başarıyla ./Models/collusion_model13.pkl olarak kaydedildi.
+
+Process finished with exit code 0
