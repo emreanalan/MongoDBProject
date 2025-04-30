@@ -45,11 +45,11 @@ print(f"✅ {len(manufacturers_cache)} manufacturer cache'lendi.\n")
 all_dates = [start_date + timedelta(days=i) for i in range(115)]
 
 # === 4. Shop ID'lerini Rastgele Karıştır ve Ayır ===
-all_shops = list(range(1, 401))
+all_shops = list(range(1, 101))
 random.shuffle(all_shops)
 
-collusion_shops = all_shops[:200]
-normal_shops = all_shops[200:]
+collusion_shops = all_shops[:50]
+normal_shops = all_shops[50:]
 
 # === 5. Collusion Shop Verisi ===
 collusion_groups = create_collusion_groups_from_list(collusion_shops)
