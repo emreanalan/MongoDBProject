@@ -1,6 +1,7 @@
 import pymongo
 import random
 from datetime import datetime, timedelta
+from CollusionShopsDataSet import create_collusion_groups_from_list, generate_collusion_data
 
 # MongoDB bağlantısı
 client = pymongo.MongoClient(
@@ -43,9 +44,22 @@ print(f"✅ {len(manufacturers_cache)} manufacturer cache'lendi.\n")
 # === 3. Tarihler ===
 all_dates = [start_date + timedelta(days=i) for i in range(115)]
 
-def generate_normal_shop_data(shop_id_list):
-    print("🚀 ShopsDataSet oluşturuluyor...\n")
+# === 4. Shop ID'lerini Rastgele Karıştır ve Ayır ===
+all_shops = list(range(1, 401))
+random.shuffle(all_shops)
 
+collusion_shops = all_shops[:200]
+normal_shops = all_shops[200:]
+
+# === 5. Collusion Shop Verisi ===
+collusion_groups = create_collusion_groups_from_list(collusion_shops)
+print(f"🔐 {len(collusion_groups)} collusion grubu oluşturuluyor...")
+generate_collusion_data(collusion_groups)
+
+# === 6. Normal Shop Verisi ===
+print(f"\n🏪 {len(normal_shops)} normal shop oluşturuluyor...")
+
+def generate_normal_shop_data(shop_id_list):
     for shop_num in shop_id_list:
         shop_name = f"Shop {shop_num}"
         shop_collection = db[shop_name]
@@ -55,7 +69,7 @@ def generate_normal_shop_data(shop_id_list):
 
         product_profits = {}
         zam_days = sorted(random.sample(range(5, 110), k=random.randint(2, 5)))
-        print(f"  📅 {shop_name} zam günleri: {[all_dates[day].strftime('%Y-%m-%d') for day in zam_days]}")
+        print(f"  📅 {shop_name} zam günleri: {[d.strftime('%Y-%m-%d') for d in [start_date + timedelta(days=z) for z in zam_days]]}")
 
         bulk_operations = []
         previous_prices = {}
@@ -117,3 +131,13 @@ def generate_normal_shop_data(shop_id_list):
             print(f"⚠️ {shop_name} için hiç veri eklenmedi.\n")
 
     print("\n✅ Tüm ShopsDataSet kayıtları başarıyla tamamlandı!")
+
+# === Shopları 50’şerlik gruplara bölüp işle ===
+batch_size = 50
+for i in range(0, len(normal_shops), batch_size):
+    current_batch = normal_shops[i:i+batch_size]
+    print(f"\n📦 {i+1}-{i+len(current_batch)} arası shop'lar işleniyor...")
+    generate_normal_shop_data(current_batch)
+
+
+print("\n✅ Tüm veri seti başarıyla oluşturuldu!")

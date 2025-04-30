@@ -221,117 +221,54 @@ def select_zam_days():
             break
     return sorted(zam_days)
 
-def create_collusion_groups(shop_start, shop_end):
-    shops = [f"Shop {i}" for i in range(shop_start, shop_end + 1)]
-    random.shuffle(shops)
+def create_collusion_groups_from_list(shop_ids):
+    random.shuffle(shop_ids)
     groups = []
     idx = 0
-    while idx < len(shops):
+    while idx < len(shop_ids):
         group_size = random.choice([3, 4, 5])
-        group = shops[idx:idx+group_size]
+        group = [f"Shop {i}" for i in shop_ids[idx:idx+group_size]]
         if len(group) >= 3:
             groups.append(group)
             idx += group_size
         else:
-            groups[-1].extend(group)
+            if groups:
+                groups[-1].extend([f"Shop {i}" for i in shop_ids[idx:]])
             break
     return groups
 
-# === COLLUSION GROUPS OLUŞTUR === #
-#collusion_groups = create_collusion_groups(171, 340)
-# collusion_groups = create_collusion_groups(391, 400)
-collusion_groups = create_collusion_groups(361, 380)
+def generate_collusion_data(collusion_groups):
+    print("🚀 Collusion ShopsDataSet oluşturuluyor...\n")
 
-# === Collusion Shop Verileri Üret === #
-print("🚀 Collusion ShopsDataSet oluşturuluyor...\n")
+    for group_num, group_shops in enumerate(collusion_groups, start=1):
+        leader_shop = group_shops[0]
+        follower_shops = group_shops[1:]
 
-for group_num, group_shops in enumerate(collusion_groups, start=1):
-    leader_shop = group_shops[0]
-    follower_shops = group_shops[1:]
+        zam_days = select_zam_days()
+        zam_real_dates = [dates[d] for d in zam_days]
 
-    zam_days = select_zam_days()
-    zam_real_dates = [dates[d] for d in zam_days]
+        follower_delays = {shop: random.randint(1, 7) for shop in follower_shops}
+        selected_manufacturers = random.sample(manufacturers, k=random.choice([2, 3]))
 
-    follower_delays = {shop: random.randint(1, 7) for shop in follower_shops}
-    selected_manufacturers = random.sample(manufacturers, k=random.choice([2, 3]))
+        product_profits = {}
 
-    # Her ürün için profit seçimi
-    product_profits = {}
+        print(f"🔵 Grup {group_num}:")
+        print(f"⭐ Lider: {leader_shop}")
+        print(f"🛒 Followerlar: {follower_shops}")
+        print(f"📅 Zam Günleri: {[d.strftime('%Y-%m-%d') for d in zam_real_dates]}")
+        print(f"⚙️ Gecikmeler: {follower_delays}\n")
 
-    print(f"🔵 Grup {group_num}:")
-    print(f"⭐ Lider: {leader_shop}")
-    print(f"🛒 Followerlar: {follower_shops}")
-    print(f"📅 Zam Günleri: {[d.strftime('%Y-%m-%d') for d in zam_real_dates]}")
-    print(f"⚙️ Gecikmeler: {follower_delays}\n")
-
-    # --- LİDER İÇİN BELGELERİ HAZIRLA --- #
-    leader_bulk_ops = []
-    previous_prices = {}
-
-    for day_idx, current_date in enumerate(dates):
-        doc = {
-            "Date": current_date,
-            "Store Type": leader_shop,
-            "Description": f"Product prices for {leader_shop} on {current_date.strftime('%Y-%m-%d')}"
-        }
-        for manu in selected_manufacturers:
-            manu_data = manufacturer_cache.get(manu, {}).get(current_date)
-            if not manu_data:
-                continue
-
-            manu_doc = {}
-            product_keys = sorted([k for k in manu_data.keys() if k.startswith("Product ") and "Price" not in k], key=lambda x: int(x.split()[1]))
-
-            for i, prod_key in enumerate(product_keys):
-                pname = manu_data[prod_key]
-                cost_str = products_cache.get((pname, current_date))
-                if not cost_str:
-                    continue
-
-                manufacturer_price = float(cost_str.replace(",", "").replace(" TL", ""))
-
-                if pname not in product_profits:
-                    product_profits[pname] = random.randint(4, 15)
-
-                profit_pct = product_profits[pname] / 100
-
-                if day_idx == 0:
-                    price = manufacturer_price * (1 + profit_pct)
-                    previous_prices[pname] = price
-                elif day_idx in zam_days:
-                    price = manufacturer_price * (1 + profit_pct)
-                    previous_prices[pname] = price
-                else:
-                    price = previous_prices[pname]
-
-                manu_doc[f"Product {i+1}"] = pname
-                manu_doc[f"Product {i+1} Price"] = f"{price:,.2f} TL"
-
-            if manu_doc:
-                doc[f"{manu} Products"] = manu_doc
-
-        leader_bulk_ops.append(pymongo.UpdateOne({"Date": current_date}, {"$set": doc}, upsert=True))
-
-    db[leader_shop].bulk_write(leader_bulk_ops)
-
-    # --- FOLLOWERLAR İÇİN BELGELERİ HAZIRLA --- #
-    for follower_shop in follower_shops:
-        delay = follower_delays[follower_shop]
-        follower_bulk_ops = []
-        follower_prev_prices = {}
+        leader_bulk_ops = []
+        previous_prices = {}
 
         for day_idx, current_date in enumerate(dates):
-            delayed_idx = max(0, day_idx - delay)
-            delayed_date = dates[delayed_idx]
-
             doc = {
                 "Date": current_date,
-                "Store Type": follower_shop,
-                "Description": f"Product prices for {follower_shop} on {current_date.strftime('%Y-%m-%d')}"
+                "Store Type": leader_shop,
+                "Description": f"Product prices for {leader_shop} on {current_date.strftime('%Y-%m-%d')}"
             }
-
             for manu in selected_manufacturers:
-                manu_data = manufacturer_cache.get(manu, {}).get(delayed_date)
+                manu_data = manufacturer_cache.get(manu, {}).get(current_date)
                 if not manu_data:
                     continue
 
@@ -340,22 +277,25 @@ for group_num, group_shops in enumerate(collusion_groups, start=1):
 
                 for i, prod_key in enumerate(product_keys):
                     pname = manu_data[prod_key]
-                    cost_str = products_cache.get((pname, delayed_date))
+                    cost_str = products_cache.get((pname, current_date))
                     if not cost_str:
                         continue
 
                     manufacturer_price = float(cost_str.replace(",", "").replace(" TL", ""))
 
+                    if pname not in product_profits:
+                        product_profits[pname] = random.randint(4, 15)
+
                     profit_pct = product_profits[pname] / 100
 
-                    if delayed_idx == 0:
+                    if day_idx == 0:
                         price = manufacturer_price * (1 + profit_pct)
-                        follower_prev_prices[pname] = price
-                    elif delayed_idx in zam_days:
+                        previous_prices[pname] = price
+                    elif day_idx in zam_days:
                         price = manufacturer_price * (1 + profit_pct)
-                        follower_prev_prices[pname] = price
+                        previous_prices[pname] = price
                     else:
-                        price = follower_prev_prices[pname]
+                        price = previous_prices[pname]
 
                     manu_doc[f"Product {i+1}"] = pname
                     manu_doc[f"Product {i+1} Price"] = f"{price:,.2f} TL"
@@ -363,14 +303,65 @@ for group_num, group_shops in enumerate(collusion_groups, start=1):
                 if manu_doc:
                     doc[f"{manu} Products"] = manu_doc
 
-            follower_bulk_ops.append(pymongo.UpdateOne({"Date": current_date}, {"$set": doc}, upsert=True))
+            leader_bulk_ops.append(pymongo.UpdateOne({"Date": current_date}, {"$set": doc}, upsert=True))
 
-        # === Bulk Write işlemini küçük parçalara ayır ===
-        batch_size = 30  # Maksimum 30 işlem bir seferde
-        for i in range(0, len(follower_bulk_ops), batch_size):
-            batch = follower_bulk_ops[i:i + batch_size]
-            db[follower_shop].bulk_write(batch)
+        db[leader_shop].bulk_write(leader_bulk_ops)
 
-print("\n✅ Tüm Collusion Shops başarıyla ultra hızlı oluşturuldu!")
+        for follower_shop in follower_shops:
+            delay = follower_delays[follower_shop]
+            follower_bulk_ops = []
+            follower_prev_prices = {}
+
+            for day_idx, current_date in enumerate(dates):
+                delayed_idx = max(0, day_idx - delay)
+                delayed_date = dates[delayed_idx]
+
+                doc = {
+                    "Date": current_date,
+                    "Store Type": follower_shop,
+                    "Description": f"Product prices for {follower_shop} on {current_date.strftime('%Y-%m-%d')}"
+                }
+
+                for manu in selected_manufacturers:
+                    manu_data = manufacturer_cache.get(manu, {}).get(delayed_date)
+                    if not manu_data:
+                        continue
+
+                    manu_doc = {}
+                    product_keys = sorted([k for k in manu_data.keys() if k.startswith("Product ") and "Price" not in k], key=lambda x: int(x.split()[1]))
+
+                    for i, prod_key in enumerate(product_keys):
+                        pname = manu_data[prod_key]
+                        cost_str = products_cache.get((pname, delayed_date))
+                        if not cost_str:
+                            continue
+
+                        manufacturer_price = float(cost_str.replace(",", "").replace(" TL", ""))
+
+                        profit_pct = product_profits[pname] / 100
+
+                        if delayed_idx == 0:
+                            price = manufacturer_price * (1 + profit_pct)
+                            follower_prev_prices[pname] = price
+                        elif delayed_idx in zam_days:
+                            price = manufacturer_price * (1 + profit_pct)
+                            follower_prev_prices[pname] = price
+                        else:
+                            price = follower_prev_prices[pname]
+
+                        manu_doc[f"Product {i+1}"] = pname
+                        manu_doc[f"Product {i+1} Price"] = f"{price:,.2f} TL"
+
+                    if manu_doc:
+                        doc[f"{manu} Products"] = manu_doc
+
+                follower_bulk_ops.append(pymongo.UpdateOne({"Date": current_date}, {"$set": doc}, upsert=True))
+
+            batch_size = 30
+            for i in range(0, len(follower_bulk_ops), batch_size):
+                batch = follower_bulk_ops[i:i + batch_size]
+                db[follower_shop].bulk_write(batch)
+
+    print("\n✅ Tüm Collusion Shops başarıyla ultra hızlı oluşturuldu!")
 
 
