@@ -104,7 +104,7 @@ Edit
 
 
 🔢 1. Collusion Grubu
-Her grup 3–5 Shop’tan oluşur (✓ aynı).
+Her grup 3–5 Shop’tan oluşur.
 
 🏭 2. Manufacturer Seçimi
 Her shop için 3–4 manufacturer seçilir.
@@ -136,6 +136,80 @@ Diğer ürünler: her shop için küçük farklılık içeren profit % ile zam y
 
 
 
+=============================================================================================================================================================
+"C:\Users\emrea\Desktop\FINAL PROJECT\mongodb_env\Scripts\python.exe" "C:\Users\emrea\Desktop\FINAL PROJECT\MongoDBProject\Build\CollusionShopsDataSet.py"
+🔵 Manufacturer cache oluşturuluyor...
+✅ Manufacturer cache tamamlandı.
+
+
+🔹 Grup 1
+🔁 Ortak Manufacturer'lar: ['Man 23', 'Man 1']
+  🛍️ Shop 12 -> ['Man 23', 'Man 1', 'Man 9', 'Man 22']
+  🛍️ Shop 6 -> ['Man 23', 'Man 1', 'Man 5', 'Man 8']
+  🛍️ Shop 11 -> ['Man 23', 'Man 1', 'Man 19', 'Man 15']
+  🛍️ Shop 10 -> ['Man 23', 'Man 1', 'Man 22', 'Man 18']
+  🛍️ Shop 18 -> ['Man 23', 'Man 1', 'Man 15']
+
+🔹 Grup 2
+🔁 Ortak Manufacturer'lar: ['Man 7', 'Man 6']
+  🛍️ Shop 15 -> ['Man 7', 'Man 6', 'Man 22', 'Man 20']
+  🛍️ Shop 1 -> ['Man 7', 'Man 6', 'Man 17', 'Man 25']
+  🛍️ Shop 4 -> ['Man 7', 'Man 6', 'Man 13', 'Man 5']
+  🛍️ Shop 13 -> ['Man 7', 'Man 6', 'Man 9', 'Man 22']
+
+🔹 Grup 3
+🔁 Ortak Manufacturer'lar: ['Man 4', 'Man 19']
+  🛍️ Shop 20 -> ['Man 4', 'Man 19', 'Man 13', 'Man 5']
+  🛍️ Shop 19 -> ['Man 4', 'Man 19', 'Man 24']
+  🛍️ Shop 3 -> ['Man 4', 'Man 19', 'Man 10']
+  🛍️ Shop 17 -> ['Man 4', 'Man 19', 'Man 5']
+  🛍️ Shop 9 -> ['Man 4', 'Man 19', 'Man 6']
+
+🔹 Grup 4
+🔁 Ortak Manufacturer'lar: ['Man 18', 'Man 14']
+  🛍️ Shop 5 -> ['Man 18', 'Man 14', 'Man 20']
+  🛍️ Shop 16 -> ['Man 18', 'Man 14', 'Man 12', 'Man 21']
+  🛍️ Shop 8 -> ['Man 18', 'Man 14', 'Man 4']
+  🛍️ Shop 7 -> ['Man 18', 'Man 14', 'Man 5', 'Man 9']
+  🛍️ Shop 14 -> ['Man 18', 'Man 14', 'Man 5']
+  🛍️ Shop 2 -> ['Man 18', 'Man 14', 'Man 12']
+
+🧠 Ortak ürünler belirleniyor ve collusion ürünleri seçiliyor...
+
+
+🔵 Grup 1 - Ortak Tarih: 2025-01-01
+   ⭐ Lider Shop: Shop 12
+   🛒 Followerlar: ['Shop 6', 'Shop 11', 'Shop 10', 'Shop 18']
+   ⏱️ Delay Günleri: {'Shop 12': 0, 'Shop 6': 7, 'Shop 11': 1, 'Shop 10': 2, 'Shop 18': 6}
+   📅 Zam Günleri: ['2025-01-29', '2025-02-25', '2025-03-11', '2025-03-27', '2025-04-04', '2025-04-20']
+   🎯 Collusion Ürünleri: ['Product 7', 'Product 444', 'Product 13', 'Product 441', 'Product 6', 'Product 448']
+
+
+🔵 Grup 2 - Ortak Tarih: 2025-01-01
+   ⭐ Lider Shop: Shop 15
+   🛒 Followerlar: ['Shop 1', 'Shop 4', 'Shop 13']
+   ⏱️ Delay Günleri: {'Shop 15': 0, 'Shop 1': 1, 'Shop 4': 6, 'Shop 13': 2}
+   📅 Zam Günleri: ['2025-02-12', '2025-02-21', '2025-03-31', '2025-04-16']
+   🎯 Collusion Ürünleri: ['Product 113', 'Product 130', 'Product 119', 'Product 124', 'Product 123', 'Product 140', 'Product 112', 'Product 126', 'Product 122']
+
+
+🔵 Grup 3 - Ortak Tarih: 2025-01-01
+   ⭐ Lider Shop: Shop 20
+   🛒 Followerlar: ['Shop 19', 'Shop 3', 'Shop 17', 'Shop 9']
+   ⏱️ Delay Günleri: {'Shop 20': 0, 'Shop 19': 4, 'Shop 3': 6, 'Shop 17': 3, 'Shop 9': 2}
+   📅 Zam Günleri: ['2025-01-17', '2025-02-01', '2025-03-18', '2025-04-21']
+   🎯 Collusion Ürünleri: ['Product 376', 'Product 79', 'Product 76', 'Product 65', 'Product 62', 'Product 77', 'Product 370', 'Product 364', 'Product 369']
+
+
+🔵 Grup 4 - Ortak Tarih: 2025-01-01
+   ⭐ Lider Shop: Shop 5
+   🛒 Followerlar: ['Shop 16', 'Shop 8', 'Shop 7', 'Shop 14', 'Shop 2']
+   ⏱️ Delay Günleri: {'Shop 5': 0, 'Shop 16': 7, 'Shop 8': 3, 'Shop 7': 6, 'Shop 14': 1, 'Shop 2': 7}
+   📅 Zam Günleri: ['2025-01-25', '2025-02-07', '2025-02-23', '2025-03-25', '2025-04-05', '2025-04-20']
+   🎯 Collusion Ürünleri: ['Product 266', 'Product 348', 'Product 269', 'Product 356', 'Product 359', 'Product 262', 'Product 273', 'Product 263']
+
+
+Process finished with exit code 0
 
 
 

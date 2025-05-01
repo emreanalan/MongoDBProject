@@ -202,7 +202,6 @@ import random
 from datetime import datetime, timedelta
 from collections import defaultdict
 
-# === MongoDB Bağlantısı === #
 client = pymongo.MongoClient(
     "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
     serverSelectionTimeoutMS=300000,
@@ -211,10 +210,8 @@ client = pymongo.MongoClient(
 )
 db = client["DataSet"]
 
-# === Tüm Manufacturer Listesi === #
 manufacturers = [f"Man {i}" for i in range(1, 26)]
 
-# === Manufacturer Cache === #
 print("🔵 Manufacturer cache oluşturuluyor...")
 manufacturer_cache = {}
 for manu in manufacturers:
@@ -222,8 +219,8 @@ for manu in manufacturers:
     manufacturer_cache[manu] = {doc["Date"]: doc for doc in cursor}
 print("✅ Manufacturer cache tamamlandı.\n")
 
-# === Shop Gruplarını Oluştur === #
 def create_collusion_groups_from_list(shop_ids):
+    shop_ids = list(shop_ids)
     random.shuffle(shop_ids)
     groups = []
     idx = 0
@@ -239,24 +236,19 @@ def create_collusion_groups_from_list(shop_ids):
             break
     return groups
 
-# === Her Grup İçin Manufacturer Ata ve Yapıyı Döndür === #
 def assign_manufacturers_to_groups(collusion_groups):
     group_manus_map = {}
     for group_num, group_shops in enumerate(collusion_groups, start=1):
         common_manus = random.sample(manufacturers, 2)
         remaining_manus = [m for m in manufacturers if m not in common_manus]
-
+        shop_manus = {}
         print(f"\n🔹 Grup {group_num}")
         print(f"🔁 Ortak Manufacturer'lar: {common_manus}")
-
-        shop_manus = {}
         for shop in group_shops:
-            extra_count = random.choice([1, 2])
-            extra_manus = random.sample(remaining_manus, extra_count)
+            extra_manus = random.sample(remaining_manus, random.choice([1, 2]))
             full_manus = common_manus + extra_manus
             shop_manus[shop] = full_manus
             print(f"  🛍️ {shop} -> {full_manus}")
-
         group_manus_map[group_num] = {
             "group_shops": group_shops,
             "common_manus": common_manus,
@@ -264,11 +256,9 @@ def assign_manufacturers_to_groups(collusion_groups):
         }
     return group_manus_map
 
-# === Zam Günlerini Seç === #
-def select_zam_days(all_dates):
+def select_zam_days(dates):
     zam_days = []
-    possible_days = list(range(7, len(all_dates)))
-
+    possible_days = list(range(7, len(dates)))
     while True:
         if len(zam_days) >= 6 or not possible_days:
             break
@@ -282,39 +272,26 @@ def select_zam_days(all_dates):
             break
         if len(zam_days) == 5 and random.random() > 0.4:
             break
-    return [all_dates[i] for i in sorted(zam_days)]
+    return [dates[i] for i in sorted(zam_days)]
 
-# === Ortak Ürünleri Belirle, Fiyatları Hesapla ve Yaz === #
-def select_collusion_products(group_manus_map):
+def generate_collusion_shops(group_manus_map):
     print("\n🧠 Ortak ürünler belirleniyor ve collusion ürünleri seçiliyor...\n")
-    products_collection = db["Products"]
+    all_dates = [datetime(2025, 1, 1) + timedelta(days=i) for i in range(115)]
 
     for group_num, group_data in group_manus_map.items():
         common_manus = group_data["common_manus"]
         group_shops = group_data["group_shops"]
+        shop_manus_map = group_data["shop_manus"]
+
         leader = group_shops[0]
         followers = group_shops[1:]
+        delays = {shop: (0 if shop == leader else random.randint(1, 7)) for shop in group_shops}
+        zam_days = select_zam_days(all_dates)
 
-        date_sets = []
-        for manu in common_manus:
-            manu_dates = set(manufacturer_cache[manu].keys())
-            date_sets.append({d.date() for d in manu_dates})
-
-        if not date_sets:
-            print(f"⚠️ Grup {group_num}: Ortak manufacturer tarihleri bulunamadı.")
-            continue
-
-        common_dates = set.intersection(*date_sets)
-        if not common_dates:
-            print(f"⚠️ Grup {group_num}: Ortak gün bulunamadı.")
-            continue
-
-        sample_date = sorted(common_dates)[0]
-        sample_datetime = datetime.combine(sample_date, datetime.min.time())
-
+        sample_date = all_dates[0]
         all_products = set()
         for manu in common_manus:
-            manu_doc = manufacturer_cache[manu].get(sample_datetime)
+            manu_doc = manufacturer_cache[manu].get(sample_date)
             if not manu_doc:
                 continue
             for i in range(1, 21):
@@ -323,63 +300,75 @@ def select_collusion_products(group_manus_map):
                     all_products.add(pname)
 
         all_products = list(all_products)
+        collusion_products = random.sample(all_products, max(1, int(len(all_products) * random.uniform(0.15, 0.30))))
+        collusion_price_map = {p: round(random.uniform(5.0, 10.0), 2) / 100 for p in collusion_products}
 
-        if not all_products:
-            print(f"⚠️ Grup {group_num}: Ortak üreticilerde ürün bulunamadı.")
-            continue
-
-        count = max(1, int(len(all_products) * random.uniform(0.15, 0.30)))
-        selected = random.sample(all_products, count)
-        collusion_prices = {p: round(random.uniform(5.0, 10.0), 2) / 100 for p in selected}
-
-        all_dates = [sample_datetime + timedelta(days=i) for i in range(115)]
-        zam_days = select_zam_days(all_dates)
-        delays = {shop: random.randint(1, 3) for shop in group_shops}
-
-        print(f"🔵 Grup {group_num} - Ortak Tarih: {sample_date.strftime('%Y-%m-%d')}")
+        print(f"\n🔵 Grup {group_num} - Ortak Tarih: {sample_date.strftime('%Y-%m-%d')}")
         print(f"   ⭐ Lider Shop: {leader}")
         print(f"   🛒 Followerlar: {followers}")
         print(f"   ⏱️ Delay Günleri: {delays}")
         print(f"   📅 Zam Günleri: {[d.strftime('%Y-%m-%d') for d in zam_days]}")
-        print(f"   🎯 Collusion Ürünleri: {selected}\n")
+        print(f"   🎯 Collusion Ürünleri: {collusion_products}\n")
 
-        # === Collusion fiyatlarını yaz === #
         for shop in group_shops:
-            delay = delays[shop]
             shop_collection = db[shop]
+            profit_variation = defaultdict(lambda: round(random.uniform(-0.1, 0.1), 3))
+            previous_prices = {}
+            bulk_ops = []
+
             for date in all_dates:
-                eff_date = date + timedelta(days=delay) if shop != leader else date
                 doc = {
                     "Date": date,
                     "Store Type": shop,
                     "Description": f"Generated collusion prices on {date.strftime('%Y-%m-%d')}"
                 }
-                for manu in common_manus:
-                    manu_data = manufacturer_cache[manu].get(eff_date)
-                    if not manu_data:
-                        continue
+                shop_manus = shop_manus_map[shop]
+
+                for manu in shop_manus:
                     manu_doc = {}
                     for i in range(1, 21):
-                        pname = manu_data.get(f"Product {i}")
-                        if not pname or pname not in selected:
-                            continue
-                        base_price_str = manu_data.get(f"Product {i} Price")
-                        if not base_price_str:
-                            continue
-                        base_price = float(base_price_str.replace(",", "").replace(" TL", ""))
-                        final_price = base_price * (1 + collusion_prices[pname])
-                        manu_doc[f"Product {i}"] = pname
-                        manu_doc[f"Product {i} Price"] = f"{final_price:,.2f} TL"
+                        pname = None
+                        base_price = None
+                        for zam_day in zam_days:
+                            write_day = zam_day + timedelta(days=delays[shop])
+                            if date == write_day:
+                                base_doc = manufacturer_cache[manu].get(zam_day)
+                                if base_doc:
+                                    pname = base_doc.get(f"Product {i}")
+                                    base_str = base_doc.get(f"Product {i} Price")
+                                    if pname and base_str:
+                                        base_price = float(base_str.replace(",", "").replace(" TL", ""))
+                                        profit_pct = collusion_price_map.get(pname, 0) * 100
+                                        final_price = base_price * (1 + profit_pct / 100)
+                                        break
+
+                        if pname is None:
+                            manu_data = manufacturer_cache[manu].get(date)
+                            if manu_data:
+                                pname = manu_data.get(f"Product {i}")
+                                base_str = manu_data.get(f"Product {i} Price")
+                                if pname and base_str:
+                                    base_price = float(base_str.replace(",", "").replace(" TL", ""))
+                                    if date in zam_days:
+                                        profit_pct = round(random.uniform(2.0, 12.0) + profit_variation[pname] * 100, 2)
+                                        final_price = base_price * (1 + profit_pct / 100)
+                                        previous_prices[pname] = final_price
+                                    else:
+                                        profit_pct = None
+                                        final_price = previous_prices.get(pname, base_price)
+                        if pname and base_price:
+                            manu_doc[f"Product {i}"] = pname
+                            manu_doc[f"Product {i} Manufacturer Price"] = f"{base_price:,.2f} TL"
+                            if profit_pct is not None:
+                                manu_doc[f"Product {i} Shop Profit %"] = profit_pct
+                            manu_doc[f"Product {i} Price"] = f"{final_price:,.2f} TL"
                     if manu_doc:
                         doc[f"{manu} Products"] = manu_doc
-                shop_collection.update_one({"Date": date}, {"$set": doc}, upsert=True)
+                bulk_ops.append(pymongo.UpdateOne({"Date": date}, {"$set": doc}, upsert=True))
+            if bulk_ops:
+                shop_collection.bulk_write(bulk_ops)
 
-# === Çalıştır === #
 if __name__ == "__main__":
-    collusion_groups = create_collusion_groups_from_list([1,2,3,4,5,6,7,8])
-    group_manufacturer_structure = assign_manufacturers_to_groups(collusion_groups)
-    select_collusion_products(group_manufacturer_structure)
-
-
-
-
+    collusion_groups = create_collusion_groups_from_list(range(1, 21))
+    group_structure = assign_manufacturers_to_groups(collusion_groups)
+    generate_collusion_shops(group_structure)

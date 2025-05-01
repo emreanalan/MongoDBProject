@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score, classification_report
 import joblib
 
 # Yeni eklenen feature engineering fonksiyonumuz
-from utils.feature_engineering import extract_features_from_shop
+from utils.feature_engineering2 import extract_features_from_shop
 
 # === MongoDB Bağlantısı === #
 client = pymongo.MongoClient(

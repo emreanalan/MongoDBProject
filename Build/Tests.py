@@ -1,68 +1,79 @@
 import pymongo
 from datetime import datetime, timedelta
+from pprint import pprint
 
-# === MongoDB Bağlantısı === #
-client = pymongo.MongoClient(
-    "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
-    serverSelectionTimeoutMS=300000,
-    socketTimeoutMS=600000,
-    connectTimeoutMS=300000
-)
+client = pymongo.MongoClient("mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 db = client["DataSet"]
 
-# === Parametreler === #
-shop_list = [f"Shop {i}" for i in range(1, 9)]
-price_delta_threshold = 0.01  # %1 fark
-minimum_match_days = 3
-minimum_common_products = 5
-
-# === Yardımcı Fonksiyon === #
-def extract_price(price_str):
-    if not price_str:
+# === Yardımcı === #
+def extract_price(val):
+    if not val:
         return None
-    return float(price_str.replace(" TL", "").replace(",", ""))
+    return float(val.replace(" TL", "").replace(",", ""))
 
-def detect_collusion():
-    collusion_scores = {}
+# === Test Fonksiyonu === #
+def test_collusion_group(group_shops: list, collusion_products: list, zam_days: list, delays: dict):
+    print("\n==============================")
+    print(f"🧪 Test başlatıldı: {group_shops}")
+    print("==============================")
 
-    for i, shop_a in enumerate(shop_list):
-        for shop_b in shop_list[i+1:]:
-            match_count = 0
-            product_overlap = {}
+    leader = group_shops[0]
+    success = True
 
-            cursor_a = db[shop_a].find({}, {"Date": 1})
-            all_dates = sorted([doc["Date"] for doc in cursor_a if "Date" in doc])
+    for zam_day in zam_days:
+        print(f"\n🔎 Test edilen zam günü: {zam_day.strftime('%Y-%m-%d')}")
+        leader_doc = db[leader].find_one({"Date": zam_day})
+        if not leader_doc:
+            print(f"❌ Lider {leader} verisi eksik.")
+            success = False
+            continue
 
-            for date in all_dates:
-                doc_a = db[shop_a].find_one({"Date": date})
-                doc_b = db[shop_b].find_one({"Date": date})
-                if not doc_a or not doc_b:
+        for manu_key in leader_doc:
+            if "Products" not in manu_key:
+                continue
+            for i in range(1, 21):
+                pname = leader_doc[manu_key].get(f"Product {i}")
+                if pname not in collusion_products:
                     continue
+                leader_price = extract_price(leader_doc[manu_key].get(f"Product {i} Price"))
 
-                for key in doc_a:
-                    if "Products" in key:
-                        manu_a = doc_a.get(key, {})
-                        manu_b = doc_b.get(key, {})
-                        for i in range(1, 21):
-                            p_key = f"Product {i}"
-                            p_price_a = extract_price(manu_a.get(f"{p_key} Price"))
-                            p_price_b = extract_price(manu_b.get(f"{p_key} Price"))
-                            if p_price_a and p_price_b:
-                                diff = abs(p_price_a - p_price_b) / max(p_price_a, p_price_b)
-                                if diff <= price_delta_threshold:
-                                    product_name = manu_a[p_key]
-                                    product_overlap.setdefault(date, []).append(product_name)
+                for follower in group_shops[1:]:
+                    delay_day = zam_day + timedelta(days=delays[follower])
+                    f_doc = db[follower].find_one({"Date": delay_day})
+                    if not f_doc:
+                        print(f"❌ {follower} verisi eksik: {delay_day}")
+                        success = False
+                        continue
+                    f_price = None
+                    for f_key in f_doc:
+                        if "Products" in f_key and f_doc[f_key].get(f"Product {i}") == pname:
+                            f_price = extract_price(f_doc[f_key].get(f"Product {i} Price"))
+                            break
+                    if f_price is None:
+                        print(f"❌ {follower} ürünü bulamadı: {pname}")
+                        success = False
+                    elif abs(leader_price - f_price) > 0.05:
+                        print(f"❌ {follower} fiyat uyumsuz: {pname} {leader_price} ≠ {f_price}")
+                        success = False
+                    else:
+                        print(f"✅ {follower} doğru fiyatladı: {pname} | Lider: {leader_price:.2f} | Takipçi: {f_price:.2f} | Fark: {abs(leader_price - f_price):.2f}")
 
-            for date, prods in product_overlap.items():
-                if len(prods) >= minimum_common_products:
-                    match_count += 1
+    if success:
+        print("\n🎯 Grup testi BAŞARILI ✅")
+    else:
+        print("\n⚠️ Grup testi BAŞARISIZ ❌")
 
-            if match_count >= minimum_match_days:
-                collusion_scores[(shop_a, shop_b)] = match_count
-
-    print("\n🔍 Tespit Edilen Potansiyel Collusion Çiftleri:")
-    for (a, b), score in sorted(collusion_scores.items(), key=lambda x: -x[1]):
-        print(f"  ⚠️ {a} & {b} -> {score} ortak gün")
-
+# === Örnek Kullanım === #
 if __name__ == "__main__":
-    detect_collusion()
+    test_collusion_group(
+        group_shops=["Shop 13", "Shop 5", "Shop 19", "Shop 18"],
+        collusion_products=[
+            "Product 218", "Product 219", "Product 146", "Product 154", "Product 205",
+            "Product 156", "Product 151", "Product 216"
+        ],
+        zam_days=[
+            datetime(2025, 1, 10), datetime(2025, 2, 19),
+            datetime(2025, 3, 10), datetime(2025, 3, 25)
+        ],
+        delays={"Shop 13": 0, "Shop 5": 1, "Shop 19": 5, "Shop 18": 7}
+    )

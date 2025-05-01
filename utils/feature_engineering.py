@@ -1,77 +1,52 @@
-def extract_features_from_shop(shop_docs):
-    import numpy as np
+def extract_features_for_shop(shop_name, db):
+    cursor = db[shop_name].find({})
+    days_with_price_increase = 0
+    total_price_increase_pct = 0
+    total_products_updated = 0
+    total_profit_pct = 0
+    total_entries = 0
+    collusion_products = []  # Yeni: Collusion ürünleri
 
-    all_prices = []
-    product_price_series = {}  # Ürün bazlı fiyat serileri
+    for doc in cursor:
+        for key in doc:
+            if "Products" in key:
+                manu_doc = doc[key]
+                for i in range(1, 21):
+                    pname = manu_doc.get(f"Product {i}")
+                    price_str = manu_doc.get(f"Product {i} Price")
+                    base_str = manu_doc.get(f"Product {i} Manufacturer Price")
+                    profit = manu_doc.get(f"Product {i} Shop Profit %")
 
-    for doc in shop_docs:
-        for manu in [f"Man{i} Products" for i in range(1, 26)]:
-            if manu in doc:
-                for key, value in doc[manu].items():
-                    if "Price" in key:
-                        pname_key = key.replace(" Price", "")
-                        pname = doc[manu].get(pname_key)
-                        if pname:
-                            price = float(value.replace(",", "").replace(" TL", ""))
-                            all_prices.append(price)
-                            if pname not in product_price_series:
-                                product_price_series[pname] = []
-                            product_price_series[pname].append((doc["Date"], price))
+                    if pname and price_str and base_str:
+                        try:
+                            price = float(price_str.replace(" TL", "").replace(",", ""))
+                            base = float(base_str.replace(" TL", "").replace(",", ""))
+                            pct_increase = (price - base) / base
+                            total_price_increase_pct += pct_increase
+                            total_products_updated += 1
+                            if pct_increase > 0.01:
+                                days_with_price_increase += 1
+                            if profit:
+                                total_profit_pct += float(profit)
+                            total_entries += 1
 
-    # Tüm fiyatlar için genel istatistikler
-    avg_price = np.mean(all_prices) if all_prices else 0
-    std_price = np.std(all_prices) if all_prices else 0
-    min_price = np.min(all_prices) if all_prices else 0
-    max_price = np.max(all_prices) if all_prices else 0
-    q1_price = np.percentile(all_prices, 25) if all_prices else 0
-    q3_price = np.percentile(all_prices, 75) if all_prices else 0
-    count_prices = len(all_prices)
+                            # Yeni: Eğer collusion ürünü ise, listeye ekleyelim
+                            if pname in collusion_products:
+                                collusion_products.append(pname)
+                        except:
+                            continue
 
-    # Ürün bazlı zam analizi
-    zam_freqs = []
-    zam_std_devs = []
-    sync_zam_counts = []
+    avg_price_increase_pct = total_price_increase_pct / total_products_updated if total_products_updated else 0
+    price_increase_frequency = 115 / days_with_price_increase if days_with_price_increase else 115
+    avg_products_updated_per_zam = total_products_updated / days_with_price_increase if days_with_price_increase else 0
+    avg_profit_pct = total_profit_pct / total_entries if total_entries else 0
 
-    date_set = set()
-    for prices in product_price_series.values():
-        prices.sort()
-        last_price = None
-        last_date = None
-        zam_days = []
-        zam_ratios = []
-
-        for date, price in prices:
-            if last_price is not None:
-                if price > last_price * 1.01:  # %1'den fazla artış varsa zam diyelim
-                    days_passed = (date - last_date).days
-                    zam_days.append(days_passed)
-                    zam_ratios.append((price - last_price) / last_price)
-                    date_set.add(date)
-
-            last_price = price
-            last_date = date
-
-        if zam_days:
-            zam_freqs.append(np.mean(zam_days))
-        if zam_ratios:
-            zam_std_devs.append(np.std(zam_ratios))
-
-    # Zam yapılan günlerde kaç ürün var
-    if date_set:
-        sync_ratio = len(date_set) / 115  # 115 günümüz var toplam
-    else:
-        sync_ratio = 0
-
-    feature_vector = [
-        avg_price,
-        std_price,
-        min_price,
-        max_price,
-        q1_price,
-        q3_price,
-        count_prices,
-        np.mean(zam_freqs) if zam_freqs else 0,
-        np.mean(zam_std_devs) if zam_std_devs else 0,
-        sync_ratio
-    ]
-    return feature_vector
+    return {
+        "shop": shop_name,
+        "avg_price_increase_pct": round(avg_price_increase_pct, 4),
+        "num_price_increase_days": days_with_price_increase,
+        "price_increase_frequency": round(price_increase_frequency, 2),
+        "avg_products_updated_per_zam": round(avg_products_updated_per_zam, 2),
+        "avg_profit_pct": round(avg_profit_pct, 2),
+        "num_collusion_products": len(collusion_products)  # Yeni: Collusion ürün sayısı
+    }

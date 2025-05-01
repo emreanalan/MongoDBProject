@@ -7,7 +7,7 @@ from tabulate import tabulate
 from sklearn.metrics import classification_report, accuracy_score
 
 # === Feature Engineering Fonksiyonunu Çağır ===
-from utils.feature_engineering import extract_features_from_shop
+from utils.feature_engineering2 import extract_features_from_shop
 
 # === MongoDB Bağlantısı === #
 client = pymongo.MongoClient(

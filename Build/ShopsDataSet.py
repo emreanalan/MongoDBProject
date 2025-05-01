@@ -252,4 +252,5 @@ def generate_normal_shop_data(shop_id_list):
     print("\n✅ Tüm ShopsDataSet kayıtları başarıyla tamamlandı!")
 
 # --- Shops oluşturuluyor ---
-generate_normal_shop_data([1, 2])
+for i in range(10, 20):
+    generate_normal_shop_data([i])
