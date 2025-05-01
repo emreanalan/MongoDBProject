@@ -1,79 +1,108 @@
 import pymongo
-from datetime import datetime, timedelta
-from pprint import pprint
+import matplotlib.pyplot as plt
+import pandas as pd
+from datetime import datetime
+from collections import defaultdict
 
-client = pymongo.MongoClient("mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+client = pymongo.MongoClient(
+    "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+)
 db = client["DataSet"]
 
-# === Yardımcı === #
-def extract_price(val):
-    if not val:
-        return None
-    return float(val.replace(" TL", "").replace(",", ""))
+test_cases = [
+    {'product': 'Product 287', 'shops': ['Shop 27', 'Shop 30', 'Shop 55', 'Shop 92']},  # collusion
+    {'product': 'Product 287', 'shops': ['Shop 22', 'Shop 34']}   # normal
+]
+def extract_price_data(product_name, shop_names):
+    data = []
+    for shop in shop_names:
+        cursor = db[shop].find({})
+        for doc in cursor:
+            date = doc.get("Date")
+            for key in doc:
+                if "Products" in key and isinstance(doc[key], dict):
+                    block = doc[key]
+                    for i in range(1, 21):
+                        pname = block.get(f"Product {i}")
+                        if pname == product_name:
+                            price_str = block.get(f"Product {i} Price")
+                            if price_str:
+                                price = float(price_str.replace(" TL", "").replace(",", ""))
+                                data.append({"Date": date, "Shop": shop, "Price": price})
+    return pd.DataFrame(data)
 
-# === Test Fonksiyonu === #
-def test_collusion_group(group_shops: list, collusion_products: list, zam_days: list, delays: dict):
-    print("\n==============================")
-    print(f"🧪 Test başlatıldı: {group_shops}")
-    print("==============================")
 
-    leader = group_shops[0]
-    success = True
 
-    for zam_day in zam_days:
-        print(f"\n🔎 Test edilen zam günü: {zam_day.strftime('%Y-%m-%d')}")
-        leader_doc = db[leader].find_one({"Date": zam_day})
-        if not leader_doc:
-            print(f"❌ Lider {leader} verisi eksik.")
-            success = False
-            continue
+# Grafik çiz
+fig, axs = plt.subplots(len(test_cases), 1, figsize=(14, 5 * len(test_cases)))
 
-        for manu_key in leader_doc:
-            if "Products" not in manu_key:
-                continue
-            for i in range(1, 21):
-                pname = leader_doc[manu_key].get(f"Product {i}")
-                if pname not in collusion_products:
-                    continue
-                leader_price = extract_price(leader_doc[manu_key].get(f"Product {i} Price"))
+if len(test_cases) == 1:
+    axs = [axs]
 
-                for follower in group_shops[1:]:
-                    delay_day = zam_day + timedelta(days=delays[follower])
-                    f_doc = db[follower].find_one({"Date": delay_day})
-                    if not f_doc:
-                        print(f"❌ {follower} verisi eksik: {delay_day}")
-                        success = False
-                        continue
-                    f_price = None
-                    for f_key in f_doc:
-                        if "Products" in f_key and f_doc[f_key].get(f"Product {i}") == pname:
-                            f_price = extract_price(f_doc[f_key].get(f"Product {i} Price"))
-                            break
-                    if f_price is None:
-                        print(f"❌ {follower} ürünü bulamadı: {pname}")
-                        success = False
-                    elif abs(leader_price - f_price) > 0.05:
-                        print(f"❌ {follower} fiyat uyumsuz: {pname} {leader_price} ≠ {f_price}")
-                        success = False
-                    else:
-                        print(f"✅ {follower} doğru fiyatladı: {pname} | Lider: {leader_price:.2f} | Takipçi: {f_price:.2f} | Fark: {abs(leader_price - f_price):.2f}")
+for i, case in enumerate(test_cases):
+    df = extract_price_data(case["product"], case["shops"])
+    # Hangi shoplarda ürün gerçekten bulunmuş?
+    for shop in case["shops"]:
+        if not df[df["Shop"] == shop].empty:
+            print(f"✅ {case['product']} bulundu: {shop}")
+        else:
+            print(f"❌ {case['product']} YOK: {shop}")
 
-    if success:
-        print("\n🎯 Grup testi BAŞARILI ✅")
-    else:
-        print("\n⚠️ Grup testi BAŞARISIZ ❌")
+    df["Date"] = pd.to_datetime(df["Date"])
+    ax = axs[i]
+    for shop in case["shops"]:
+        sub = df[df["Shop"] == shop].sort_values("Date")
+        ax.plot(sub["Date"], sub["Price"], label=shop)
+    ax.set_title(f"Fiyat Değişimi - {case['product']}")
+    ax.set_xlabel("Tarih")
+    ax.set_ylabel("Fiyat (TL)")
+    ax.legend()
+    ax.grid(True)
 
-# === Örnek Kullanım === #
-if __name__ == "__main__":
-    test_collusion_group(
-        group_shops=["Shop 13", "Shop 5", "Shop 19", "Shop 18"],
-        collusion_products=[
-            "Product 218", "Product 219", "Product 146", "Product 154", "Product 205",
-            "Product 156", "Product 151", "Product 216"
-        ],
-        zam_days=[
-            datetime(2025, 1, 10), datetime(2025, 2, 19),
-            datetime(2025, 3, 10), datetime(2025, 3, 25)
-        ],
-        delays={"Shop 13": 0, "Shop 5": 1, "Shop 19": 5, "Shop 18": 7}
-    )
+plt.tight_layout()
+plt.show()
+
+
+
+
+# Shop grupları
+# collusion_shops = ["Shop 55", "Shop 27", "Shop 30", "Shop 92"]
+# normal_shops = ["Shop 34", "Shop 60", "Shop 12", "Shop 9", "Shop 22"]
+#
+# def product_counts(shop_list):
+#     product_freq = defaultdict(set)
+#     for shop in shop_list:
+#         cursor = db[shop].find({})
+#         for doc in cursor:
+#             for key in doc:
+#                 if "Products" in key and isinstance(doc[key], dict):
+#                     block = doc[key]
+#                     for i in range(1, 21):
+#                         pname = block.get(f"Product {i}")
+#                         if pname:
+#                             product_freq[pname].add(shop)
+#     return product_freq
+#
+# collusion_counts = product_counts(collusion_shops)
+# normal_counts = product_counts(normal_shops)
+#
+# common_products = set(collusion_counts.keys()).intersection(normal_counts.keys())
+# product_common_count = {
+#     p: len(collusion_counts[p]) + len(normal_counts[p])
+#     for p in common_products
+# }
+# top_product, count = max(product_common_count.items(), key=lambda x: x[1])
+#
+# print(f"\n🏆 En yaygın ortak ürün: {top_product}")
+# print(f"📊 Geçtiği toplam shop sayısı: {count}")
+#
+# # Test case oluştur
+# collusion_list = sorted(list(collusion_counts[top_product]))[:5]
+# normal_list = sorted(list(normal_counts[top_product]))[:5]
+#
+# print("\n📦 Otomatik Test Case:")
+# print("test_cases = [")
+# print(f"    {{'product': '{top_product}', 'shops': {collusion_list}}},  # collusion")
+# print(f"    {{'product': '{top_product}', 'shops': {normal_list}}}   # normal")
+# print("]")
+
