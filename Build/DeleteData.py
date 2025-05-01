@@ -71,7 +71,7 @@ def delete_date_range(collection_name, start_date_str, end_date_str):
 #
 # print("Tüm Product collectionları başarıyla temizlendi!")
 
-for i in range(1, 401):
+for i in range(1, 40):
     collection_name = f"Shop {i}"
     if collection_name in db.list_collection_names():
         db.drop_collection(collection_name)
@@ -80,6 +80,16 @@ for i in range(1, 401):
         print(f"Collection '{collection_name}' bulunamadı, zaten yok.")
 
 print("Tüm Product collectionları başarıyla temizlendi!")
+
+# for i in range(1, 26):
+#     collection_name = f"Man {i}"
+#     if collection_name in db.list_collection_names():
+#         db.drop_collection(collection_name)
+#         print(f"Collection '{collection_name}' silindi.")
+#     else:
+#         print(f"Collection '{collection_name}' bulunamadı, zaten yok.")
+#
+# print("Tüm Product collectionları başarıyla temizlendi!")
 #################################################################################################
 
 # man1_collection = db["Man1"]

@@ -1,95 +1,68 @@
 import pymongo
 from datetime import datetime, timedelta
 
-def test_shops_relations(shops):
-    client = pymongo.MongoClient(
-        "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
-    )
-    db = client["DataSet"]
+# === MongoDB Bağlantısı === #
+client = pymongo.MongoClient(
+    "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+    serverSelectionTimeoutMS=300000,
+    socketTimeoutMS=600000,
+    connectTimeoutMS=300000
+)
+db = client["DataSet"]
 
-    # --- Her Shop'ın fiyat verisini çekelim
-    shop_data = {}
-    for shop in shops:
-        collection = db[shop]
-        records = list(collection.find({}).sort("Date", 1))
-        date_to_prices = {}
-        for record in records:
-            date = record["Date"]
-            prices = {}
-            for manu_key in [k for k in record.keys() if k.endswith("Products")]:
-                products = record[manu_key]
-                for key in products:
-                    if "Price" in key:
-                        continue
-                    num = key.split()[1]
-                    pname = products.get(f"Product {num}")
-                    pprice_str = products.get(f"Product {num} Price")
-                    if pname and pprice_str:
-                        price = float(pprice_str.replace(",", "").replace(" TL", ""))
-                        prices[pname] = price
-            date_to_prices[date] = prices
-        shop_data[shop] = date_to_prices
+# === Parametreler === #
+shop_list = [f"Shop {i}" for i in range(1, 9)]
+price_delta_threshold = 0.01  # %1 fark
+minimum_match_days = 3
+minimum_common_products = 5
 
-    leader = shops[0]
-    followers = shops[1:]
+# === Yardımcı Fonksiyon === #
+def extract_price(price_str):
+    if not price_str:
+        return None
+    return float(price_str.replace(" TL", "").replace(",", ""))
 
-    print(f"\n🔵 Test Başladı: Leader = {leader}, Followers = {followers}")
+def detect_collusion():
+    collusion_scores = {}
 
-    # --- Leader zam günlerini bulalım
-    leader_dates = sorted(shop_data[leader].keys())
-    previous_prices = {}
-    zam_days = []
+    for i, shop_a in enumerate(shop_list):
+        for shop_b in shop_list[i+1:]:
+            match_count = 0
+            product_overlap = {}
 
-    for date in leader_dates:
-        prices = shop_data[leader][date]
-        for pname, price in prices.items():
-            if pname in previous_prices:
-                if abs(price - previous_prices[pname]) > 0.01:
-                    zam_days.append(date)
-                    break
-            previous_prices[pname] = price
+            cursor_a = db[shop_a].find({}, {"Date": 1})
+            all_dates = sorted([doc["Date"] for doc in cursor_a if "Date" in doc])
 
-    zam_days = sorted(list(set(zam_days)))
-
-    print(f"📅 Bulunan Zam Günleri: {[d.strftime('%Y-%m-%d') for d in zam_days]}")
-
-    # --- Şimdi follower'lar doğru takip ediyor mu bakalım
-    for follower in followers:
-        follower_dates = sorted(shop_data[follower].keys())
-
-        for zam_day in zam_days:
-            # Follower hangi gün tepki vermiş?
-            min_delay = None
-            found = False
-
-            for offset in range(1, 8):  # Delay max 7 gün olabilir
-                target_day = zam_day + timedelta(days=offset)
-                if target_day not in follower_dates:
+            for date in all_dates:
+                doc_a = db[shop_a].find_one({"Date": date})
+                doc_b = db[shop_b].find_one({"Date": date})
+                if not doc_a or not doc_b:
                     continue
 
-                leader_prices = shop_data[leader][zam_day]
-                follower_prices = shop_data[follower][target_day]
+                for key in doc_a:
+                    if "Products" in key:
+                        manu_a = doc_a.get(key, {})
+                        manu_b = doc_b.get(key, {})
+                        for i in range(1, 21):
+                            p_key = f"Product {i}"
+                            p_price_a = extract_price(manu_a.get(f"{p_key} Price"))
+                            p_price_b = extract_price(manu_b.get(f"{p_key} Price"))
+                            if p_price_a and p_price_b:
+                                diff = abs(p_price_a - p_price_b) / max(p_price_a, p_price_b)
+                                if diff <= price_delta_threshold:
+                                    product_name = manu_a[p_key]
+                                    product_overlap.setdefault(date, []).append(product_name)
 
-                match_count = 0
-                total_count = 0
+            for date, prods in product_overlap.items():
+                if len(prods) >= minimum_common_products:
+                    match_count += 1
 
-                for pname, lprice in leader_prices.items():
-                    fprice = follower_prices.get(pname)
-                    if fprice is None:
-                        continue
-                    total_count += 1
-                    if abs(fprice - lprice) <= 0.01:
-                        match_count += 1
+            if match_count >= minimum_match_days:
+                collusion_scores[(shop_a, shop_b)] = match_count
 
-                if total_count > 0 and match_count / total_count > 0.8:  # %80'den fazlası eşleşiyorsa
-                    min_delay = offset
-                    found = True
-                    break
+    print("\n🔍 Tespit Edilen Potansiyel Collusion Çiftleri:")
+    for (a, b), score in sorted(collusion_scores.items(), key=lambda x: -x[1]):
+        print(f"  ⚠️ {a} & {b} -> {score} ortak gün")
 
-            if not found:
-                print(f"⚠️ {follower} mağazası {zam_day.strftime('%Y-%m-%d')} zam gününe tepki vermemiş.")
-            else:
-                print(f"✅ {follower} mağazası {zam_day.strftime('%Y-%m-%d')} zamını {min_delay} gün gecikmeli takip etmiş.")
-
-    print("\n✅ Test Bitti.\n")
-
+if __name__ == "__main__":
+    detect_collusion()

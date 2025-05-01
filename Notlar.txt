@@ -1,0 +1,142 @@
+man low moderate high ---------
+her rproduct için ayrı pofit  -------------
+collusiona dahil olan productları %20 si collusion a dahil   ----------
+detection da produc tproduct bakcak
+normal ve gruplar diye ayır
+tespit iiçn tarih verilebiliyo mu
+
+
+========================================================================================================================
+
+🏭 ManufacturerDataSet.py – Adım Adım Ne Yapıyor?
+1. Ürün Listesi Hazırlanıyor
+500 ürün (Product 1–Product 500) listeleniyor.
+
+2. 25 Üretici (Manufacturer) Oluşturuluyor
+Her üreticiye 20 farklı ürün atanıyor.
+
+Örn: Man 1 → Product 1–Product 20
+
+3. Her Üreticiye Rastgele Production Rate Veriliyor
+Low, Moderate, High (Üretim Hızı)
+
+Buna göre Cost multiplier belirleniyor:
+
+Low: ×1.00
+
+Moderate: ×0.95
+
+High: ×0.90
+
+4. Production Rate’e Göre Profit % Belirleniyor
+Low → %2–4
+
+Moderate → %6.5–9
+
+High → %11–13.5
+
+5. 115 Günlük Fiyatlandırma Yapılıyor
+Her gün için ürün fiyatları hesaplanıyor:
+
+Cost Price = Ürün maliyeti × çarpan
+
+Price = Cost Price × (1 + profit%)
+
+6. MongoDB’ye Şu Şekilde Kaydediliyor:
+json
+Copy
+Edit
+{
+  "Date": "2025-01-01",
+  "Production Rate": "Moderate",
+  "Profit Percentage": 8.5,
+  "Product 1": "Product 100",
+  "Product 1 Cost Price": "950.00 TL",
+  "Product 1 Price": "1,026.00 TL"
+}
+🏪 ShopsDataSet.py – Adım Adım Ne Yapıyor?
+1. Tüm Manufacturer Verileri Cache Ediliyor
+Man 1–Man 25 verileri (115 gün) belleğe alınır.
+
+2. Her Manufacturer–Product İçin Profit % Belirleniyor
+Her üretici–ürün çifti için 1 kez %profit atanır.
+
+Örn: Man 11 - Product 300 → %5.45
+
+Bu bilgiler: manufacturer_product_profit_cache
+
+3. Shops Oluşturuluyor
+Örn: Shop 1, Shop 2 ...
+
+Her shop’a rastgele 2–3 üretici atanır.
+
+4. Her Shop’a Hafif Profit Varyasyonu Ekleniyor
+Shop, üretici-ürün profiti etrafında ±%0.1 sapmalı yeni değer üretir.
+
+Örn: Man 11 - Product 300 → %5.52
+
+5. Zam Günleri Rastgele Seçiliyor
+Shop başına 2–5 gün, örn: [17, 48, 72]
+
+6. 115 Günlük Fiyatlandırma Yapılıyor
+İlk gün ve zam günlerinde:
+
+shop_price = manufacturer_price × (1 + profit%)
+
+Diğer günlerde:
+
+En son kullanılan fiyat tekrar yazılır.
+
+7. MongoDB’ye Şu Şekilde Kaydediliyor:
+json
+Copy
+Edit
+{
+  "Date": "2025-01-17",
+  "Store Type": "Shop 1",
+  "Man 11 Products": {
+    "Product 1": "Product 300",
+    "Product 1 Manufacturer Price": "1000.00 TL",
+    "Product 1 Shop Profit %": 5.52,
+    "Product 1 Price": "1,055.20 TL"
+  }
+}
+
+
+🔢 1. Collusion Grubu
+Her grup 3–5 Shop’tan oluşur (✓ aynı).
+
+🏭 2. Manufacturer Seçimi
+Her shop için 3–4 manufacturer seçilir.
+
+Grup içindeki en az 2 manufacturer ortak olacak.
+
+Diğerleri farklı olabilir, bu sayede:
+
+Zam davranışında benzerlik korunur (ortak ürünler).
+
+Farklılıklar da var → gerçekçi yapı korunur.
+
+📌 Uygulama:
+Önce grup için 2 ortak manufacturer seç.
+
+Sonra her shop’a 1–2 tane daha ekstra manufacturer ekle.
+
+🔍 3. Collusion Ürün Seçimi
+Her shop’un sahip olduğu tüm ürünlerin birleşiminden:
+
+%15–30 kadarı collusion ürünü olarak seçilir.
+
+Bu ürünlere aynı günlerde aynı zam oranı uygulanır (✓ önceki mantık devam).
+
+📈 4. Zam Oranları
+Collusion ürünler: ürün bazlı sabit zam oranı (örneğin: Product 333 → %10.12 tüm shoplar için)
+
+Diğer ürünler: her shop için küçük farklılık içeren profit % ile zam yapılır.
+
+
+
+
+
+
+
