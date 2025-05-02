@@ -169,410 +169,400 @@ Diğer ürünler: her shop için küçük farklılık içeren profit % ile zam y
 
 🚀 ShopsDataSet oluşturuluyor...
 
-🔵 Shop 49 için seçilen manufacturerlar: ['Man 18', 'Man 4']
-  📅 Shop 49 zam günleri: ['2025-01-31', '2025-04-08']
-✅ Shop 49 için 115 kayıt eklendi.
-
-🔵 Shop 1 için seçilen manufacturerlar: ['Man 23', 'Man 24', 'Man 14']
-  📅 Shop 1 zam günleri: ['2025-01-13', '2025-03-20']
+🔵 Shop 1 için seçilen manufacturerlar: ['Man 6', 'Man 5']
+  📅 Shop 1 zam günleri: ['2025-02-03', '2025-03-30', '2025-04-10']
 ✅ Shop 1 için 115 kayıt eklendi.
 
-🔵 Shop 65 için seçilen manufacturerlar: ['Man 13', 'Man 18', 'Man 20']
-  📅 Shop 65 zam günleri: ['2025-02-02', '2025-02-12', '2025-03-20']
+🔵 Shop 29 için seçilen manufacturerlar: ['Man 1', 'Man 4']
+  📅 Shop 29 zam günleri: ['2025-01-23', '2025-03-01', '2025-03-21']
+✅ Shop 29 için 115 kayıt eklendi.
+
+🔵 Shop 31 için seçilen manufacturerlar: ['Man 24', 'Man 6']
+  📅 Shop 31 zam günleri: ['2025-01-27', '2025-02-23', '2025-03-28', '2025-04-04']
+✅ Shop 31 için 115 kayıt eklendi.
+
+🔵 Shop 65 için seçilen manufacturerlar: ['Man 13', 'Man 6']
+  📅 Shop 65 zam günleri: ['2025-01-14', '2025-02-12', '2025-02-17', '2025-02-20', '2025-03-07']
 ✅ Shop 65 için 115 kayıt eklendi.
 
-🔵 Shop 23 için seçilen manufacturerlar: ['Man 20', 'Man 22', 'Man 6']
-  📅 Shop 23 zam günleri: ['2025-03-11', '2025-04-04', '2025-04-09']
-✅ Shop 23 için 115 kayıt eklendi.
-
-🔵 Shop 9 için seçilen manufacturerlar: ['Man 13', 'Man 24', 'Man 9']
-  📅 Shop 9 zam günleri: ['2025-01-15', '2025-01-28', '2025-03-15', '2025-03-23', '2025-03-31']
-✅ Shop 9 için 115 kayıt eklendi.
-
-🔵 Shop 34 için seçilen manufacturerlar: ['Man 5', 'Man 2', 'Man 15']
-  📅 Shop 34 zam günleri: ['2025-02-09', '2025-02-27', '2025-03-14']
-✅ Shop 34 için 115 kayıt eklendi.
-
-🔵 Shop 60 için seçilen manufacturerlar: ['Man 20', 'Man 8']
-  📅 Shop 60 zam günleri: ['2025-02-05', '2025-02-18', '2025-03-04', '2025-03-29']
+🔵 Shop 60 için seçilen manufacturerlar: ['Man 23', 'Man 13', 'Man 4']
+  📅 Shop 60 zam günleri: ['2025-03-16', '2025-03-21', '2025-04-16']
 ✅ Shop 60 için 115 kayıt eklendi.
 
-🔵 Shop 48 için seçilen manufacturerlar: ['Man 20', 'Man 14', 'Man 4']
-  📅 Shop 48 zam günleri: ['2025-01-20', '2025-03-12', '2025-03-21', '2025-04-10']
-✅ Shop 48 için 115 kayıt eklendi.
+🔵 Shop 49 için seçilen manufacturerlar: ['Man 10', 'Man 16', 'Man 11']
+  📅 Shop 49 zam günleri: ['2025-02-21', '2025-02-24', '2025-03-17', '2025-04-16']
+✅ Shop 49 için 115 kayıt eklendi.
 
-🔵 Shop 98 için seçilen manufacturerlar: ['Man 11', 'Man 21']
-  📅 Shop 98 zam günleri: ['2025-01-10', '2025-02-03', '2025-02-11', '2025-03-12', '2025-03-20']
-✅ Shop 98 için 115 kayıt eklendi.
-
-🔵 Shop 32 için seçilen manufacturerlar: ['Man 7', 'Man 22', 'Man 10']
-  📅 Shop 32 zam günleri: ['2025-01-09', '2025-02-28', '2025-03-19', '2025-03-31']
-✅ Shop 32 için 115 kayıt eklendi.
-
-🔵 Shop 13 için seçilen manufacturerlar: ['Man 19', 'Man 9']
-  📅 Shop 13 zam günleri: ['2025-01-22', '2025-02-25', '2025-03-07', '2025-03-24', '2025-04-04']
-✅ Shop 13 için 115 kayıt eklendi.
-
-🔵 Shop 94 için seçilen manufacturerlar: ['Man 8', 'Man 14']
-  📅 Shop 94 zam günleri: ['2025-01-13', '2025-03-21', '2025-04-16']
-✅ Shop 94 için 115 kayıt eklendi.
-
-🔵 Shop 87 için seçilen manufacturerlar: ['Man 16', 'Man 13']
-  📅 Shop 87 zam günleri: ['2025-01-12', '2025-02-06', '2025-03-08', '2025-04-19']
-✅ Shop 87 için 115 kayıt eklendi.
-
-🔵 Shop 35 için seçilen manufacturerlar: ['Man 9', 'Man 8']
-  📅 Shop 35 zam günleri: ['2025-01-18', '2025-02-08', '2025-03-15', '2025-03-16', '2025-03-21']
-✅ Shop 35 için 115 kayıt eklendi.
-
-🔵 Shop 54 için seçilen manufacturerlar: ['Man 20', 'Man 7', 'Man 6']
-  📅 Shop 54 zam günleri: ['2025-03-14', '2025-03-24', '2025-04-18']
-✅ Shop 54 için 115 kayıt eklendi.
-
-🔵 Shop 12 için seçilen manufacturerlar: ['Man 25', 'Man 1', 'Man 19']
-  📅 Shop 12 zam günleri: ['2025-02-28', '2025-03-25', '2025-03-27', '2025-03-29']
-✅ Shop 12 için 115 kayıt eklendi.
-
-🔵 Shop 14 için seçilen manufacturerlar: ['Man 12', 'Man 20', 'Man 11']
-  📅 Shop 14 zam günleri: ['2025-01-12', '2025-01-13']
-✅ Shop 14 için 115 kayıt eklendi.
-
-🔵 Shop 22 için seçilen manufacturerlar: ['Man 15', 'Man 3']
-  📅 Shop 22 zam günleri: ['2025-02-15', '2025-04-08', '2025-04-12', '2025-04-19']
-✅ Shop 22 için 115 kayıt eklendi.
-
-🔵 Shop 95 için seçilen manufacturerlar: ['Man 2', 'Man 3']
-  📅 Shop 95 zam günleri: ['2025-03-18', '2025-04-04', '2025-04-16']
-✅ Shop 95 için 115 kayıt eklendi.
-
-🔵 Shop 26 için seçilen manufacturerlar: ['Man 4', 'Man 20', 'Man 1']
-  📅 Shop 26 zam günleri: ['2025-01-12', '2025-01-23', '2025-03-12']
-✅ Shop 26 için 115 kayıt eklendi.
-
-🔵 Shop 17 için seçilen manufacturerlar: ['Man 7', 'Man 1', 'Man 12']
-  📅 Shop 17 zam günleri: ['2025-01-23', '2025-03-10', '2025-03-30']
-✅ Shop 17 için 115 kayıt eklendi.
-
-🔵 Shop 74 için seçilen manufacturerlar: ['Man 23', 'Man 10']
-  📅 Shop 74 zam günleri: ['2025-04-04', '2025-04-11']
-✅ Shop 74 için 115 kayıt eklendi.
-
-🔵 Shop 52 için seçilen manufacturerlar: ['Man 9', 'Man 21']
-  📅 Shop 52 zam günleri: ['2025-02-16', '2025-03-04', '2025-03-17']
-✅ Shop 52 için 115 kayıt eklendi.
-
-🔵 Shop 39 için seçilen manufacturerlar: ['Man 25', 'Man 22']
-  📅 Shop 39 zam günleri: ['2025-02-12', '2025-03-02', '2025-03-21', '2025-04-04', '2025-04-16']
-✅ Shop 39 için 115 kayıt eklendi.
-
-🔵 Shop 15 için seçilen manufacturerlar: ['Man 8', 'Man 1', 'Man 11']
-  📅 Shop 15 zam günleri: ['2025-01-15', '2025-01-25', '2025-01-29', '2025-04-07']
-✅ Shop 15 için 115 kayıt eklendi.
-
-🔵 Shop 93 için seçilen manufacturerlar: ['Man 24', 'Man 3', 'Man 16']
-  📅 Shop 93 zam günleri: ['2025-03-30', '2025-03-31']
-✅ Shop 93 için 115 kayıt eklendi.
-
-🔵 Shop 7 için seçilen manufacturerlar: ['Man 5', 'Man 18']
-  📅 Shop 7 zam günleri: ['2025-01-09', '2025-01-21']
-✅ Shop 7 için 115 kayıt eklendi.
-
-🔵 Shop 75 için seçilen manufacturerlar: ['Man 7', 'Man 25']
-  📅 Shop 75 zam günleri: ['2025-01-09', '2025-01-22']
-✅ Shop 75 için 115 kayıt eklendi.
-
-🔵 Shop 81 için seçilen manufacturerlar: ['Man 8', 'Man 20', 'Man 17']
-  📅 Shop 81 zam günleri: ['2025-01-17', '2025-02-19', '2025-03-05']
-✅ Shop 81 için 115 kayıt eklendi.
-
-🔵 Shop 86 için seçilen manufacturerlar: ['Man 5', 'Man 15']
-  📅 Shop 86 zam günleri: ['2025-01-09', '2025-03-18', '2025-04-17']
-✅ Shop 86 için 115 kayıt eklendi.
-
-🔵 Shop 59 için seçilen manufacturerlar: ['Man 20', 'Man 17']
-  📅 Shop 59 zam günleri: ['2025-01-08', '2025-02-03', '2025-03-30', '2025-04-04']
-✅ Shop 59 için 115 kayıt eklendi.
-
-🔵 Shop 79 için seçilen manufacturerlar: ['Man 9', 'Man 10']
-  📅 Shop 79 zam günleri: ['2025-02-19', '2025-02-23', '2025-03-13', '2025-04-01']
-✅ Shop 79 için 115 kayıt eklendi.
-
-🔵 Shop 83 için seçilen manufacturerlar: ['Man 2', 'Man 7', 'Man 13']
-  📅 Shop 83 zam günleri: ['2025-01-25', '2025-01-31', '2025-02-15', '2025-03-06']
-✅ Shop 83 için 115 kayıt eklendi.
-
-🔵 Shop 10 için seçilen manufacturerlar: ['Man 21', 'Man 4', 'Man 1']
-  📅 Shop 10 zam günleri: ['2025-01-06', '2025-02-10', '2025-03-02', '2025-04-10', '2025-04-19']
-✅ Shop 10 için 115 kayıt eklendi.
-
-🔵 Shop 24 için seçilen manufacturerlar: ['Man 4', 'Man 16']
-  📅 Shop 24 zam günleri: ['2025-01-11', '2025-02-17', '2025-03-19']
-✅ Shop 24 için 115 kayıt eklendi.
-
-🔵 Shop 97 için seçilen manufacturerlar: ['Man 6', 'Man 5']
-  📅 Shop 97 zam günleri: ['2025-03-24', '2025-03-26', '2025-04-13']
-✅ Shop 97 için 115 kayıt eklendi.
-
-🔵 Shop 82 için seçilen manufacturerlar: ['Man 16', 'Man 9']
-  📅 Shop 82 zam günleri: ['2025-01-20', '2025-03-09']
-✅ Shop 82 için 115 kayıt eklendi.
-
-🔵 Shop 66 için seçilen manufacturerlar: ['Man 15', 'Man 2', 'Man 10']
-  📅 Shop 66 zam günleri: ['2025-02-17', '2025-03-28']
-✅ Shop 66 için 115 kayıt eklendi.
-
-🔵 Shop 50 için seçilen manufacturerlar: ['Man 8', 'Man 19']
-  📅 Shop 50 zam günleri: ['2025-01-22', '2025-02-24', '2025-03-03', '2025-03-17', '2025-03-29']
+🔵 Shop 50 için seçilen manufacturerlar: ['Man 18', 'Man 25', 'Man 9']
+  📅 Shop 50 zam günleri: ['2025-02-15', '2025-02-23', '2025-03-08']
 ✅ Shop 50 için 115 kayıt eklendi.
 
-🔵 Shop 40 için seçilen manufacturerlar: ['Man 24', 'Man 11', 'Man 9']
-  📅 Shop 40 zam günleri: ['2025-01-06', '2025-01-09', '2025-02-19', '2025-02-22', '2025-03-13']
+🔵 Shop 59 için seçilen manufacturerlar: ['Man 9', 'Man 4']
+  📅 Shop 59 zam günleri: ['2025-02-18', '2025-03-01', '2025-03-06', '2025-03-22', '2025-04-05']
+✅ Shop 59 için 115 kayıt eklendi.
+
+🔵 Shop 77 için seçilen manufacturerlar: ['Man 10', 'Man 14']
+  📅 Shop 77 zam günleri: ['2025-01-17', '2025-02-22']
+✅ Shop 77 için 115 kayıt eklendi.
+
+🔵 Shop 81 için seçilen manufacturerlar: ['Man 11', 'Man 8', 'Man 6']
+  📅 Shop 81 zam günleri: ['2025-02-12', '2025-03-01', '2025-03-29']
+✅ Shop 81 için 115 kayıt eklendi.
+
+🔵 Shop 98 için seçilen manufacturerlar: ['Man 12', 'Man 8']
+  📅 Shop 98 zam günleri: ['2025-01-06', '2025-01-10', '2025-03-06', '2025-04-17']
+✅ Shop 98 için 115 kayıt eklendi.
+
+🔵 Shop 25 için seçilen manufacturerlar: ['Man 24', 'Man 15']
+  📅 Shop 25 zam günleri: ['2025-01-23', '2025-01-26', '2025-02-20', '2025-04-15']
+✅ Shop 25 için 115 kayıt eklendi.
+
+🔵 Shop 40 için seçilen manufacturerlar: ['Man 8', 'Man 5']
+  📅 Shop 40 zam günleri: ['2025-01-09', '2025-03-24']
 ✅ Shop 40 için 115 kayıt eklendi.
 
-🔵 Shop 19 için seçilen manufacturerlar: ['Man 20', 'Man 8']
-  📅 Shop 19 zam günleri: ['2025-01-11', '2025-02-02', '2025-02-13', '2025-03-12']
-✅ Shop 19 için 115 kayıt eklendi.
+🔵 Shop 46 için seçilen manufacturerlar: ['Man 2', 'Man 12', 'Man 15']
+  📅 Shop 46 zam günleri: ['2025-02-05', '2025-03-07', '2025-03-23', '2025-04-18', '2025-04-19']
+✅ Shop 46 için 115 kayıt eklendi.
 
-🔵 Shop 28 için seçilen manufacturerlar: ['Man 12', 'Man 14']
-  📅 Shop 28 zam günleri: ['2025-01-11', '2025-02-20', '2025-03-25']
-✅ Shop 28 için 115 kayıt eklendi.
+🔵 Shop 72 için seçilen manufacturerlar: ['Man 20', 'Man 14']
+  📅 Shop 72 zam günleri: ['2025-02-13', '2025-03-07', '2025-03-20', '2025-03-26', '2025-04-11']
+✅ Shop 72 için 115 kayıt eklendi.
 
-🔵 Shop 20 için seçilen manufacturerlar: ['Man 24', 'Man 23', 'Man 12']
-  📅 Shop 20 zam günleri: ['2025-01-15', '2025-02-11']
-✅ Shop 20 için 115 kayıt eklendi.
+🔵 Shop 93 için seçilen manufacturerlar: ['Man 6', 'Man 15', 'Man 19']
+  📅 Shop 93 zam günleri: ['2025-01-30', '2025-03-01', '2025-04-17']
+✅ Shop 93 için 115 kayıt eklendi.
 
-🔵 Shop 90 için seçilen manufacturerlar: ['Man 4', 'Man 7']
-  📅 Shop 90 zam günleri: ['2025-02-19', '2025-02-23', '2025-02-26', '2025-04-12', '2025-04-13']
-✅ Shop 90 için 115 kayıt eklendi.
+🔵 Shop 11 için seçilen manufacturerlar: ['Man 3', 'Man 1']
+  📅 Shop 11 zam günleri: ['2025-02-05', '2025-02-14', '2025-03-16', '2025-03-21']
+✅ Shop 11 için 115 kayıt eklendi.
 
-🔵 Shop 51 için seçilen manufacturerlar: ['Man 16', 'Man 6']
-  📅 Shop 51 zam günleri: ['2025-02-15', '2025-03-05', '2025-04-06', '2025-04-17']
-✅ Shop 51 için 115 kayıt eklendi.
+🔵 Shop 95 için seçilen manufacturerlar: ['Man 11', 'Man 23', 'Man 15']
+  📅 Shop 95 zam günleri: ['2025-01-29', '2025-02-09', '2025-02-23', '2025-03-08', '2025-04-12']
+✅ Shop 95 için 115 kayıt eklendi.
 
-🔵 Shop 69 için seçilen manufacturerlar: ['Man 5', 'Man 20', 'Man 6']
-  📅 Shop 69 zam günleri: ['2025-02-09', '2025-03-27', '2025-03-31', '2025-04-03']
-✅ Shop 69 için 115 kayıt eklendi.
+🔵 Shop 42 için seçilen manufacturerlar: ['Man 7', 'Man 21', 'Man 3']
+  📅 Shop 42 zam günleri: ['2025-01-15', '2025-02-23', '2025-04-04']
+✅ Shop 42 için 115 kayıt eklendi.
 
-🔵 Shop 88 için seçilen manufacturerlar: ['Man 11', 'Man 12']
-  📅 Shop 88 zam günleri: ['2025-01-09', '2025-01-14', '2025-02-02', '2025-02-16']
+🔵 Shop 27 için seçilen manufacturerlar: ['Man 25', 'Man 15']
+  📅 Shop 27 zam günleri: ['2025-01-14', '2025-02-10', '2025-02-17', '2025-03-08', '2025-04-19']
+✅ Shop 27 için 115 kayıt eklendi.
+
+🔵 Shop 66 için seçilen manufacturerlar: ['Man 1', 'Man 12']
+  📅 Shop 66 zam günleri: ['2025-01-28', '2025-02-27', '2025-03-09', '2025-03-21']
+✅ Shop 66 için 115 kayıt eklendi.
+
+🔵 Shop 88 için seçilen manufacturerlar: ['Man 19', 'Man 24']
+  📅 Shop 88 zam günleri: ['2025-01-16', '2025-01-26']
 ✅ Shop 88 için 115 kayıt eklendi.
 
-🔵 Shop 4 için seçilen manufacturerlar: ['Man 8', 'Man 7']
-  📅 Shop 4 zam günleri: ['2025-01-24', '2025-02-05', '2025-03-14']
-✅ Shop 4 için 115 kayıt eklendi.
+🔵 Shop 92 için seçilen manufacturerlar: ['Man 19', 'Man 8']
+  📅 Shop 92 zam günleri: ['2025-02-14', '2025-03-04', '2025-03-25', '2025-04-05', '2025-04-07']
+✅ Shop 92 için 115 kayıt eklendi.
 
-🔵 Shop 44 için seçilen manufacturerlar: ['Man 11', 'Man 23', 'Man 2']
-  📅 Shop 44 zam günleri: ['2025-01-27', '2025-03-22']
+🔵 Shop 38 için seçilen manufacturerlar: ['Man 18', 'Man 14']
+  📅 Shop 38 zam günleri: ['2025-01-17', '2025-03-01', '2025-04-13', '2025-04-18']
+✅ Shop 38 için 115 kayıt eklendi.
+
+🔵 Shop 71 için seçilen manufacturerlar: ['Man 24', 'Man 15']
+  📅 Shop 71 zam günleri: ['2025-01-24', '2025-01-29', '2025-03-06', '2025-03-21', '2025-04-20']
+✅ Shop 71 için 115 kayıt eklendi.
+
+🔵 Shop 35 için seçilen manufacturerlar: ['Man 2', 'Man 18', 'Man 4']
+  📅 Shop 35 zam günleri: ['2025-01-10', '2025-04-20']
+✅ Shop 35 için 115 kayıt eklendi.
+
+🔵 Shop 86 için seçilen manufacturerlar: ['Man 23', 'Man 4']
+  📅 Shop 86 zam günleri: ['2025-01-11', '2025-02-11']
+✅ Shop 86 için 115 kayıt eklendi.
+
+🔵 Shop 32 için seçilen manufacturerlar: ['Man 12', 'Man 10', 'Man 19']
+  📅 Shop 32 zam günleri: ['2025-02-02', '2025-02-14', '2025-02-23']
+✅ Shop 32 için 115 kayıt eklendi.
+
+🔵 Shop 6 için seçilen manufacturerlar: ['Man 14', 'Man 10', 'Man 7']
+  📅 Shop 6 zam günleri: ['2025-01-08', '2025-01-10', '2025-03-17', '2025-03-20']
+✅ Shop 6 için 115 kayıt eklendi.
+
+🔵 Shop 56 için seçilen manufacturerlar: ['Man 7', 'Man 9']
+  📅 Shop 56 zam günleri: ['2025-01-13', '2025-02-10', '2025-02-26', '2025-04-08']
+✅ Shop 56 için 115 kayıt eklendi.
+
+🔵 Shop 16 için seçilen manufacturerlar: ['Man 22', 'Man 15']
+  📅 Shop 16 zam günleri: ['2025-02-08', '2025-03-25', '2025-03-28']
+✅ Shop 16 için 115 kayıt eklendi.
+
+🔵 Shop 44 için seçilen manufacturerlar: ['Man 4', 'Man 16', 'Man 2']
+  📅 Shop 44 zam günleri: ['2025-03-12', '2025-03-21', '2025-04-13', '2025-04-15']
 ✅ Shop 44 için 115 kayıt eklendi.
 
-🔵 Shop 3 için seçilen manufacturerlar: ['Man 5', 'Man 7', 'Man 24']
-  📅 Shop 3 zam günleri: ['2025-03-02', '2025-03-21', '2025-03-31', '2025-04-04']
+🔵 Shop 62 için seçilen manufacturerlar: ['Man 3', 'Man 21', 'Man 25']
+  📅 Shop 62 zam günleri: ['2025-01-20', '2025-01-21', '2025-02-14', '2025-04-05']
+✅ Shop 62 için 115 kayıt eklendi.
+
+🔵 Shop 87 için seçilen manufacturerlar: ['Man 14', 'Man 3', 'Man 8']
+  📅 Shop 87 zam günleri: ['2025-02-14', '2025-02-16', '2025-03-22']
+✅ Shop 87 için 115 kayıt eklendi.
+
+🔵 Shop 53 için seçilen manufacturerlar: ['Man 24', 'Man 25']
+  📅 Shop 53 zam günleri: ['2025-01-20', '2025-02-24', '2025-03-10', '2025-04-15']
+✅ Shop 53 için 115 kayıt eklendi.
+
+🔵 Shop 85 için seçilen manufacturerlar: ['Man 11', 'Man 13']
+  📅 Shop 85 zam günleri: ['2025-01-27', '2025-03-24', '2025-04-04']
+✅ Shop 85 için 115 kayıt eklendi.
+
+🔵 Shop 26 için seçilen manufacturerlar: ['Man 10', 'Man 13', 'Man 1']
+  📅 Shop 26 zam günleri: ['2025-01-17', '2025-01-20', '2025-04-14']
+✅ Shop 26 için 115 kayıt eklendi.
+
+🔵 Shop 89 için seçilen manufacturerlar: ['Man 1', 'Man 6']
+  📅 Shop 89 zam günleri: ['2025-01-08', '2025-02-20', '2025-02-23', '2025-02-28', '2025-03-29']
+✅ Shop 89 için 115 kayıt eklendi.
+
+🔵 Shop 52 için seçilen manufacturerlar: ['Man 9', 'Man 12', 'Man 24']
+  📅 Shop 52 zam günleri: ['2025-03-26', '2025-03-27', '2025-03-31']
+✅ Shop 52 için 115 kayıt eklendi.
+
+🔵 Shop 75 için seçilen manufacturerlar: ['Man 3', 'Man 12']
+  📅 Shop 75 zam günleri: ['2025-01-17', '2025-01-28', '2025-02-10', '2025-03-06', '2025-03-11']
+✅ Shop 75 için 115 kayıt eklendi.
+
+🔵 Shop 84 için seçilen manufacturerlar: ['Man 18', 'Man 8', 'Man 14']
+  📅 Shop 84 zam günleri: ['2025-03-13', '2025-04-05']
+✅ Shop 84 için 115 kayıt eklendi.
+
+🔵 Shop 51 için seçilen manufacturerlar: ['Man 3', 'Man 23']
+  📅 Shop 51 zam günleri: ['2025-01-08', '2025-03-10']
+✅ Shop 51 için 115 kayıt eklendi.
+
+🔵 Shop 18 için seçilen manufacturerlar: ['Man 13', 'Man 3', 'Man 21']
+  📅 Shop 18 zam günleri: ['2025-01-20', '2025-02-08', '2025-02-14']
+✅ Shop 18 için 115 kayıt eklendi.
+
+🔵 Shop 73 için seçilen manufacturerlar: ['Man 14', 'Man 13']
+  📅 Shop 73 zam günleri: ['2025-01-15', '2025-04-03', '2025-04-06', '2025-04-12']
+✅ Shop 73 için 115 kayıt eklendi.
+
+🔵 Shop 3 için seçilen manufacturerlar: ['Man 9', 'Man 5']
+  📅 Shop 3 zam günleri: ['2025-02-17', '2025-04-20']
 ✅ Shop 3 için 115 kayıt eklendi.
+
+🔵 Shop 20 için seçilen manufacturerlar: ['Man 4', 'Man 9']
+  📅 Shop 20 zam günleri: ['2025-01-14', '2025-04-05']
+✅ Shop 20 için 115 kayıt eklendi.
+
+🔵 Shop 96 için seçilen manufacturerlar: ['Man 9', 'Man 8']
+  📅 Shop 96 zam günleri: ['2025-01-07', '2025-03-03', '2025-03-06', '2025-03-15', '2025-04-02']
+✅ Shop 96 için 115 kayıt eklendi.
+
+🔵 Shop 82 için seçilen manufacturerlar: ['Man 16', 'Man 15', 'Man 24']
+  📅 Shop 82 zam günleri: ['2025-02-10', '2025-02-21', '2025-02-24', '2025-03-06', '2025-04-20']
+✅ Shop 82 için 115 kayıt eklendi.
+
+🔵 Shop 94 için seçilen manufacturerlar: ['Man 15', 'Man 20']
+  📅 Shop 94 zam günleri: ['2025-02-19', '2025-03-05', '2025-03-15', '2025-04-02']
+✅ Shop 94 için 115 kayıt eklendi.
+
+🔵 Shop 2 için seçilen manufacturerlar: ['Man 11', 'Man 4']
+  📅 Shop 2 zam günleri: ['2025-02-02', '2025-02-11']
+✅ Shop 2 için 115 kayıt eklendi.
 
 
 ✅ Tüm ShopsDataSet kayıtları başarıyla tamamlandı!
 
 🧠 Ortak ürünler belirleniyor ve collusion ürünleri seçiliyor...
 
-      🔸 Shop 55 için tüm manufacturerlar: ['Man 15', 'Man 5', 'Man 6']
-      🔸 Shop 27 için tüm manufacturerlar: ['Man 15', 'Man 14', 'Man 20', 'Man 6']
-      🔸 Shop 30 için tüm manufacturerlar: ['Man 15', 'Man 5', 'Man 6', 'Man 19']
-      🔸 Shop 92 için tüm manufacturerlar: ['Man 15', 'Man 1', 'Man 6']
-   🧱 Ortak Manufacturerlar: ['Man 15', 'Man 6']
-      🔸 Shop 16 için tüm manufacturerlar: ['Man 24', 'Man 3', 'Man 18', 'Man 5']
-      🔸 Shop 5 için tüm manufacturerlar: ['Man 24', 'Man 11', 'Man 5']
-      🔸 Shop 46 için tüm manufacturerlar: ['Man 24', 'Man 25', 'Man 2', 'Man 5']
-   🧱 Ortak Manufacturerlar: ['Man 5', 'Man 24']
-      🔸 Shop 45 için tüm manufacturerlar: ['Man 11', 'Man 3', 'Man 8']
-      🔸 Shop 70 için tüm manufacturerlar: ['Man 18', 'Man 3', 'Man 8']
-      🔸 Shop 43 için tüm manufacturerlar: ['Man 13', 'Man 3', 'Man 8']
-      🔸 Shop 25 için tüm manufacturerlar: ['Man 7', 'Man 3', 'Man 8']
-   🧱 Ortak Manufacturerlar: ['Man 8', 'Man 3']
-      🔸 Shop 68 için tüm manufacturerlar: ['Man 10', 'Man 11', 'Man 5', 'Man 21']
-      🔸 Shop 36 için tüm manufacturerlar: ['Man 25', 'Man 11', 'Man 5', 'Man 21']
-      🔸 Shop 72 için tüm manufacturerlar: ['Man 11', 'Man 20', 'Man 21']
-      🔸 Shop 37 için tüm manufacturerlar: ['Man 11', 'Man 3', 'Man 5', 'Man 21']
-      🔸 Shop 31 için tüm manufacturerlar: ['Man 10', 'Man 11', 'Man 14', 'Man 21']
-   🧱 Ortak Manufacturerlar: ['Man 21', 'Man 11']
-      🔸 Shop 56 için tüm manufacturerlar: ['Man 18', 'Man 24', 'Man 9']
-      🔸 Shop 61 için tüm manufacturerlar: ['Man 18', 'Man 17', 'Man 9', 'Man 6']
-      🔸 Shop 71 için tüm manufacturerlar: ['Man 18', 'Man 9', 'Man 16']
-      🔸 Shop 11 için tüm manufacturerlar: ['Man 18', 'Man 4', 'Man 9']
-      🔸 Shop 33 için tüm manufacturerlar: ['Man 18', 'Man 2', 'Man 9']
-   🧱 Ortak Manufacturerlar: ['Man 9', 'Man 18']
-      🔸 Shop 6 için tüm manufacturerlar: ['Man 25', 'Man 16', 'Man 22']
-      🔸 Shop 80 için tüm manufacturerlar: ['Man 16', 'Man 6', 'Man 13', 'Man 22']
-      🔸 Shop 96 için tüm manufacturerlar: ['Man 24', 'Man 16', 'Man 22']
-      🔸 Shop 58 için tüm manufacturerlar: ['Man 23', 'Man 16', 'Man 20', 'Man 22']
-   🧱 Ortak Manufacturerlar: ['Man 22', 'Man 16']
-      🔸 Shop 100 için tüm manufacturerlar: ['Man 25', 'Man 7', 'Man 10']
-      🔸 Shop 73 için tüm manufacturerlar: ['Man 18', 'Man 7', 'Man 10']
-      🔸 Shop 2 için tüm manufacturerlar: ['Man 18', 'Man 7', 'Man 10']
-      🔸 Shop 62 için tüm manufacturerlar: ['Man 13', 'Man 7', 'Man 9', 'Man 10']
-      🔸 Shop 53 için tüm manufacturerlar: ['Man 17', 'Man 7', 'Man 5', 'Man 10']
-   🧱 Ortak Manufacturerlar: ['Man 10', 'Man 7']
-      🔸 Shop 63 için tüm manufacturerlar: ['Man 24', 'Man 25', 'Man 13', 'Man 16']
-      🔸 Shop 57 için tüm manufacturerlar: ['Man 24', 'Man 25', 'Man 15', 'Man 16']
-      🔸 Shop 42 için tüm manufacturerlar: ['Man 25', 'Man 3', 'Man 7', 'Man 16']
-      🔸 Shop 85 için tüm manufacturerlar: ['Man 25', 'Man 12', 'Man 16']
-   🧱 Ortak Manufacturerlar: ['Man 16', 'Man 25']
-      🔸 Shop 76 için tüm manufacturerlar: ['Man 4', 'Man 17', 'Man 10']
-      🔸 Shop 78 için tüm manufacturerlar: ['Man 4', 'Man 17', 'Man 20']
-      🔸 Shop 84 için tüm manufacturerlar: ['Man 4', 'Man 17', 'Man 1']
-   🧱 Ortak Manufacturerlar: ['Man 17', 'Man 4']
-      🔸 Shop 91 için tüm manufacturerlar: ['Man 20', 'Man 19', 'Man 12', 'Man 1']
-      🔸 Shop 67 için tüm manufacturerlar: ['Man 20', 'Man 19', 'Man 24', 'Man 1']
-      🔸 Shop 38 için tüm manufacturerlar: ['Man 19', 'Man 1', 'Man 8']
-   🧱 Ortak Manufacturerlar: ['Man 19', 'Man 1']
-      🔸 Shop 21 için tüm manufacturerlar: ['Man 15', 'Man 9', 'Man 6']
-      🔸 Shop 29 için tüm manufacturerlar: ['Man 3', 'Man 9', 'Man 6']
-      🔸 Shop 8 için tüm manufacturerlar: ['Man 21', 'Man 9', 'Man 6', 'Man 1']
-      🔸 Shop 89 için tüm manufacturerlar: ['Man 2', 'Man 9', 'Man 6']
-   🧱 Ortak Manufacturerlar: ['Man 9', 'Man 6']
-      🔸 Shop 77 için tüm manufacturerlar: ['Man 18', 'Man 4', 'Man 19', 'Man 25']
-      🔸 Shop 99 için tüm manufacturerlar: ['Man 18', 'Man 4', 'Man 22', 'Man 10']
-      🔸 Shop 64 için tüm manufacturerlar: ['Man 18', 'Man 4', 'Man 5']
-      🔸 Shop 47 için tüm manufacturerlar: ['Man 18', 'Man 4', 'Man 19']
-      🔸 Shop 18 için tüm manufacturerlar: ['Man 18', 'Man 4', 'Man 9', 'Man 22']
-      🔸 Shop 41 için tüm manufacturerlar: ['Man 18', 'Man 4', 'Man 17', 'Man 16']
-   🧱 Ortak Manufacturerlar: ['Man 18', 'Man 4']
+      🔸 Shop 69 için tüm manufacturerlar: ['Man 21', 'Man 13', 'Man 12', 'Man 19']
+      🔸 Shop 4 için tüm manufacturerlar: ['Man 6', 'Man 13', 'Man 7', 'Man 19']
+      🔸 Shop 100 için tüm manufacturerlar: ['Man 21', 'Man 13', 'Man 19', 'Man 2']
+      🔸 Shop 55 için tüm manufacturerlar: ['Man 8', 'Man 13', 'Man 12', 'Man 19']
+   🧱 Ortak Manufacturerlar: ['Man 13', 'Man 19']
+      🔸 Shop 21 için tüm manufacturerlar: ['Man 25', 'Man 24', 'Man 23']
+      🔸 Shop 97 için tüm manufacturerlar: ['Man 10', 'Man 24', 'Man 23']
+      🔸 Shop 33 için tüm manufacturerlar: ['Man 24', 'Man 23', 'Man 1']
+      🔸 Shop 43 için tüm manufacturerlar: ['Man 24', 'Man 23', 'Man 17', 'Man 1']
+      🔸 Shop 64 için tüm manufacturerlar: ['Man 24', 'Man 23', 'Man 9']
+   🧱 Ortak Manufacturerlar: ['Man 23', 'Man 24']
+      🔸 Shop 90 için tüm manufacturerlar: ['Man 10', 'Man 18', 'Man 4']
+      🔸 Shop 28 için tüm manufacturerlar: ['Man 10', 'Man 20', 'Man 1', 'Man 4']
+      🔸 Shop 14 için tüm manufacturerlar: ['Man 10', 'Man 22', 'Man 4']
+      🔸 Shop 58 için tüm manufacturerlar: ['Man 10', 'Man 3', 'Man 4']
+      🔸 Shop 78 için tüm manufacturerlar: ['Man 10', 'Man 25', 'Man 4']
+   🧱 Ortak Manufacturerlar: ['Man 10', 'Man 4']
+      🔸 Shop 99 için tüm manufacturerlar: ['Man 13', 'Man 5', 'Man 9']
+      🔸 Shop 74 için tüm manufacturerlar: ['Man 13', 'Man 11', 'Man 9']
+      🔸 Shop 48 için tüm manufacturerlar: ['Man 21', 'Man 13', 'Man 9']
+      🔸 Shop 63 için tüm manufacturerlar: ['Man 13', 'Man 24', 'Man 19', 'Man 9']
+      🔸 Shop 30 için tüm manufacturerlar: ['Man 4', 'Man 22', 'Man 13', 'Man 9']
+   🧱 Ortak Manufacturerlar: ['Man 9', 'Man 13']
+      🔸 Shop 7 için tüm manufacturerlar: ['Man 5', 'Man 13', 'Man 14', 'Man 25']
+      🔸 Shop 36 için tüm manufacturerlar: ['Man 24', 'Man 14', 'Man 25', 'Man 4']
+      🔸 Shop 23 için tüm manufacturerlar: ['Man 14', 'Man 23', 'Man 25']
+      🔸 Shop 37 için tüm manufacturerlar: ['Man 6', 'Man 14', 'Man 25']
+   🧱 Ortak Manufacturerlar: ['Man 14', 'Man 25']
+      🔸 Shop 67 için tüm manufacturerlar: ['Man 6', 'Man 21', 'Man 2', 'Man 4']
+      🔸 Shop 57 için tüm manufacturerlar: ['Man 6', 'Man 21', 'Man 9', 'Man 4']
+      🔸 Shop 39 için tüm manufacturerlar: ['Man 21', 'Man 1', 'Man 8', 'Man 4']
+      🔸 Shop 24 için tüm manufacturerlar: ['Man 21', 'Man 7', 'Man 4']
+      🔸 Shop 12 için tüm manufacturerlar: ['Man 21', 'Man 25', 'Man 9', 'Man 4']
+   🧱 Ortak Manufacturerlar: ['Man 21', 'Man 4']
+      🔸 Shop 13 için tüm manufacturerlar: ['Man 21', 'Man 12', 'Man 23', 'Man 17']
+      🔸 Shop 54 için tüm manufacturerlar: ['Man 21', 'Man 24', 'Man 23', 'Man 17']
+      🔸 Shop 34 için tüm manufacturerlar: ['Man 21', 'Man 15', 'Man 23', 'Man 24']
+      🔸 Shop 76 için tüm manufacturerlar: ['Man 18', 'Man 21', 'Man 23']
+      🔸 Shop 47 için tüm manufacturerlar: ['Man 21', 'Man 23', 'Man 19', 'Man 9']
+   🧱 Ortak Manufacturerlar: ['Man 23', 'Man 21']
+      🔸 Shop 9 için tüm manufacturerlar: ['Man 3', 'Man 25', 'Man 4']
+      🔸 Shop 19 için tüm manufacturerlar: ['Man 3', 'Man 7', 'Man 24', 'Man 4']
+      🔸 Shop 61 için tüm manufacturerlar: ['Man 6', 'Man 3', 'Man 4']
+      🔸 Shop 70 için tüm manufacturerlar: ['Man 3', 'Man 17', 'Man 4']
+      🔸 Shop 10 için tüm manufacturerlar: ['Man 3', 'Man 7', 'Man 4']
+   🧱 Ortak Manufacturerlar: ['Man 3', 'Man 4']
+      🔸 Shop 83 için tüm manufacturerlar: ['Man 20', 'Man 21', 'Man 16', 'Man 7']
+      🔸 Shop 91 için tüm manufacturerlar: ['Man 22', 'Man 21', 'Man 16']
+      🔸 Shop 41 için tüm manufacturerlar: ['Man 6', 'Man 21', 'Man 16']
+      🔸 Shop 80 için tüm manufacturerlar: ['Man 22', 'Man 21', 'Man 16', 'Man 2']
+   🧱 Ortak Manufacturerlar: ['Man 16', 'Man 21']
+      🔸 Shop 17 için tüm manufacturerlar: ['Man 3', 'Man 16', 'Man 24']
+      🔸 Shop 68 için tüm manufacturerlar: ['Man 6', 'Man 3', 'Man 24', 'Man 1']
+      🔸 Shop 22 için tüm manufacturerlar: ['Man 3', 'Man 24', 'Man 19']
+      🔸 Shop 15 için tüm manufacturerlar: ['Man 3', 'Man 22', 'Man 24']
+      🔸 Shop 79 için tüm manufacturerlar: ['Man 10', 'Man 3', 'Man 20', 'Man 24']
+   🧱 Ortak Manufacturerlar: ['Man 3', 'Man 24']
+      🔸 Shop 8 için tüm manufacturerlar: ['Man 10', 'Man 3', 'Man 20', 'Man 15']
+      🔸 Shop 45 için tüm manufacturerlar: ['Man 10', 'Man 20', 'Man 14', 'Man 11']
+      🔸 Shop 5 için tüm manufacturerlar: ['Man 10', 'Man 13', 'Man 20', 'Man 5']
+   🧱 Ortak Manufacturerlar: ['Man 10', 'Man 20']
 
 🔵 Grup 1 - Ortak Tarih: 2025-01-01
-   ⭐ Lider Shop: Shop 55
-   ⏱️ Delay Günleri: {'Shop 55': 0, 'Shop 27': 5, 'Shop 30': 2, 'Shop 92': 7}
-   🧱 Ortak Manufacturerlar: ['Man 15', 'Man 6']
-   🎯 Collusion Ürünleri: ['Product 115', 'Product 103', 'Product 111', 'Product 288', 'Product 292', 'Product 281', 'Product 283', 'Product 296', 'Product 287']
+   ⭐ Lider Shop: Shop 69
+   ⏱️ Delay Günleri: {'Shop 69': 0, 'Shop 4': 2, 'Shop 100': 5, 'Shop 55': 4}
+   🧱 Ortak Manufacturerlar: ['Man 13', 'Man 19']
+   🎯 Collusion Ürünleri: ['Product 245', 'Product 369', 'Product 254', 'Product 243', 'Product 256', 'Product 368', 'Product 246', 'Product 366', 'Product 241', 'Product 244']
 
+✅ Shop 69 collusion verisi oluşturuldu.
+✅ Shop 4 collusion verisi oluşturuldu.
+✅ Shop 100 collusion verisi oluşturuldu.
 ✅ Shop 55 collusion verisi oluşturuldu.
-✅ Shop 27 collusion verisi oluşturuldu.
-✅ Shop 30 collusion verisi oluşturuldu.
-✅ Shop 92 collusion verisi oluşturuldu.
 
 🔵 Grup 2 - Ortak Tarih: 2025-01-01
-   ⭐ Lider Shop: Shop 16
-   ⏱️ Delay Günleri: {'Shop 16': 0, 'Shop 5': 6, 'Shop 46': 5}
-   🧱 Ortak Manufacturerlar: ['Man 5', 'Man 24']
-   🎯 Collusion Ürünleri: ['Product 464', 'Product 462', 'Product 83', 'Product 81', 'Product 479', 'Product 82', 'Product 94', 'Product 461', 'Product 467']
-
-✅ Shop 16 collusion verisi oluşturuldu.
-✅ Shop 5 collusion verisi oluşturuldu.
-✅ Shop 46 collusion verisi oluşturuldu.
-
-🔵 Grup 3 - Ortak Tarih: 2025-01-01
-   ⭐ Lider Shop: Shop 45
-   ⏱️ Delay Günleri: {'Shop 45': 0, 'Shop 70': 3, 'Shop 43': 6, 'Shop 25': 7}
-   🧱 Ortak Manufacturerlar: ['Man 8', 'Man 3']
-   🎯 Collusion Ürünleri: ['Product 51', 'Product 152', 'Product 150', 'Product 46', 'Product 53', 'Product 153', 'Product 45', 'Product 155', 'Product 41']
-
-✅ Shop 45 collusion verisi oluşturuldu.
-✅ Shop 70 collusion verisi oluşturuldu.
-✅ Shop 43 collusion verisi oluşturuldu.
-✅ Shop 25 collusion verisi oluşturuldu.
-
-🔵 Grup 4 - Ortak Tarih: 2025-01-01
-   ⭐ Lider Shop: Shop 68
-   ⏱️ Delay Günleri: {'Shop 68': 0, 'Shop 36': 1, 'Shop 72': 1, 'Shop 37': 5, 'Shop 31': 7}
-   🧱 Ortak Manufacturerlar: ['Man 21', 'Man 11']
-   🎯 Collusion Ürünleri: ['Product 410', 'Product 404', 'Product 420', 'Product 206', 'Product 210', 'Product 204', 'Product 201', 'Product 417', 'Product 418', 'Product 407', 'Product 411']
-
-✅ Shop 68 collusion verisi oluşturuldu.
-✅ Shop 36 collusion verisi oluşturuldu.
-✅ Shop 72 collusion verisi oluşturuldu.
-✅ Shop 37 collusion verisi oluşturuldu.
-✅ Shop 31 collusion verisi oluşturuldu.
-
-🔵 Grup 5 - Ortak Tarih: 2025-01-01
-   ⭐ Lider Shop: Shop 56
-   ⏱️ Delay Günleri: {'Shop 56': 0, 'Shop 61': 6, 'Shop 71': 5, 'Shop 11': 4, 'Shop 33': 2}
-   🧱 Ortak Manufacturerlar: ['Man 9', 'Man 18']
-   🎯 Collusion Ürünleri: ['Product 358', 'Product 342', 'Product 176', 'Product 169', 'Product 355', 'Product 174']
-
-✅ Shop 56 collusion verisi oluşturuldu.
-✅ Shop 61 collusion verisi oluşturuldu.
-✅ Shop 71 collusion verisi oluşturuldu.
-✅ Shop 11 collusion verisi oluşturuldu.
-✅ Shop 33 collusion verisi oluşturuldu.
-
-🔵 Grup 6 - Ortak Tarih: 2025-01-01
-   ⭐ Lider Shop: Shop 6
-   ⏱️ Delay Günleri: {'Shop 6': 0, 'Shop 80': 4, 'Shop 96': 4, 'Shop 58': 7}
-   🧱 Ortak Manufacturerlar: ['Man 22', 'Man 16']
-   🎯 Collusion Ürünleri: ['Product 434', 'Product 318', 'Product 312', 'Product 320', 'Product 305', 'Product 422', 'Product 425']
-
-✅ Shop 6 collusion verisi oluşturuldu.
-✅ Shop 80 collusion verisi oluşturuldu.
-✅ Shop 96 collusion verisi oluşturuldu.
-✅ Shop 58 collusion verisi oluşturuldu.
-
-🔵 Grup 7 - Ortak Tarih: 2025-01-01
-   ⭐ Lider Shop: Shop 100
-   ⏱️ Delay Günleri: {'Shop 100': 0, 'Shop 73': 6, 'Shop 2': 4, 'Shop 62': 1, 'Shop 53': 3}
-   🧱 Ortak Manufacturerlar: ['Man 10', 'Man 7']
-   🎯 Collusion Ürünleri: ['Product 131', 'Product 188', 'Product 190', 'Product 139', 'Product 128', 'Product 198', 'Product 183']
-
-✅ Shop 100 collusion verisi oluşturuldu.
-✅ Shop 73 collusion verisi oluşturuldu.
-✅ Shop 2 collusion verisi oluşturuldu.
-✅ Shop 62 collusion verisi oluşturuldu.
-✅ Shop 53 collusion verisi oluşturuldu.
-
-🔵 Grup 8 - Ortak Tarih: 2025-01-01
-   ⭐ Lider Shop: Shop 63
-   ⏱️ Delay Günleri: {'Shop 63': 0, 'Shop 57': 4, 'Shop 42': 3, 'Shop 85': 2}
-   🧱 Ortak Manufacturerlar: ['Man 16', 'Man 25']
-   🎯 Collusion Ürünleri: ['Product 317', 'Product 310', 'Product 493', 'Product 499', 'Product 500', 'Product 490', 'Product 305', 'Product 492', 'Product 495', 'Product 301', 'Product 319']
-
-✅ Shop 63 collusion verisi oluşturuldu.
-✅ Shop 57 collusion verisi oluşturuldu.
-✅ Shop 42 collusion verisi oluşturuldu.
-✅ Shop 85 collusion verisi oluşturuldu.
-
-🔵 Grup 9 - Ortak Tarih: 2025-01-01
-   ⭐ Lider Shop: Shop 76
-   ⏱️ Delay Günleri: {'Shop 76': 0, 'Shop 78': 2, 'Shop 84': 4}
-   🧱 Ortak Manufacturerlar: ['Man 17', 'Man 4']
-   🎯 Collusion Ürünleri: ['Product 65', 'Product 336', 'Product 327', 'Product 326', 'Product 323', 'Product 68', 'Product 324', 'Product 338', 'Product 330', 'Product 74', 'Product 78']
-
-✅ Shop 76 collusion verisi oluşturuldu.
-✅ Shop 78 collusion verisi oluşturuldu.
-✅ Shop 84 collusion verisi oluşturuldu.
-
-🔵 Grup 10 - Ortak Tarih: 2025-01-01
-   ⭐ Lider Shop: Shop 91
-   ⏱️ Delay Günleri: {'Shop 91': 0, 'Shop 67': 1, 'Shop 38': 5}
-   🧱 Ortak Manufacturerlar: ['Man 19', 'Man 1']
-   🎯 Collusion Ürünleri: ['Product 366', 'Product 6', 'Product 7', 'Product 370', 'Product 5', 'Product 12', 'Product 378', 'Product 367', 'Product 14', 'Product 377']
-
-✅ Shop 91 collusion verisi oluşturuldu.
-✅ Shop 67 collusion verisi oluşturuldu.
-✅ Shop 38 collusion verisi oluşturuldu.
-
-🔵 Grup 11 - Ortak Tarih: 2025-01-01
    ⭐ Lider Shop: Shop 21
-   ⏱️ Delay Günleri: {'Shop 21': 0, 'Shop 29': 2, 'Shop 8': 4, 'Shop 89': 6}
-   🧱 Ortak Manufacturerlar: ['Man 9', 'Man 6']
-   🎯 Collusion Ürünleri: ['Product 107', 'Product 169', 'Product 163', 'Product 168', 'Product 105', 'Product 110', 'Product 101', 'Product 162', 'Product 120', 'Product 114']
+   ⏱️ Delay Günleri: {'Shop 21': 0, 'Shop 97': 2, 'Shop 33': 5, 'Shop 43': 3, 'Shop 64': 3}
+   🧱 Ortak Manufacturerlar: ['Man 23', 'Man 24']
+   🎯 Collusion Ürünleri: ['Product 442', 'Product 469', 'Product 471', 'Product 441', 'Product 450', 'Product 454', 'Product 463']
 
 ✅ Shop 21 collusion verisi oluşturuldu.
-✅ Shop 29 collusion verisi oluşturuldu.
-✅ Shop 8 collusion verisi oluşturuldu.
-✅ Shop 89 collusion verisi oluşturuldu.
-
-🔵 Grup 12 - Ortak Tarih: 2025-01-01
-   ⭐ Lider Shop: Shop 77
-   ⏱️ Delay Günleri: {'Shop 77': 0, 'Shop 99': 7, 'Shop 64': 6, 'Shop 47': 3, 'Shop 18': 4, 'Shop 41': 7}
-   🧱 Ortak Manufacturerlar: ['Man 18', 'Man 4']
-   🎯 Collusion Ürünleri: ['Product 63', 'Product 351', 'Product 69', 'Product 62', 'Product 66', 'Product 342', 'Product 61', 'Product 78', 'Product 68', 'Product 344']
-
-✅ Shop 77 collusion verisi oluşturuldu.
-✅ Shop 99 collusion verisi oluşturuldu.
+✅ Shop 97 collusion verisi oluşturuldu.
+✅ Shop 33 collusion verisi oluşturuldu.
+✅ Shop 43 collusion verisi oluşturuldu.
 ✅ Shop 64 collusion verisi oluşturuldu.
+
+🔵 Grup 3 - Ortak Tarih: 2025-01-01
+   ⭐ Lider Shop: Shop 90
+   ⏱️ Delay Günleri: {'Shop 90': 0, 'Shop 28': 6, 'Shop 14': 1, 'Shop 58': 4, 'Shop 78': 5}
+   🧱 Ortak Manufacturerlar: ['Man 10', 'Man 4']
+   🎯 Collusion Ürünleri: ['Product 195', 'Product 191', 'Product 76', 'Product 190', 'Product 79', 'Product 182', 'Product 61', 'Product 192', 'Product 77', 'Product 183']
+
+✅ Shop 90 collusion verisi oluşturuldu.
+✅ Shop 28 collusion verisi oluşturuldu.
+✅ Shop 14 collusion verisi oluşturuldu.
+✅ Shop 58 collusion verisi oluşturuldu.
+✅ Shop 78 collusion verisi oluşturuldu.
+
+🔵 Grup 4 - Ortak Tarih: 2025-01-01
+   ⭐ Lider Shop: Shop 99
+   ⏱️ Delay Günleri: {'Shop 99': 0, 'Shop 74': 6, 'Shop 48': 4, 'Shop 63': 3, 'Shop 30': 3}
+   🧱 Ortak Manufacturerlar: ['Man 9', 'Man 13']
+   🎯 Collusion Ürünleri: ['Product 163', 'Product 170', 'Product 247', 'Product 168', 'Product 253', 'Product 241', 'Product 169', 'Product 258', 'Product 245', 'Product 259']
+
+✅ Shop 99 collusion verisi oluşturuldu.
+✅ Shop 74 collusion verisi oluşturuldu.
+✅ Shop 48 collusion verisi oluşturuldu.
+✅ Shop 63 collusion verisi oluşturuldu.
+✅ Shop 30 collusion verisi oluşturuldu.
+
+🔵 Grup 5 - Ortak Tarih: 2025-01-01
+   ⭐ Lider Shop: Shop 7
+   ⏱️ Delay Günleri: {'Shop 7': 0, 'Shop 36': 4, 'Shop 23': 4, 'Shop 37': 3}
+   🧱 Ortak Manufacturerlar: ['Man 14', 'Man 25']
+   🎯 Collusion Ürünleri: ['Product 261', 'Product 498', 'Product 482', 'Product 492', 'Product 274', 'Product 269']
+
+✅ Shop 7 collusion verisi oluşturuldu.
+✅ Shop 36 collusion verisi oluşturuldu.
+✅ Shop 23 collusion verisi oluşturuldu.
+✅ Shop 37 collusion verisi oluşturuldu.
+
+🔵 Grup 6 - Ortak Tarih: 2025-01-01
+   ⭐ Lider Shop: Shop 67
+   ⏱️ Delay Günleri: {'Shop 67': 0, 'Shop 57': 5, 'Shop 39': 1, 'Shop 24': 7, 'Shop 12': 7}
+   🧱 Ortak Manufacturerlar: ['Man 21', 'Man 4']
+   🎯 Collusion Ürünleri: ['Product 409', 'Product 417', 'Product 76', 'Product 415', 'Product 61', 'Product 408', 'Product 420', 'Product 70', 'Product 69', 'Product 405', 'Product 418']
+
+✅ Shop 67 collusion verisi oluşturuldu.
+✅ Shop 57 collusion verisi oluşturuldu.
+✅ Shop 39 collusion verisi oluşturuldu.
+✅ Shop 24 collusion verisi oluşturuldu.
+✅ Shop 12 collusion verisi oluşturuldu.
+
+🔵 Grup 7 - Ortak Tarih: 2025-01-01
+   ⭐ Lider Shop: Shop 13
+   ⏱️ Delay Günleri: {'Shop 13': 0, 'Shop 54': 7, 'Shop 34': 3, 'Shop 76': 5, 'Shop 47': 2}
+   🧱 Ortak Manufacturerlar: ['Man 23', 'Man 21']
+   🎯 Collusion Ürünleri: ['Product 448', 'Product 403', 'Product 407', 'Product 415', 'Product 459', 'Product 411', 'Product 408', 'Product 405', 'Product 404', 'Product 445', 'Product 406']
+
+✅ Shop 13 collusion verisi oluşturuldu.
+✅ Shop 54 collusion verisi oluşturuldu.
+✅ Shop 34 collusion verisi oluşturuldu.
+✅ Shop 76 collusion verisi oluşturuldu.
 ✅ Shop 47 collusion verisi oluşturuldu.
-✅ Shop 18 collusion verisi oluşturuldu.
+
+🔵 Grup 8 - Ortak Tarih: 2025-01-01
+   ⭐ Lider Shop: Shop 9
+   ⏱️ Delay Günleri: {'Shop 9': 0, 'Shop 19': 3, 'Shop 61': 5, 'Shop 70': 7, 'Shop 10': 1}
+   🧱 Ortak Manufacturerlar: ['Man 3', 'Man 4']
+   🎯 Collusion Ürünleri: ['Product 63', 'Product 74', 'Product 52', 'Product 66', 'Product 65', 'Product 57', 'Product 47', 'Product 60']
+
+✅ Shop 9 collusion verisi oluşturuldu.
+✅ Shop 19 collusion verisi oluşturuldu.
+✅ Shop 61 collusion verisi oluşturuldu.
+✅ Shop 70 collusion verisi oluşturuldu.
+✅ Shop 10 collusion verisi oluşturuldu.
+
+🔵 Grup 9 - Ortak Tarih: 2025-01-01
+   ⭐ Lider Shop: Shop 83
+   ⏱️ Delay Günleri: {'Shop 83': 0, 'Shop 91': 4, 'Shop 41': 7, 'Shop 80': 2}
+   🧱 Ortak Manufacturerlar: ['Man 16', 'Man 21']
+   🎯 Collusion Ürünleri: ['Product 310', 'Product 303', 'Product 403', 'Product 411', 'Product 410', 'Product 420', 'Product 413', 'Product 319']
+
+✅ Shop 83 collusion verisi oluşturuldu.
+✅ Shop 91 collusion verisi oluşturuldu.
 ✅ Shop 41 collusion verisi oluşturuldu.
+✅ Shop 80 collusion verisi oluşturuldu.
+
+🔵 Grup 10 - Ortak Tarih: 2025-01-01
+   ⭐ Lider Shop: Shop 17
+   ⏱️ Delay Günleri: {'Shop 17': 0, 'Shop 68': 4, 'Shop 22': 5, 'Shop 15': 7, 'Shop 79': 3}
+   🧱 Ortak Manufacturerlar: ['Man 3', 'Man 24']
+   🎯 Collusion Ürünleri: ['Product 54', 'Product 471', 'Product 57', 'Product 43', 'Product 49', 'Product 56', 'Product 475']
+
+✅ Shop 17 collusion verisi oluşturuldu.
+✅ Shop 68 collusion verisi oluşturuldu.
+✅ Shop 22 collusion verisi oluşturuldu.
+✅ Shop 15 collusion verisi oluşturuldu.
+✅ Shop 79 collusion verisi oluşturuldu.
+
+🔵 Grup 11 - Ortak Tarih: 2025-01-01
+   ⭐ Lider Shop: Shop 8
+   ⏱️ Delay Günleri: {'Shop 8': 0, 'Shop 45': 4, 'Shop 5': 3}
+   🧱 Ortak Manufacturerlar: ['Man 10', 'Man 20']
+   🎯 Collusion Ürünleri: ['Product 386', 'Product 193', 'Product 391', 'Product 188', 'Product 395', 'Product 184', 'Product 186']
+
+✅ Shop 8 collusion verisi oluşturuldu.
+✅ Shop 45 collusion verisi oluşturuldu.
+✅ Shop 5 collusion verisi oluşturuldu.
 
 Process finished with exit code 0
-
-
 
 
