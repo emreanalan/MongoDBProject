@@ -12,22 +12,65 @@ import multiprocessing
 import pandas as pd
 
 SHOP_DATA_DIR = "C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/Build/exported_shops"
+SIMILARITY_CSV = "C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/Build/Cvss/shop_pair_similarities.csv"
+OUTPUT_FEATURES_CSV = "C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/Build/Cvss/shop_features4.csv"
+
 COLLUSION_GROUPS = {
-    1: [47, 12, 88, 99, 98],
-    2: [41, 63, 18, 44, 42],
-    3: [34, 2, 85],
-    4: [23, 40, 75],
-    5: [50, 67, 84],
-    6: [60, 19, 65, 49],
-    7: [48, 15, 11, 26],
-    8: [74, 96, 53, 33],
-    9: [59, 70, 29, 90, 10],
-    10: [35, 80, 30, 52],
-    11: [54, 68, 76, 45],
-    12: [62, 86, 21, 46, 55, 78]
+    1: [356, 376, 309],
+    2: [228, 192, 329, 258, 1],
+    3: [199, 161, 38, 241],
+    4: [395, 312, 76],
+    5: [90, 164, 365, 62, 292],
+    6: [320, 24, 121],
+    7: [105, 335, 201, 364, 104],
+    8: [73, 45, 232],
+    9: [116, 379, 102],
+    10: [372, 328, 371, 139, 265],
+    11: [195, 82, 351, 304],
+    12: [344, 375, 193],
+    13: [290, 7, 175],
+    14: [314, 129, 212, 211],
+    15: [400, 41, 122, 217],
+    16: [227, 9, 46, 3],
+    17: [125, 293, 360],
+    18: [243, 361, 268, 186],
+    19: [79, 233, 12],
+    20: [33, 368, 224],
+    21: [10, 92, 174],
+    22: [279, 315, 58, 282],
+    23: [169, 387, 246, 142, 155],
+    24: [382, 296, 188],
+    25: [160, 322, 327],
+    26: [319, 99, 352],
+    27: [338, 159, 263, 242],
+    28: [185, 394, 348, 4],
+    29: [110, 277, 367, 366],
+    30: [69, 240, 61],
+    31: [396, 36, 248],
+    32: [198, 255, 321, 317],
+    33: [189, 231, 114],
+    34: [299, 278, 131, 17],
+    35: [55, 96, 21],
+    36: [177, 218, 83, 187, 208],
+    37: [383, 285, 330, 134, 143],
+    38: [275, 108, 95, 388, 345],
+    39: [89, 44, 85],
+    40: [283, 310, 16, 88],
+    41: [179, 264, 149, 205],
+    42: [84, 254, 247],
+    43: [26, 168, 19],
+    44: [308, 359, 138],
+    45: [194, 257, 291],
+    46: [115, 70, 14],
+    47: [39, 350, 397, 234, 146],
+    48: [135, 343, 32, 150, 101],
+    49: [377, 165, 137, 147],
+    50: [162, 23, 286, 6, 386],
+    51: [27, 362, 173],
 }
 
 COLLUSION_SHOPS = {shop_id: group for group, shops in COLLUSION_GROUPS.items() for shop_id in shops}
+
 
 similarity_cache = {}
 
@@ -37,7 +80,6 @@ def parse_price(price_str):
 def extract_product_price_history(shop_path):
     with open(shop_path, "r", encoding="utf-8") as f:
         records = json.load(f)
-
     product_history = defaultdict(list)
     for day_record in records:
         date = day_record["Date"]
@@ -50,6 +92,15 @@ def extract_product_price_history(shop_path):
                         profit = prod_data[sub_key]
                         product_history[product_name].append((date, profit))
     return product_history
+
+def build_similarity_lookup(sim_df):
+    lookup = defaultdict(dict)
+    for _, row in sim_df.iterrows():
+        id1, id2 = int(row["shop_id_1"]), int(row["shop_id_2"])
+        data = (row["delay_score"], row["overlap_score"], row["profit_similarity"])
+        lookup[id1][id2] = data
+        lookup[id2][id1] = data  # iki yönlü ekle
+    return lookup
 
 def compute_product_based_similarity(shop_id, shop_product_days, all_shops_product_days, all_shops_profit):
     if shop_id in similarity_cache:
@@ -104,14 +155,14 @@ def extract_shop_features_parallel(args):
     shop_path, all_shops_product_days, all_shops_profit = args
     return extract_shop_features(shop_path, all_shops_product_days, all_shops_profit)
 
-def extract_shop_features(shop_path, all_shops_product_days, all_shops_profit):
+def extract_shop_features(shop_path, similarity_lookup):
     shop_id = int(os.path.basename(shop_path).split()[1].split(".")[0])
     product_days = extract_product_price_history(shop_path)
 
+    # Temel istatistikler
     all_dates = set()
     profit_percentages = []
     manufacturer_set = set()
-
     with open(shop_path, "r", encoding="utf-8") as f:
         records = json.load(f)
         for day_record in records:
@@ -124,12 +175,36 @@ def extract_shop_features(shop_path, all_shops_product_days, all_shops_profit):
                         if sub_key.endswith("Shop Profit %"):
                             profit_percentages.append(prod_data[sub_key])
 
+    # Zaman aralıkları
     sorted_dates = sorted(all_dates)
     date_objs = [datetime.strptime(d, "%Y-%m-%d") for d in sorted_dates]
     date_diffs = np.diff(sorted(date_objs))
     day_intervals = [d.days for d in date_diffs]
 
-    delay_score, overlap_score, profit_similarity = compute_product_based_similarity(shop_id, product_days, all_shops_product_days, all_shops_profit)
+    # Diğer mağazalara göre ortalama similarity değerleri
+    similarities = similarity_lookup.get(shop_id, {})
+    delays, overlaps, profits = zip(*similarities.values()) if similarities else ([], [], [])
+    avg_delay_score = np.mean(delays) if delays else 0
+    exact_overlap_ratio = np.mean(overlaps) if overlaps else 0
+    avg_profit_similarity = np.mean(profits) if profits else 0
+
+    # Grup içi benzerlikler
+    group_id = COLLUSION_SHOPS.get(shop_id, -1)
+    group_shops = COLLUSION_GROUPS.get(group_id, [])
+    group_delays, group_overlaps, group_profits = [], [], []
+    shared_products = []
+
+    for other_id in group_shops:
+        if other_id == shop_id or other_id not in similarities:
+            continue
+        d, o, p = similarities[other_id]
+        group_delays.append(d)
+        group_overlaps.append(o)
+        group_profits.append(p)
+
+        # Shared product count
+        shared = set(product_days.keys()) & set(similarity_lookup.get(other_id, {}).keys())
+        shared_products.append(len(shared))
 
     return {
         "shop_id": shop_id,
@@ -139,12 +214,18 @@ def extract_shop_features(shop_path, all_shops_product_days, all_shops_profit):
         "avg_profit_pct": np.mean(profit_percentages) if profit_percentages else 0,
         "profit_pct_std": np.std(profit_percentages) if profit_percentages else 0,
         "product_count": len(product_days),
-        "avg_delay_score": delay_score,
-        "exact_overlap_ratio": overlap_score,
-        "avg_profit_similarity": profit_similarity,
+        "avg_delay_score": avg_delay_score,
+        "exact_overlap_ratio": exact_overlap_ratio,
+        "avg_profit_similarity": avg_profit_similarity,
+        "group_size": len(group_shops),
+        "group_avg_delay_score": np.mean(group_delays) if group_delays else 0,
+        "group_avg_overlap_ratio": np.mean(group_overlaps) if group_overlaps else 0,
+        "group_avg_profit_similarity": np.mean(group_profits) if group_profits else 0,
+        "shared_products_with_group": np.mean(shared_products) if shared_products else 0,
         "label_binary": 1 if shop_id in COLLUSION_SHOPS else 0,
-        "label_group": COLLUSION_SHOPS.get(shop_id, -1)
+        "label_group": group_id
     }
+
 
 def visualize_similarity_graph(feature_list, threshold=0.99):
     G = nx.Graph()
@@ -187,32 +268,20 @@ def visualize_similarity_graph(feature_list, threshold=0.99):
     plt.legend()
     plt.tight_layout()
     plt.show()
-def save_features_to_csv(feature_list, path="shop_features.csv"):
+def save_features_to_csv(feature_list, path="shop_features4.csv"):
     df = pd.DataFrame(feature_list)
     df.to_csv(path, index=False)
     print(f"Özellikler CSV olarak kaydedildi: {path}")
 def main():
+    sim_df = pd.read_csv(SIMILARITY_CSV)
+    similarity_lookup = build_similarity_lookup(sim_df)
+
     shop_files = glob(os.path.join(SHOP_DATA_DIR, "Shop *.json"))
-    all_shops_product_days = {}
-    all_shops_profit = {}
-    for shop_file in shop_files:
-        shop_id = int(os.path.basename(shop_file).split()[1].split(".")[0])
-        full = extract_product_price_history(shop_file)
-        all_shops_product_days[shop_id] = {k: [x for x in v] for k, v in full.items()}
-        all_shops_profit[shop_id] = full
+    features = [extract_shop_features(f, similarity_lookup) for f in shop_files]
 
-    args = [(shop_file, all_shops_product_days, all_shops_profit) for shop_file in shop_files]
-
-    with multiprocessing.Pool(processes=os.cpu_count()) as pool:
-        feature_list = pool.map(extract_shop_features_parallel, args)
-
-    print("Toplam kayıt sayısı:", len(feature_list))
-    for row in feature_list[:10]:
-        print(row)
-    save_features_to_csv(feature_list)
-
-
-    # visualize_similarity_graph(feature_list, threshold=0.99)
+    df = pd.DataFrame(features)
+    df.to_csv(OUTPUT_FEATURES_CSV, index=False)
+    print(f"Özellik dosyası kaydedildi: {OUTPUT_FEATURES_CSV}")
 
 if __name__ == "__main__":
     main()

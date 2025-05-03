@@ -26,4 +26,4 @@ if __name__ == "__main__":
         "Shop 99"
     ]
 
-    label_shops("C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/utils/shop_features.csv", collusion_shops)
+    label_shops("C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/utils/shop_features3.csv", collusion_shops)

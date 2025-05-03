@@ -171,12 +171,24 @@ def generate_collusion_shops(group_map):
         print(f"   🧱 Ortak Manufacturerlar: {common_manus}")
         print(f"   🎯 Collusion Ürünleri: {collusion_products}\n")
 
+        # Tüm mağazalar için başlangıç fiyatları eşitleniyor
+        shared_starting_prices = {}
+        for manu in common_manus:
+            manu_data = manufacturer_cache[manu].get(sample_date)
+            if not manu_data:
+                continue
+            for i in range(1, 21):
+                pname = manu_data.get(f"Product {i}")
+                pprice = manu_data.get(f"Product {i} Price")
+                if pname and pprice:
+                    base_price = float(pprice.replace(",", "").replace(" TL", ""))
+                    shared_starting_prices[pname] = base_price
+
         zam_plan = {}
 
         for shop in group_shops:
             bulk_ops = []
-            profit_variation = defaultdict(lambda: round(random.uniform(-0.1, 0.1), 3))
-            previous_prices = {}
+            previous_prices = shared_starting_prices.copy()
             shop_collection = db[shop]
 
             for date_idx, date in enumerate(all_dates):
@@ -195,10 +207,12 @@ def generate_collusion_shops(group_map):
                         pprice = manu_data.get(f"Product {i} Price")
                         if not pname or not pprice:
                             continue
-                        base_price = float(pprice.replace(",", "").replace(" TL", ""))
+                        base_price = shared_starting_prices.get(pname)
+                        if base_price is None:
+                            continue
 
-                        final_price = None
-                        profit_pct = None
+                        final_price = previous_prices.get(pname, base_price)
+                        profit_pct = 0.0
 
                         if pname in collusion_price_map:
                             for z_day in zam_days:
@@ -206,36 +220,12 @@ def generate_collusion_shops(group_map):
                                 delay = delays[shop]
                                 reach_date = zam_date + timedelta(days=delay)
 
-                                if shop == leader and date == zam_date:
+                                if date == reach_date:
                                     profit_pct = collusion_price_map[pname] * 100
                                     final_price = base_price * (1 + collusion_price_map[pname])
-                                    zam_plan[(pname, zam_date)] = final_price
                                     previous_prices[pname] = final_price
+                                    zam_plan[(pname, zam_date)] = final_price
                                     break
-
-                                elif shop != leader and zam_date <= date <= reach_date:
-                                    old_price = previous_prices.get(pname, base_price)
-                                    new_price = zam_plan.get((pname, zam_date))
-                                    if new_price:
-                                        steps = delay
-                                        step = (new_price - old_price) / steps if steps > 0 else 0
-                                        day_passed = (date - zam_date).days
-                                        final_price = old_price + step * day_passed
-                                        deviation = random.uniform(-0.0005, 0.0005)
-                                        final_price *= (1 + deviation)
-                                        profit_pct = 0.0
-                                        previous_prices[pname] = final_price
-                                        break
-
-                        if final_price is None:
-                            base_profit = manufacturer_product_profit_cache[manu][pname]
-                            adj_profit = round(base_profit + profit_variation[pname] * 100, 2)
-                            profit_pct = adj_profit
-                            if date_idx == 0 or date_idx in zam_days:
-                                final_price = base_price * (1 + adj_profit / 100)
-                                previous_prices[pname] = final_price
-                            else:
-                                final_price = previous_prices.get(pname, base_price * (1 + adj_profit / 100))
 
                         manu_doc[f"Product {i}"] = pname
                         manu_doc[f"Product {i} Manufacturer Price"] = f"{base_price:,.2f} TL"
@@ -245,9 +235,15 @@ def generate_collusion_shops(group_map):
                         doc[f"{manu} Products"] = manu_doc
 
                 bulk_ops.append(pymongo.UpdateOne({"Date": date}, {"$set": doc}, upsert=True))
+
+                if len(bulk_ops) >= 30:
+                    shop_collection.bulk_write(bulk_ops)
+                    bulk_ops = []
+
             if bulk_ops:
                 shop_collection.bulk_write(bulk_ops)
-                print(f"✅ {shop} collusion verisi oluşturuldu.")
+            print(f"✅ {shop} collusion verisi oluşturuldu.")
+
 
 
 # --- Karışık Shop ID üretimi ---

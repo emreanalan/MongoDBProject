@@ -6,7 +6,7 @@ from DataRetrieval import (
     fetch_price_data_from_shop,
     fetch_manufacturer_data,
 )
-from ShopFeatureEngineering import (
+from generate_similarity_matrix import (
     detect_real_leader_follower,
     calculate_profit_relative_to_manufacturer,
 )

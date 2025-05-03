@@ -7,7 +7,7 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 
 from DataRetrieval import fetch_all_manufacturers, fetch_shops_for_manufacturer, fetch_price_data_from_shop, \
     fetch_manufacturer_data
-from ShopFeatureEngineering import create_shop_features
+from generate_similarity_matrix import create_shop_features
 
 start_date = "2025-01-01"
 end_date = "2025-04-20"
