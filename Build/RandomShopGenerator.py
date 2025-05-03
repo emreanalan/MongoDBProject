@@ -243,6 +243,7 @@ def generate_collusion_shops(group_map):
                         manu_doc[f"Product {i} Shop Profit %"] = profit_pct
                     if manu_doc:
                         doc[f"{manu} Products"] = manu_doc
+
                 bulk_ops.append(pymongo.UpdateOne({"Date": date}, {"$set": doc}, upsert=True))
             if bulk_ops:
                 shop_collection.bulk_write(bulk_ops)
@@ -250,9 +251,9 @@ def generate_collusion_shops(group_map):
 
 
 # --- Karışık Shop ID üretimi ---
-all_shops = list(range(1, 101))
+all_shops = list(range(1, 401))
 random.shuffle(all_shops)
 
 # İlk 200 tanesi normal, kalan 200 tanesi collusion olarak ayrılır
-generate_shop_documents(all_shops[:50], is_collusion=False)
-generate_shop_documents(all_shops[50:], is_collusion=True)
+generate_shop_documents(all_shops[:200], is_collusion=False)
+generate_shop_documents(all_shops[200:], is_collusion=True)

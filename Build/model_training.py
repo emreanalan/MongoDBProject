@@ -1,53 +1,67 @@
 import pandas as pd
-import matplotlib.pyplot as plt
+import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, confusion_matrix
+import matplotlib.pyplot as plt
+import seaborn as sns
+import joblib
 
-def train_model(input_csv, test_size=0.3, random_state=42):
-    # Veriyi yükle
-    df = pd.read_csv(input_csv)
+# Şu yolu senin verdiğin konuma göre güncelledik
+DATA_PATH = "/csv_yedek/shop_features.csv"
+df = pd.read_csv(DATA_PATH)
 
-    # Özellikleri ve etiketleri ayır
-    X = df.drop(columns=["Shop", "Label"])
-    y = df["Label"]
+# 1. AŞAMA: Collusion var mı yok mu (Binary Classification)
+features = [
+    "price_change_count", "avg_day_between_changes", "manufacturer_count",
+    "avg_profit_pct", "profit_pct_std", "product_count",
+    "avg_delay_score", "exact_overlap_ratio", "avg_profit_similarity"
+]
 
-    # Eğitim/test ayır
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=test_size, random_state=random_state
-    )
+X = df[features]
+y_binary = df["label_binary"]
 
-    # Modeli oluştur ve eğit
-    clf = RandomForestClassifier(n_estimators=100, random_state=random_state)
-    clf.fit(X_train, y_train)
-    y_pred = clf.predict(X_test)
+X_train_bin, X_test_bin, y_train_bin, y_test_bin = train_test_split(X, y_binary, test_size=0.25, random_state=42)
 
-    # Performans raporu
-    print("🔍 Model Performans Raporu:")
-    print(classification_report(y_test, y_pred))
+clf_bin = RandomForestClassifier(n_estimators=100, random_state=42)
+clf_bin.fit(X_train_bin, y_train_bin)
 
-    # Özellik önemleri
-    feature_importances = clf.feature_importances_
-    feature_names = X.columns
-    importance_df = pd.DataFrame({
-        "Feature": feature_names,
-        "Importance": feature_importances
-    }).sort_values(by="Importance", ascending=False)
+# Binary tahmin
+y_pred_bin = clf_bin.predict(X_test_bin)
+print("--- Classification Report (Binary) ---")
+print(classification_report(y_test_bin, y_pred_bin))
 
-    print("\n🔎 Özellik Önem Sıralaması:")
-    print(importance_df)
+cm_bin = confusion_matrix(y_test_bin, y_pred_bin)
+sns.heatmap(cm_bin, annot=True, fmt="d", cmap="Blues")
+plt.title("Confusion Matrix - Binary Collusion Detection")
+plt.xlabel("Predicted")
+plt.ylabel("Actual")
+plt.show()
 
-    # Görselleştirme
-    plt.figure(figsize=(10, 6))
-    plt.barh(importance_df["Feature"], importance_df["Importance"], color="skyblue")
-    plt.gca().invert_yaxis()
-    plt.title("🔍 Feature Importance (Random Forest)")
-    plt.xlabel("Importance")
-    plt.tight_layout()
-    plt.show()
+# 2. AŞAMA: Collusion olanların grup sınıflandırması
+collusion_df = df[df["label_binary"] == 1]
+X_group = collusion_df[features]
+y_group = collusion_df["label_group"]
 
-    return clf
+X_train_grp, X_test_grp, y_train_grp, y_test_grp = train_test_split(X_group, y_group, test_size=0.25, random_state=42)
 
-# --- Kullanım Örneği ---
-if __name__ == "__main__":
-    train_model("C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/utils/shop_features_labeled.csv")
+clf_grp = RandomForestClassifier(n_estimators=100, random_state=42)
+clf_grp.fit(X_train_grp, y_train_grp)
+
+# Grup tahmin
+y_pred_grp = clf_grp.predict(X_test_grp)
+print("--- Classification Report (Group) ---")
+print(classification_report(y_test_grp, y_pred_grp))
+
+cm_grp = confusion_matrix(y_test_grp, y_pred_grp, labels=sorted(y_group.unique()))
+sns.heatmap(cm_grp, annot=True, fmt="d", cmap="Blues")
+plt.title("Confusion Matrix - Collusion Group Classification")
+plt.xlabel("Predicted label")
+plt.ylabel("True label")
+plt.xticks(ticks=np.arange(len(y_group.unique())), labels=sorted(y_group.unique()))
+plt.yticks(ticks=np.arange(len(y_group.unique())), labels=sorted(y_group.unique()))
+plt.show()
+
+# Model kayıt
+# joblib.dump(clf_bin, "model_binary.pkl")
+# joblib.dump(clf_grp, "model_group.pkl")

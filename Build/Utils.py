@@ -10,7 +10,7 @@ client = pymongo.MongoClient(
 db = client["DataSet"]
 
 # Kayıtları dışa aktarmak istediğin shop isimleri
-shop_names = [f"Shop {i}" for i in range(1, 101)]
+shop_names = [f"Shop {i}" for i in range(1, 401)]
 
 # Çıktı klasörü
 os.makedirs("exported_shops", exist_ok=True)
