@@ -1,29 +1,45 @@
+import re
 import pandas as pd
 
-def label_shops(input_csv, collusion_shop_names, output_csv="C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/utils/shop_features_labeled.csv"):
-    # CSV dosyasını oku
-    df = pd.read_csv(input_csv)
+with open("C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/TestsAndModels/collusionSet.txt", "r", encoding="utf-8") as f:
+    content = f.read()
 
-    # Etiket ekle: 1 = Collusion, 0 = Normal
-    df["Label"] = df["Shop"].apply(lambda x: 1 if x in collusion_shop_names else 0)
+groups = []
+current_group = []
+group_id = 1
 
-    # Yeni CSV'ye yaz
-    df.to_csv(output_csv, index=False)
-    print(f"✅ Etiketli veri kaydedildi: {output_csv}")
+for line in content.splitlines():
+    shop_match = re.search(r"Shop (\d+)", line)
+    if shop_match:
+        current_group.append(shop_match.group(1))
 
-    return df
+    if "🧱 Ortak Manufacturerlar" in line:
+        groups.append({
+            "GroupID": group_id,
+            "Shops": "; ".join(current_group)
+        })
+        current_group = []
+        group_id += 1
 
-# --- Kullanım Örneği ---
-if __name__ == "__main__":
-    collusion_shops = [
-        "Shop 2", "Shop 10", "Shop 11", "Shop 12", "Shop 15", "Shop 18", "Shop 19",
-        "Shop 21", "Shop 23", "Shop 26", "Shop 29", "Shop 30", "Shop 33", "Shop 34",
-        "Shop 35", "Shop 40", "Shop 41", "Shop 42", "Shop 44", "Shop 45", "Shop 46",
-        "Shop 47", "Shop 48", "Shop 49", "Shop 50", "Shop 52", "Shop 53", "Shop 54",
-        "Shop 55", "Shop 59", "Shop 60", "Shop 62", "Shop 63", "Shop 65", "Shop 67",
-        "Shop 68", "Shop 70", "Shop 74", "Shop 75", "Shop 76", "Shop 78", "Shop 80",
-        "Shop 84", "Shop 85", "Shop 86", "Shop 88", "Shop 90", "Shop 96", "Shop 98",
-        "Shop 99"
-    ]
 
-    label_shops("C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/utils/shop_features3.csv", collusion_shops)
+
+df = pd.DataFrame(groups)
+df.to_csv("collusion_groups_shops_only.csv", index=False, encoding="utf-8")
+print("CSV dosyası oluşturuldu: collusion_groups_shops_only.csv")
+
+
+import pandas as pd
+
+# Dosya yolu (gerekirse güncelle)
+df = pd.read_csv("collusion_groups_shops_only.csv")
+
+# COLLUSION_GROUPS sözlüğü
+with open("collusion_groups_dict.py", "w", encoding="utf-8") as f:
+    f.write("COLLUSION_GROUPS = {\n")
+    for _, row in df.iterrows():
+        group_id = int(row["GroupID"])
+        shops = [int(shop.strip()) for shop in row["Shops"].split(";")]
+        f.write(f"    {group_id}: {shops},\n")
+    f.write("}\n")
+
+print("collusion_groups_dict.py dosyası oluşturuldu.")

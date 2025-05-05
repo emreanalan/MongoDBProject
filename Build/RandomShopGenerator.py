@@ -47,7 +47,6 @@ def generate_shop_documents(shop_ids, is_collusion=False):
         print("\n🚀 ShopsDataSet oluşturuluyor...\n")
         generate_normal_shops(shop_ids)
 
-
 def create_collusion_groups_from_list(shop_ids):
     random.shuffle(shop_ids)
     groups = []
@@ -142,7 +141,7 @@ def generate_collusion_shops(group_map):
         common_manus = group_data["common_manus"]
         shop_manus_map = group_data["shop_manus"]
         leader = group_shops[0]
-        delays = {shop: (0 if shop == leader else random.randint(1, 7)) for shop in group_shops}
+        delays = {shop: (0 if shop == leader else random.randint(1, 4)) for shop in group_shops}
 
         zam_days = []
         while len(zam_days) < random.randint(3, 6):
@@ -150,6 +149,10 @@ def generate_collusion_shops(group_map):
             if all(abs(aday - mevcut) >= 10 for mevcut in zam_days):
                 zam_days.append(aday)
         zam_days.sort()
+
+        # Her zam günü için ortak ama farklı zam oranları üret
+        zam_oranlari = {z_day: round(random.uniform(0.055, 0.075), 5) for z_day in zam_days}
+        sapma_degeri_map = {shop: round(random.uniform(-0.0005, 0.0005), 4) for shop in group_shops}
 
         sample_date = all_dates[0]
         all_products = set()
@@ -163,16 +166,33 @@ def generate_collusion_shops(group_map):
                     all_products.add(pname)
 
         collusion_products = random.sample(list(all_products), max(1, int(len(all_products) * random.uniform(0.15, 0.30))))
-        collusion_price_map = {p: round(random.uniform(5.0, 10.0), 2) / 100 for p in collusion_products}
 
-        print(f"\n🔵 Grup {group_num} - Ortak Tarih: {sample_date.strftime('%Y-%m-%d')}")
-        print(f"   ⭐ Lider Shop: {leader}")
-        print(f"   ⏱️ Delay Günleri: {delays}")
-        print(f"   🧱 Ortak Manufacturerlar: {common_manus}")
-        print(f"   🎯 Collusion Ürünleri: {collusion_products}\n")
+        collusion_profit_map = {}
+        for pname in collusion_products:
+            collusion_profit_map[pname] = round(random.uniform(0.08, 0.12), 5)
 
-        # Tüm mağazalar için başlangıç fiyatları eşitleniyor
-        shared_starting_prices = {}
+        shop_start_prices = {shop: {} for shop in group_shops}
+        for shop in group_shops:
+            sapma = sapma_degeri_map[shop]
+            for pname in collusion_products:
+                for manu in common_manus:
+                    manu_data = manufacturer_cache[manu].get(sample_date)
+                    if not manu_data:
+                        continue
+                    for i in range(1, 21):
+                        p = manu_data.get(f"Product {i}")
+                        price_str = manu_data.get(f"Product {i} Price")
+                        if p == pname and price_str:
+                            manu_price = float(price_str.replace(",", "").replace(" TL", ""))
+                            profit_orani = collusion_profit_map[pname]
+                            base_price = manu_price * (1 + profit_orani)
+                            final_price = round(base_price * (1 + sapma), 2)
+                            shop_start_prices[shop][pname] = final_price
+                            break
+                    if pname in shop_start_prices[shop]:
+                        break
+
+        dynamic_start_prices = {}
         for manu in common_manus:
             manu_data = manufacturer_cache[manu].get(sample_date)
             if not manu_data:
@@ -180,62 +200,89 @@ def generate_collusion_shops(group_map):
             for i in range(1, 21):
                 pname = manu_data.get(f"Product {i}")
                 pprice = manu_data.get(f"Product {i} Price")
-                if pname and pprice:
+                if pname and pprice and pname not in collusion_products:
                     base_price = float(pprice.replace(",", "").replace(" TL", ""))
-                    shared_starting_prices[pname] = base_price
+                    dynamic_start_prices[pname] = base_price
 
-        zam_plan = {}
+        zam_gunleri_str = [all_dates[z].strftime('%Y-%m-%d') for z in zam_days]
+
+        print(f"\n🔵 Grup {group_num} - Ortak Tarih: {sample_date.strftime('%Y-%m-%d')}")
+        print(f"   ⭐ Lider Shop: {leader}")
+        print(f"   ⏱️ Delay Günleri: {delays}")
+        print(f"   🧱 Ortak Manufacturerlar: {common_manus}")
+        print(f"   📅 Zam Günleri (lider için): {zam_gunleri_str}")
+        print(f"   🎯 Collusion ürünleri: {collusion_products}\n")
 
         for shop in group_shops:
             bulk_ops = []
-            previous_prices = shared_starting_prices.copy()
+            previous_prices = shop_start_prices[shop].copy()
             shop_collection = db[shop]
 
-            for date_idx, date in enumerate(all_dates):
+            for day_index, date in enumerate(all_dates):
                 doc = {
                     "Date": date,
                     "Store Type": shop,
                     "Description": f"Generated collusion prices on {date.strftime('%Y-%m-%d')}"
                 }
+
                 for manu in shop_manus_map[shop]:
                     manu_data = manufacturer_cache[manu].get(date)
                     if not manu_data:
                         continue
+
                     manu_doc = {}
+
                     for i in range(1, 21):
                         pname = manu_data.get(f"Product {i}")
-                        pprice = manu_data.get(f"Product {i} Price")
-                        if not pname or not pprice:
-                            continue
-                        base_price = shared_starting_prices.get(pname)
-                        if base_price is None:
+                        pprice_str = manu_data.get(f"Product {i} Price")
+                        if not pname or not pprice_str:
                             continue
 
-                        final_price = previous_prices.get(pname, base_price)
-                        profit_pct = 0.0
-
-                        if pname in collusion_price_map:
+                        if pname in collusion_products:
+                            delay = delays[shop]
                             for z_day in zam_days:
-                                zam_date = all_dates[z_day]
-                                delay = delays[shop]
-                                reach_date = zam_date + timedelta(days=delay)
-
-                                if date == reach_date:
-                                    profit_pct = collusion_price_map[pname] * 100
-                                    final_price = base_price * (1 + collusion_price_map[pname])
-                                    previous_prices[pname] = final_price
-                                    zam_plan[(pname, zam_date)] = final_price
+                                if day_index == z_day + delay:
+                                    old_price = previous_prices[pname]
+                                    zam_orani = zam_oranlari[z_day]
+                                    new_price = round(old_price * (1 + zam_orani), 2)
+                                    sapma = sapma_degeri_map[shop]
+                                    new_price = round(new_price * (1 + sapma), 2)  # shop'a özel sabit sapma
+                                    previous_prices[pname] = new_price
                                     break
 
+                            final_price = previous_prices[pname]
+                            profit_pct = collusion_profit_map[pname] * 100
+
+                        else:
+                            # COLLUSION DIŞI ÜRÜNLER ARTIK NORMAL MAĞAZA MANTIĞIYLA DAVRANACAK
+                            base_price = float(pprice_str.replace(",", "").replace(" TL", ""))
+                            if pname not in previous_prices:
+                                base_profit = manufacturer_product_profit_cache[manu][pname]
+                                profit_variation = round(random.uniform(-0.02, 0.02), 3)
+                                adj_profit = round(base_profit + profit_variation * 100, 2)
+                                final_price = base_price * (1 + adj_profit / 100)
+                                previous_prices[pname] = final_price
+                                profit_pct = adj_profit
+                            elif day_index in zam_days:
+                                base_profit = manufacturer_product_profit_cache[manu][pname]
+                                profit_variation = round(random.uniform(-0.02, 0.02), 3)
+                                adj_profit = round(base_profit + profit_variation * 100, 2)
+                                final_price = base_price * (1 + adj_profit / 100)
+                                previous_prices[pname] = final_price
+                                profit_pct = adj_profit
+                            else:
+                                final_price = previous_prices[pname]
+                                profit_pct = (final_price - base_price) / base_price * 100
+
                         manu_doc[f"Product {i}"] = pname
-                        manu_doc[f"Product {i} Manufacturer Price"] = f"{base_price:,.2f} TL"
+                        manu_doc[f"Product {i} Manufacturer Price"] = pprice_str
                         manu_doc[f"Product {i} Price"] = f"{final_price:,.2f} TL"
                         manu_doc[f"Product {i} Shop Profit %"] = profit_pct
+
                     if manu_doc:
                         doc[f"{manu} Products"] = manu_doc
 
                 bulk_ops.append(pymongo.UpdateOne({"Date": date}, {"$set": doc}, upsert=True))
-
                 if len(bulk_ops) >= 30:
                     shop_collection.bulk_write(bulk_ops)
                     bulk_ops = []
@@ -246,10 +293,13 @@ def generate_collusion_shops(group_map):
 
 
 
-# --- Karışık Shop ID üretimi ---
+
+
+
+
 all_shops = list(range(1, 401))
 random.shuffle(all_shops)
 
 # İlk 200 tanesi normal, kalan 200 tanesi collusion olarak ayrılır
-generate_shop_documents(all_shops[:200], is_collusion=False)
-generate_shop_documents(all_shops[200:], is_collusion=True)
+generate_shop_documents(all_shops[:100], is_collusion=False)
+generate_shop_documents(all_shops[100:], is_collusion=True)
