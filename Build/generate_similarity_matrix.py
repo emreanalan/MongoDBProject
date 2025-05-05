@@ -7,7 +7,6 @@ import numpy as np
 import pandas as pd
 from tqdm import tqdm
 import multiprocessing
-from sklearn.metrics.pairwise import cosine_similarity
 
 SHOP_DATA_DIR = "C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/Build/exported_shops"
 OUTPUT_CSV = "C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/Build/Cvss/shop_similarity_matrix1.csv"
@@ -32,38 +31,41 @@ def extract_product_price_history(shop_path):
 
 def compute_similarity_worker(args):
     id1, id2, data_a, data_b = args
-    delay_count = 0
-    overlap_count = 0
     total_common_products = 0
-    profit_diffs = []
+    total_profit_diffs = []
+    matched_zam_days = 0
+    delay_within_4_days = 0
 
     for product in data_a:
         if product in data_b:
-            days_a = set(data_a[product].keys())
-            days_b = set(data_b[product].keys())
+            days_a = sorted(data_a[product].keys())
+            days_b = sorted(data_b[product].keys())
             total_common_products += 1
+
             for d1 in days_a:
                 dt1 = datetime.strptime(d1, "%Y-%m-%d")
-                for delay in range(0, 8):
+                for delay in range(0, 5):  # Delay 0–4 gün arası
                     dt2 = dt1 + timedelta(days=delay)
                     d2_str = dt2.strftime("%Y-%m-%d")
-                    if d2_str in days_b:
+                    if d2_str in data_b[product]:
+                        profit_a = data_a[product][d1]
+                        profit_b = data_b[product][d2_str]
+                        diff = abs(profit_a - profit_b)
+                        total_profit_diffs.append(diff)
+
                         if delay == 0:
-                            overlap_count += 1
-                        else:
-                            delay_count += 1
-                        pa = data_a[product][d1]
-                        pb = data_b[product][d2_str]
-                        profit_diffs.append(abs(pa - pb))
+                            matched_zam_days += 1
+                        delay_within_4_days += 1
                         break
 
     if total_common_products == 0:
         return (id1, id2, 0, 0, 0)
 
-    delay_score = delay_count / total_common_products
-    overlap_score = overlap_count / total_common_products
-    profit_similarity = 1 - (np.mean(profit_diffs) / 100) if profit_diffs else 0
-    return (id1, id2, delay_score, overlap_score, profit_similarity)
+    price_similarity = 1 - (np.mean(total_profit_diffs) / 100) if total_profit_diffs else 0
+    zam_day_overlap = matched_zam_days / total_common_products
+    delay_alignment = delay_within_4_days / total_common_products
+
+    return (id1, id2, price_similarity, zam_day_overlap, delay_alignment)
 
 
 def main():
@@ -87,13 +89,13 @@ def main():
     results = []
     with multiprocessing.Pool(processes=os.cpu_count()) as pool:
         for result in tqdm(pool.imap_unordered(compute_similarity_worker, args_list), total=len(args_list)):
-            id1, id2, d, o, p = result
+            id1, id2, price_sim, zam_overlap, delay_score = result
             results.append({
                 "shop_id_1": id1,
                 "shop_id_2": id2,
-                "delay_score": d,
-                "overlap_score": o,
-                "profit_similarity": p
+                "price_similarity": price_sim,
+                "zam_day_overlap": zam_overlap,
+                "delay_alignment": delay_score
             })
 
     df = pd.DataFrame(results)
