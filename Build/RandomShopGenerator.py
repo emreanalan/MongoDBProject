@@ -52,7 +52,8 @@ def create_collusion_groups_from_list(shop_ids):
     groups = []
     idx = 0
     while idx < len(shop_ids):
-        group_size = random.choice([3, 4, 5])
+        #group_size = random.choice([3, 4, 5])
+        group_size = 10
         group = [f"Shop {i}" for i in shop_ids[idx:idx + group_size]]
         if len(group) >= 3:
             groups.append(group)
@@ -297,9 +298,9 @@ def generate_collusion_shops(group_map):
 
 
 
-all_shops = list(range(1, 401))
+all_shops = list(range(1, 101))
 random.shuffle(all_shops)
 
 # İlk 200 tanesi normal, kalan 200 tanesi collusion olarak ayrılır
-generate_shop_documents(all_shops[:100], is_collusion=False)
-generate_shop_documents(all_shops[100:], is_collusion=True)
+generate_shop_documents(all_shops[:40], is_collusion=False)
+generate_shop_documents(all_shops[40:], is_collusion=True)

@@ -8,39 +8,83 @@ import pandas as pd
 from tqdm import tqdm
 from multiprocessing import Pool
 
-SHOP_DATA_DIR = "C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/Build/exported_shops"
-OUTPUT_FEATURES_CSV = "C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/Build/Cvss/shop_features1.csv"
+SHOP_DATA_DIR = "C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/Build/exported_shops2"
+OUTPUT_FEATURES_CSV = "C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/Build/Cvss/shop_features2.csv"
+OUTPUT_CSV = "C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/Build/Cvss/shop_similarity_matrixTest1.csv"
+
+# COLLUSION_GROUPS = {
+#     1: [40, 235, 339, 245, 197, 323, 302, 182, 166, 238],
+#     2: [319, 16, 67, 172, 332, 21, 255, 12, 265, 75],
+#     3: [279, 119, 384, 220, 26, 375, 327, 33, 224, 196],
+#     4: [108, 377, 136, 276, 263, 55, 129, 396, 109, 78],
+#     5: [118, 234, 395, 30, 7, 159, 41, 160, 207, 130],
+#     6: [343, 314, 259, 151, 25, 320, 380, 258, 346, 393],
+#     7: [103, 290, 366, 199, 344, 231, 365, 241, 195, 87],
+#     8: [248, 308, 225, 183, 269, 387, 74, 371, 353, 192],
+#     9: [372, 388, 165, 60, 244, 394, 331, 79, 179, 187],
+#     10: [233, 115, 174, 53, 189, 280, 253, 6, 246, 277],
+#     11: [66, 201, 383, 101, 200, 205, 120, 285, 44, 378],
+#     12: [32, 4, 9, 185, 163, 333, 106, 83, 296, 321],
+#     13: [2, 262, 81, 325, 272, 59, 214, 256, 232, 305],
+#     14: [247, 138, 23, 306, 202, 313, 99, 328, 283, 278],
+#     15: [293, 178, 126, 147, 47, 359, 5, 361, 177, 31],
+#     16: [289, 307, 209, 301, 110, 148, 132, 173, 80, 8],
+#     17: [391, 287, 284, 3, 369, 88, 385, 273, 291, 354],
+#     18: [149, 299, 111, 254, 322, 355, 69, 57, 275, 104],
+#     19: [204, 348, 77, 266, 181, 121, 249, 114, 243, 128],
+#     20: [29, 351, 146, 36, 125, 329, 218, 105, 316, 72],
+#     21: [336, 342, 10, 145, 123, 186, 37, 137, 117, 229],
+#     22: [337, 222, 267, 52, 386, 228, 176, 91, 134, 141],
+#     23: [156, 382, 180, 50, 297, 155, 360, 191, 18, 398],
+#     24: [286, 381, 42, 70, 1, 193, 363, 237, 17, 221],
+#     25: [211, 158, 347, 373, 309, 157, 324, 379, 376, 340],
+#     26: [274, 28, 150, 251, 124, 374, 226, 294, 90, 356],
+#     27: [122, 213, 89, 250, 358, 239, 219, 64, 349, 127],
+#     28: [46, 171, 14, 230, 133, 217, 390, 188, 295, 303],
+#     29: [317, 335, 236, 19, 24, 107, 330, 35, 45, 210],
+#     30: [364, 288, 184, 131, 56, 270, 71, 39, 300, 84],
+#     31: [495, 725, 717, 747, 402, 653, 441, 626, 657, 604],
+#     32: [461, 418, 442, 594, 446, 562, 596, 456, 516, 460],
+#     33: [567, 757, 478, 489, 457, 621, 581, 422, 706, 742],
+#     34: [610, 620, 737, 736, 486, 655, 774, 510, 762, 760],
+#     35: [569, 702, 633, 491, 694, 625, 543, 644, 771, 430],
+#     36: [459, 664, 607, 483, 624, 662, 719, 722, 670, 796],
+#     37: [573, 735, 519, 681, 724, 535, 743, 465, 434, 755],
+#     38: [659, 571, 534, 580, 788, 750, 791, 507, 574, 699],
+#     39: [496, 443, 701, 776, 786, 471, 421, 410, 578, 628],
+#     40: [678, 513, 679, 521, 404, 557, 476, 727, 618, 690],
+#     41: [582, 437, 475, 677, 444, 718, 773, 584, 526, 415],
+#     42: [726, 614, 453, 728, 601, 433, 656, 540, 715, 647],
+#     43: [479, 426, 485, 627, 622, 565, 688, 603, 697, 745],
+#     44: [772, 753, 787, 523, 775, 641, 464, 558, 639, 711],
+#     45: [559, 409, 448, 689, 658, 501, 542, 586, 447, 406],
+#     46: [591, 732, 484, 799, 449, 599, 785, 648, 499, 411],
+#     47: [652, 451, 493, 663, 789, 416, 509, 751, 532, 698],
+#     48: [640, 408, 524, 504, 748, 518, 744, 512, 405, 598],
+#     49: [554, 550, 455, 636, 432, 602, 472, 427, 782, 525],
+#     50: [720, 666, 768, 431, 741, 739, 506, 556, 615, 502],
+#     51: [529, 600, 714, 764, 522, 419, 545, 538, 630, 795],
+#     52: [780, 665, 563, 634, 440, 766, 564, 792, 752, 672],
+#     53: [608, 758, 583, 716, 585, 481, 463, 541, 708, 588],
+#     54: [784, 439, 704, 684, 552, 779, 800, 631, 781, 643],
+#     55: [539, 423, 560, 520, 619, 635, 709, 687, 646, 609],
+#     56: [477, 488, 536, 424, 769, 546, 576, 651, 605, 575],
+#     57: [438, 553, 685, 561, 777, 544, 661, 494, 669, 407],
+#     58: [503, 606, 450, 613, 482, 710, 548, 403, 683, 579],
+#     59: [667, 733, 508, 514, 425, 767, 470, 436, 401, 592],
+#     60: [761, 696, 650, 798, 572, 566, 703, 654, 638, 568],
+# }
 
 COLLUSION_GROUPS = {
-    1: [206, 24, 33], 2: [164, 57, 174], 3: [246, 317, 349], 4: [169, 138, 343],
-    5: [218, 60, 153, 399], 6: [78, 160, 320], 7: [347, 139, 199], 8: [225, 83, 167],
-    9: [273, 373, 187, 31], 10: [110, 369, 217, 259, 323], 11: [275, 350, 230, 130, 38],
-    12: [330, 111, 345, 190, 18], 13: [336, 147, 173, 387], 14: [265, 254, 232, 372, 148],
-    15: [172, 315, 316, 34], 16: [84, 353, 103, 381, 329], 17: [354, 17, 376],
-    18: [65, 135, 270, 331, 359], 19: [140, 289, 6, 3], 20: [374, 93, 357],
-    21: [76, 157, 342], 22: [131, 386, 101], 23: [327, 221, 303],
-    24: [249, 122, 26, 299], 25: [318, 278, 192, 352], 26: [116, 227, 128, 9, 371],
-    27: [88, 311, 42, 19, 292], 28: [314, 392, 46, 114], 29: [189, 222, 145, 87],
-    30: [29, 396, 358], 31: [13, 228, 161], 32: [240, 180, 129, 21],
-    33: [94, 163, 271, 364, 12], 34: [16, 177, 150, 142], 35: [32, 324, 121],
-    36: [165, 291, 389, 155], 37: [80, 143, 119, 201], 38: [113, 197, 186],
-    39: [212, 209, 319], 40: [356, 178, 8, 184], 41: [379, 281, 55, 64, 30],
-    42: [66, 51, 332], 43: [298, 58, 214, 306], 44: [132, 90, 40],
-    45: [202, 220, 127, 264, 257], 46: [95, 43, 384, 368, 195],
-    47: [391, 321, 313], 48: [378, 205, 22], 49: [312, 250, 223, 1],
-    50: [28, 276, 52, 280, 100], 51: [162, 56, 54],
-    52: [47, 75, 120, 211, 334], 53: [144, 27, 67, 253, 393],
-    54: [118, 248, 194, 252], 55: [96, 279, 307], 56: [207, 367, 296, 301],
-    57: [337, 305, 288, 198, 302], 58: [297, 261, 191, 251, 274],
-    59: [71, 383, 310, 35], 60: [20, 152, 185], 61: [326, 154, 85, 134],
-    62: [151, 204, 25, 82], 63: [215, 89, 73, 322, 355],
-    64: [269, 98, 105, 304, 69], 65: [333, 4, 287, 92, 79], 66: [263, 2, 294],
-    67: [233, 285, 235], 68: [335, 390, 68, 141, 266],
-    69: [196, 338, 341, 203], 70: [377, 308, 286, 224],
-    71: [14, 394, 125], 72: [200, 351, 243, 115, 11],
-    73: [170, 37, 219, 216, 210], 74: [23, 39, 244, 234, 171],
-    75: [268, 339, 63], 76: [74, 267, 365, 229]
+    1: [56, 11, 74, 20, 76, 1, 18, 22, 36, 78],
+    2: [5, 30, 34, 82, 2, 99, 40, 45, 67, 15],
+    3: [13, 77, 80, 7, 59, 91, 70, 31, 68, 73],
+    4: [33, 17, 43, 24, 88, 47, 90, 62, 61, 28],
+    5: [69, 50, 21, 84, 58, 64, 75, 97, 16, 25],
+    6: [89, 95, 42, 93, 41, 66, 55, 37, 65, 46],
 }
+
+
 
 COLLUSION_SHOP_IDS = {shop_id for group in COLLUSION_GROUPS.values() for shop_id in group}
 SHOP_ID_TO_GROUP = {shop_id: group_id for group_id, shop_list in COLLUSION_GROUPS.items() for shop_id in shop_list}
@@ -67,89 +111,117 @@ def extract_product_price_history(shop_path):
                         product_history[product_name].append((date, profit))
     return product_history
 
-def compute_delay_overlap_similarity(product_history):
-    delay_list = []
-    overlap_list = []
-    all_profits = []
+def compute_similarity_worker(args):
+    id1, id2, data_a, data_b = args
+    total_common_products = 0
+    total_profit_diffs = []
+    matched_zam_days = 0
+    delay_within_4_days = 0
+
+    for product in data_a:
+        if product in data_b:
+            # 'data_a[product]' ve 'data_b[product]' veri yapısını kontrol et
+            if isinstance(data_a[product], dict) and isinstance(data_b[product], dict):
+                days_a = sorted(data_a[product].keys())
+                days_b = sorted(data_b[product].keys())
+                total_common_products += 1
+
+                for d1 in days_a:
+                    dt1 = datetime.strptime(d1, "%Y-%m-%d")
+                    for delay in range(0, 5):  # Delay 0–4 gün arası
+                        dt2 = dt1 + timedelta(days=delay)
+                        d2_str = dt2.strftime("%Y-%m-%d")
+                        if d2_str in data_b[product]:
+                            profit_a = data_a[product][d1]
+                            profit_b = data_b[product][d2_str]
+                            diff = abs(profit_a - profit_b)
+                            total_profit_diffs.append(diff)
+
+                            if delay == 0:
+                                matched_zam_days += 1
+                            delay_within_4_days += 1
+                            break
+            else:
+                # Eğer 'data_a[product]' veya 'data_b[product]' dict değilse, hata vermek yerine bir şey yapma.
+                continue
+
+    if total_common_products == 0:
+        return (id1, id2, 0, 0, 0)
+
+    price_similarity = 1 - (np.mean(total_profit_diffs) / 100) if total_profit_diffs else 0
+    zam_day_overlap = matched_zam_days / total_common_products
+    delay_alignment = delay_within_4_days / total_common_products
+
+    return (id1, id2, price_similarity, zam_day_overlap, delay_alignment)
+
+def compute_product_price_diff(product_history):
+    price_diff_list = []
     for product, records in product_history.items():
         records.sort()
-        for i in range(1, len(records)):
-            prev_date = datetime.strptime(records[i-1][0], "%Y-%m-%d")
-            curr_date = datetime.strptime(records[i][0], "%Y-%m-%d")
-            delay = (curr_date - prev_date).days
-            delay_list.append(int(0 <= delay <= 4))
-            overlap_list.append(int(delay == 0))
-            all_profits.append(abs(records[i][1] - records[i-1][1]))
-    avg_delay_score = np.mean(delay_list) if delay_list else 0
-    avg_zam_overlap = np.mean(overlap_list) if overlap_list else 0
-    avg_price_similarity = 1 - (np.mean(all_profits) / 100) if all_profits else 0
-    return avg_price_similarity, avg_zam_overlap, avg_delay_score
+        if len(records) > 1:
+            prices = [profit for _, profit in records]
+            price_diff = np.std(prices)
+            price_diff_list.append(price_diff)
+    return np.mean(price_diff_list) if price_diff_list else 0
 
-def compute_price_std_similarity(shop_id, shop_products, all_shop_profits, max_compare=20):
-    diffs = []
-    count = 0
-    for other_id, other_products in all_shop_profits.items():
-        if other_id == shop_id:
-            continue
-        for product in shop_products:
-            if product in other_products:
-                p1 = [v for _, v in shop_products[product]]
-                p2 = [v for _, v in other_products[product]]
-                if p1 and p2:
-                    try:
-                        diff = np.std(np.array(p1) - np.array(p2))
-                        diffs.append(diff)
-                        break
-                    except:
-                        continue
-        count += 1
-        if count >= max_compare:
-            break
-    return np.mean(diffs) if diffs else 0
+def compute_product_price_variance(product_history):
+    price_variance_list = []
+    for product, records in product_history.items():
+        if len(records) > 1:
+            prices = [profit for _, profit in records]
+            price_variance = np.var(prices)
+            price_variance_list.append(price_variance)
+    return np.mean(price_variance_list) if price_variance_list else 0
 
-def compute_top_k_neighbor_overlap(shop_id, shop_products, all_shop_profits, k=5):
-    similarities = []
-    for other_id, other_products in all_shop_profits.items():
-        if other_id == shop_id:
-            continue
-        common_products = set(shop_products.keys()) & set(other_products.keys())
-        total_overlap = 0
-        total_count = 0
-        for product in common_products:
-            dates_a = set(d for d, _ in shop_products[product])
-            dates_b = set(d for d, _ in other_products[product])
-            total_overlap += len(dates_a & dates_b)
-            total_count += len(dates_a | dates_b)
-        similarity = total_overlap / total_count if total_count else 0
-        similarities.append(similarity)
-    similarities.sort(reverse=True)
-    return np.mean(similarities[:k]) if similarities else 0
+def compute_price_change_frequency(shop_path, product_history):
+    price_changes = 0
+    for product, records in product_history.items():
+        if len(records) > 1:
+            for i in range(1, len(records)):
+                if records[i][1] != records[i-1][1]:
+                    price_changes += 1
+    return price_changes
 
-def compute_productwise_variance(shop_id, shop_products, all_shop_profits):
-    variances = []
-    for product in shop_products:
-        prices = []
-        for other_id, other_products in all_shop_profits.items():
-            if product in other_products:
-                prices.extend([v for _, v in other_products[product]])
-        if prices:
-            variances.append(np.var(prices))
-    return np.mean(variances) if variances else 0
+def compute_profit_percentage_variability(shop_path, product_history):
+    profit_variations = []
+    for product, records in product_history.items():
+        if len(records) > 1:
+            profits = [profit for _, profit in records]
+            profit_variations.append(np.std(profits))
+    return np.mean(profit_variations) if profit_variations else 0
+
+def compute_product_price_consistency(shop_id, product_history, all_shop_profits):
+    price_consistency = []
+    for product, records in product_history.items():
+        prices = [profit for _, profit in records]
+        avg_price = np.mean(prices)
+        group_prices = []
+        for other_id, other_product_history in all_shop_profits.items():
+            if other_id == shop_id:
+                continue
+            if product in other_product_history:
+                group_prices.append(np.mean([p for _, p in other_product_history[product]]))
+        price_consistency.append(np.std(group_prices) / avg_price if group_prices else 0)
+    return np.mean(price_consistency) if price_consistency else 0
+
 
 def extract_features(args):
     shop_path, all_shop_profits = args
     shop_id = int(os.path.basename(shop_path).split()[1].split(".")[0])
     product_history = extract_product_price_history(shop_path)
 
-    price_change_count = 0
-    profit_values = []
+    price_change_count = len(product_history)
+    product_price_diff = compute_product_price_diff(product_history)
+    product_price_variance = compute_product_price_variance(product_history)
+    price_change_frequency = compute_price_change_frequency(shop_path, product_history)
+    profit_percentage_variability = compute_profit_percentage_variability(shop_path, product_history)
+    product_price_consistency = compute_product_price_consistency(shop_id, product_history, all_shop_profits)
+
     manufacturer_set = set()
-    all_dates = set()
+    profit_values = []
     with open(shop_path, "r", encoding="utf-8") as f:
         records = json.load(f)
         for day_record in records:
-            all_dates.add(day_record["Date"])
-            price_change_count += 1
             for key in day_record:
                 if key.endswith("Products"):
                     manufacturer_set.add(key.split()[0])
@@ -158,35 +230,55 @@ def extract_features(args):
                             profit = parse_profit(day_record[key][sub_key])
                             profit_values.append(profit)
 
-    date_objs = sorted(datetime.strptime(d, "%Y-%m-%d") for d in all_dates)
-    day_diffs = [(date_objs[i+1] - date_objs[i]).days for i in range(len(date_objs)-1)]
-    avg_interval = np.mean(day_diffs) if day_diffs else 0
-
-    avg_price_similarity, avg_zam_overlap, avg_delay_score = compute_delay_overlap_similarity(product_history)
-    price_std_similarity = compute_price_std_similarity(shop_id, product_history, all_shop_profits)
-    top_k_neighbor_overlap = compute_top_k_neighbor_overlap(shop_id, product_history, all_shop_profits)
-    productwise_variance = compute_productwise_variance(shop_id, product_history, all_shop_profits)
-
     return {
         "shop_id": shop_id,
         "price_change_count": price_change_count,
-        "avg_day_between_changes": avg_interval,
+        "product_price_diff": product_price_diff,
+        "product_price_variance": product_price_variance,
+        "price_change_frequency": price_change_frequency,
+        "profit_percentage_variability": profit_percentage_variability,
+        "product_price_consistency": product_price_consistency,
         "manufacturer_count": len(manufacturer_set),
         "avg_profit_pct": np.mean(profit_values) if profit_values else 0,
         "profit_pct_std": np.std(profit_values) if profit_values else 0,
-        "product_count": len(product_history),
-        "avg_price_similarity": avg_price_similarity,
-        "avg_zam_overlap": avg_zam_overlap,
-        "avg_delay_score": avg_delay_score,
-        "price_std_similarity": price_std_similarity,
-        "top_k_neighbor_overlap": top_k_neighbor_overlap,
-        "productwise_variance_across_shops": productwise_variance,
         "is_collusion": int(shop_id in COLLUSION_SHOP_IDS),
         "collusion_group": SHOP_ID_TO_GROUP.get(shop_id, -1)
     }
 
 def main():
     shop_files = glob(os.path.join(SHOP_DATA_DIR, "Shop *.json"))
+    shop_ids = [int(os.path.basename(p).split()[1].split(".")[0]) for p in shop_files]
+    shop_data = {}
+
+    print("📦 Shop verileri yükleniyor...")
+    for shop_file in tqdm(shop_files, desc="Shop yükleme"):
+        shop_id = int(os.path.basename(shop_file).split()[1].split(".")[0])
+        shop_data[shop_id] = extract_product_price_history(shop_file)
+
+    print("⚙️ Paralel karşılaştırma başlıyor...")
+    args_list = []
+    for i in range(len(shop_ids)):
+        for j in range(i + 1, len(shop_ids)):
+            id1 = shop_ids[i]
+            id2 = shop_ids[j]
+            args_list.append((id1, id2, shop_data[id1], shop_data[id2]))
+
+    results = []
+    with Pool() as pool:
+        for result in tqdm(pool.imap_unordered(compute_similarity_worker, args_list), total=len(args_list)):
+            id1, id2, price_sim, zam_overlap, delay_score = result
+            results.append({
+                "shop_id_1": id1,
+                "shop_id_2": id2,
+                "price_similarity": price_sim,
+                "zam_day_overlap": zam_overlap,
+                "delay_alignment": delay_score
+            })
+
+    similarity_df = pd.DataFrame(results)
+    similarity_df.to_csv(OUTPUT_CSV, index=False)
+    print(f"✅ Similarity matrisi kaydedildi: {OUTPUT_CSV}")
+
     all_shop_profits = {
         int(os.path.basename(f).split()[1].split(".")[0]): extract_product_price_history(f)
         for f in tqdm(shop_files, desc="Ön bellekleme")

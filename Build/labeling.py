@@ -1,7 +1,7 @@
 import re
 import pandas as pd
 
-with open("C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/TestsAndModels/collusionSet.txt", "r", encoding="utf-8") as f:
+with open("C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/Build/Labeling/testSet1.txt", "r", encoding="utf-8") as f:
     content = f.read()
 
 groups = []
@@ -24,17 +24,17 @@ for line in content.splitlines():
 
 
 df = pd.DataFrame(groups)
-df.to_csv("collusion_groups_shops_only.csv", index=False, encoding="utf-8")
+df.to_csv("C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/Build/Labeling/collusion_groupsTest1.csv", index=False, encoding="utf-8")
 print("CSV dosyası oluşturuldu: collusion_groups_shops_only.csv")
 
 
 import pandas as pd
 
 # Dosya yolu (gerekirse güncelle)
-df = pd.read_csv("collusion_groups_shops_only.csv")
+df = pd.read_csv("C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/Build/Labeling/collusion_groupsTest1.csv")
 
 # COLLUSION_GROUPS sözlüğü
-with open("collusion_groups_dict.py", "w", encoding="utf-8") as f:
+with open("C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/Build/Labeling/collusion_groups_dictTest1.py", "w", encoding="utf-8") as f:
     f.write("COLLUSION_GROUPS = {\n")
     for _, row in df.iterrows():
         group_id = int(row["GroupID"])

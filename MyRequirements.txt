@@ -19,3 +19,5 @@ PySide6_Essentials
 networkx
 seaborn
 tqdm
+xgboost
+statsmodels

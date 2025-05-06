@@ -51,8 +51,8 @@ def delete_date_range(collection_name, start_date_str, end_date_str):
 
 ##########################################################################
 # Product 1'den Product 500'e kadar olan collectionları sil
-# for i in range(1, 171):
-#     collection_name = f"Shop {i}"
+# for i in range(419, 430):
+#     collection_name = f"Product {i}"
 #     if collection_name in db.list_collection_names():
 #         db.drop_collection(collection_name)
 #         print(f"Collection '{collection_name}' silindi.")
@@ -71,7 +71,7 @@ def delete_date_range(collection_name, start_date_str, end_date_str):
 #
 # print("Tüm Product collectionları başarıyla temizlendi!")
 
-for i in range(1,401):
+for i in range(1,101):
     collection_name = f"Shop {i}"
     if collection_name in db.list_collection_names():
         db.drop_collection(collection_name)
