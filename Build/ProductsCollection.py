@@ -98,7 +98,7 @@ def insert_daily_costs(product_name, materials,
                        gold_data, copper_data, aluminum_data, silver_data,
                        usd_try_data, eur_try_data, ham_petrol_data,
                        electricity_price, asgari_ucret_price, dogalgaz_price):
-    products_collection = db["Products"]  # Tek bir collection
+    products_collection = db["Products"]
 
     start_date = datetime(2025, 1, 1).date()
     daily_costs = calculate_daily_costs(product_name, materials, start_date,
@@ -107,10 +107,16 @@ def insert_daily_costs(product_name, materials,
                                         electricity_price, asgari_ucret_price, dogalgaz_price)
 
     if daily_costs:
+        # Her kayıt için Cournot alanları eklendi
+        for record in daily_costs:
+            record["Market Demand"] = random.randint(8000, 15000)
+            record["Cournot Competitors"] = []
+            record["Market Price Function"] = "P(Q) = 1000 - 0.1 * Q"
         products_collection.insert_many(daily_costs)
         print(f"Inserted {len(daily_costs)} records for {product_name}")
     else:
         print(f"No data inserted for {product_name}")
+
 
 # Preload datasets
 print("Fetching market data...")
@@ -133,8 +139,8 @@ for i in range(1, 501):
     materials = {
         "Aluminum 1Kg": round(random.uniform(0, 0.5), 3) if random.random() > 0.3 else 0,
         "Copper 1Kg": round(random.uniform(0, 0.3), 3) if random.random() > 0.3 else 0,
-        "Gold 1Kg": round(random.uniform(0, 0.05), 3) if random.random() > 0.5 else 0,
-        "Silver 1Kg": round(random.uniform(0, 0.05), 3) if random.random() > 0.5 else 0,
+        "Gold 1Kg": round(random.uniform(0, 0.005), 3) if random.random() > 0.5 else 0,
+        "Silver 1Kg": round(random.uniform(0, 0.005), 3) if random.random() > 0.5 else 0,
         "Ham_Petrol_Fiyati 1L": round(random.uniform(0, 2), 2),
         "Elektrik_Ucreti 1kW": round(random.uniform(0, 10), 2),
         "Asgari_Ucret 1 iş günü": round(random.uniform(0, 1), 2),
