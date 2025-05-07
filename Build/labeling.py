@@ -4,6 +4,7 @@ import pandas as pd
 with open("C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/Build/Labeling/testSet1.txt", "r", encoding="utf-8") as f:
     content = f.read()
 
+
 groups = []
 current_group = []
 group_id = 1

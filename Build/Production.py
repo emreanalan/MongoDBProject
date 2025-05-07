@@ -9,6 +9,7 @@ client = pymongo.MongoClient(
 )
 db = client["DataSet"]
 
+
 collections = {
     "Aluminum": db["Aluminum/TRY"],
     "Copper": db["Copper/TRY"],

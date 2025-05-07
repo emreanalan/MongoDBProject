@@ -26,7 +26,6 @@ tickers = {
     "Silver": "SI=F",    # Silver (Global prices in USD per ounce)
     "Brent": "BZ=F"
 }
-
 # Step 3: Fetch the current USD/TRY exchange rate
 def fetch_usd_to_try():
     usd_try = yf.Ticker("TRY=X")

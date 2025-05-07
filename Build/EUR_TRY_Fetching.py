@@ -74,3 +74,4 @@ for name, info in currencies.items():
             print(f"{name} -> {record['Date']} inserted")
     else:
         print(f"No new data for {name}")
+

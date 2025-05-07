@@ -10,36 +10,38 @@ client = pymongo.MongoClient(
 )
 db = client["DataSet"]
 
-# 📦 Collusion ve normal shop grupları
+
 collusion_shops = [
-    "Shop 14", "Shop 6", "Shop 18", "Shop 15", "Shop 16",
-    "Shop 19", "Shop 7", "Shop 3", "Shop 10", "Shop 11"
+    56, 11, 74, 20, 76, 1, 18, 22, 36, 78,
+    5, 30, 34, 82, 2, 99, 40, 45, 67, 15,
+    13, 77, 80, 7, 59, 91, 70, 31, 68, 73,
+    33, 17, 43, 24, 88, 47, 90, 62, 61, 28,
+    69, 50, 21, 84, 58, 64, 75, 97, 16, 25,
+    89, 95, 42, 93, 41, 66, 55, 37, 65, 46
 ]
 
 normal_shops = [
-    "Shop 1", "Shop 2", "Shop 4", "Shop 5", "Shop 8",
-    "Shop 9", "Shop 12", "Shop 13", "Shop 17", "Shop 20"
+    14, 86, 6, 8, 4, 23, 19, 27, 52, 85,
+    60, 57, 12, 98, 94, 32, 96, 71, 10, 44,
+    100, 3, 49, 72, 38, 51, 29, 92, 48, 35,
+    53, 63, 81, 39, 9, 54, 83, 79, 26
 ]
 
 collusion_group_map = {
-    "Shop 14": ["Man 15", "Man 18"],
-    "Shop 6":  ["Man 15", "Man 18"],
-    "Shop 18": ["Man 15", "Man 18"],
-    "Shop 15": ["Man 15", "Man 18"],
-    "Shop 16": ["Man 15", "Man 18"],
-
-    "Shop 19": ["Man 5", "Man 2"],
-    "Shop 7":  ["Man 5", "Man 2"],
-    "Shop 3":  ["Man 5", "Man 2"],
-    "Shop 10": ["Man 5", "Man 2"],
-    "Shop 11": ["Man 5", "Man 2"]
+    1:  [56, 11, 74, 20, 76, 1, 18, 22, 36, 78],
+    2:  [5, 30, 34, 82, 2, 99, 40, 45, 67, 15],
+    3:  [13, 77, 80, 7, 59, 91, 70, 31, 68, 73],
+    4:  [33, 17, 43, 24, 88, 47, 90, 62, 61, 28],
+    5:  [69, 50, 21, 84, 58, 64, 75, 97, 16, 25],
+    6:  [89, 95, 42, 93, 41, 66, 55, 37, 65, 46]
 }
+
 
 # Ortak üretici ürünlerini topla
 def get_common_manufacturer_products(shops, group_map=None):
     result = defaultdict(set)
     for shop in shops:
-        cursor = db[shop].find({})
+        cursor = db[str(shop)].find({})
         common_manus = group_map.get(shop, []) if group_map else None
         for doc in cursor:
             for key in doc:

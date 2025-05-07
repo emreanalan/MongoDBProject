@@ -6,8 +6,9 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 
+
 # 1. Veri yükleme
-df = pd.read_csv("C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/Build/Cvss/shop_features1.csv")
+df = pd.read_csv("C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/Build/Cvss/shop_features2.csv")
 
 # 2. Veri temizleme ve özelliklerin hazırlanması
 # 'shop_id' gibi gereksiz sütunları düşürebiliriz (modeli etkilememeli)

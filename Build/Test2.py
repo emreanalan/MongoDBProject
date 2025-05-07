@@ -1,19 +1,60 @@
-# shop_id'leri geri eklemek için önce veriyi tekrar okuyalım
-full_test_df = pd.read_csv("C:/Users/emrea/Desktop/FINAL PROJECT/MongoDBProject/Build/Cvss/shop_features2.csv")
+import pymongo
+import pandas as pd
+import matplotlib.pyplot as plt
 
-# shop_id, gerçek ve tahmin edilen grup bilgilerini birleştirelim
-comparison_df = pd.DataFrame({
-    'shop_id': full_test_df['shop_id'],
-    'actual_group': y_new_test,
-    'predicted_group': y_pred_new_test
-})
+# MongoDB bağlantısı
+client = pymongo.MongoClient(
+    "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+)
+db = client["DataSet"]
 
-# Gruplara göre sıralayalım
-comparison_df = comparison_df.sort_values(by=['actual_group', 'predicted_group']).reset_index(drop=True)
+product_name = "Product 301"
+shop_ids = [45]
+shop_names = [f"Shop {i}" for i in shop_ids]
 
-# CSV olarak kaydet (isteğe bağlı)
-comparison_df.to_csv("predicted_vs_actual_collusion_groups.csv", index=False)
+records = []
 
-# Ekrana yazdıralım
-print("\nTahmin Edilen vs Gerçek Collusion Grupları (Shop Bazında):")
-print(comparison_df)
+for shop_name in shop_names:
+    collection = db[shop_name]
+    cursor = collection.find()
+
+    for doc in cursor:
+        date = doc.get("Date")
+        for key in doc.keys():
+            if key.startswith("Man") and "Products" in key:
+                man_products = doc[key]
+                product_key = product_name
+                price_key = f"{product_name} Price"
+
+                if product_key in man_products and price_key in man_products:
+                    price_str = man_products[price_key].replace(" TL", "").replace(",", "")
+                    try:
+                        price = float(price_str)
+                        records.append({
+                            "date": pd.to_datetime(date),
+                            "shop_name": shop_name,
+                            "price": price
+                        })
+                    except ValueError:
+                        print(f"Fiyat dönüştürülemedi: {price_str} ({shop_name} / {date})")
+
+# DataFrame'e aktar
+df = pd.DataFrame(records)
+
+# Eğer veri boşsa hata verme
+if df.empty:
+    print("Uyarı: Belirtilen ürün için hiçbir mağazada veri bulunamadı.")
+else:
+    # Grafiği çiz
+    plt.figure(figsize=(12, 6))
+    for shop_name in shop_names:
+        shop_df = df[df["shop_name"] == shop_name]
+        plt.plot(shop_df["date"], shop_df["price"], label=shop_name)
+
+    plt.title(f"Fiyat-Zaman Grafiği - {product_name}")
+    plt.xlabel("Tarih")
+    plt.ylabel("Fiyat (TL)")
+    plt.legend()
+    plt.grid(True)
+    plt.tight_layout()
+    plt.show()

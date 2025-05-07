@@ -57,6 +57,7 @@ def compute_similarity_worker(args):
                         profit_diffs.append(abs(pa - pb))
                         break
 
+
     if total_common_products == 0:
         return (id1, id2, 0, 0, 0)
 

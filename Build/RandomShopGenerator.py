@@ -136,6 +136,7 @@ def generate_normal_shops(shop_ids):
             print(f"⚠️ {shop_name} için hiç veri eklenmedi.\n")
     print("\n✅ Tüm ShopsDataSet kayıtları başarıyla tamamlandı!")
 
+
 def generate_collusion_shops(group_map):
     for group_num, group_data in group_map.items():
         group_shops = group_data["group_shops"]
@@ -298,7 +299,7 @@ def generate_collusion_shops(group_map):
 
 
 
-all_shops = list(range(1, 101))
+all_shops = list(range(101, 201))
 random.shuffle(all_shops)
 
 # İlk 200 tanesi normal, kalan 200 tanesi collusion olarak ayrılır

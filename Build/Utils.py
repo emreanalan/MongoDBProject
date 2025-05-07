@@ -3,6 +3,7 @@ import json
 import os
 from datetime import datetime
 
+
 # MongoDB bağlantısı
 client = pymongo.MongoClient(
     "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
