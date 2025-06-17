@@ -1,142 +1,200 @@
-# MongoDB Manufacturer & Distributor Management System
+# 🧠 Collusion Group Detection System (CGDS)
 
-> **Author:** Emre Analan  
-> **Project Type:** Manufacturer, Distributor, and Market Behavior Management  
-> **Database:** MongoDB  
-> **Language:** Python  
+## 📜 Introduction
 
----
+Collusion among online vendors poses a significant challenge in maintaining fair marketplaces. This project is designed to **detect collusive groups of shops** based on simulated behavior, profit margins, and pricing similarities. Leveraging **synthetic data generation**, **feature engineering**, and **supervised machine learning**, the system identifies suspicious shop clusters that may exhibit coordinated manipulation tactics.
 
-## 📋 Project Overview
-
-This project is a **Manufacturer and Distributor Management System** integrated with **dynamic market behavior detection** features such as **Collusion Detection** and **Fraud Detection**. It allows users to dynamically manage manufacturers, distributors, products, and shops while analyzing price trends, profit margins, and market behaviors over time.
-
-Built on top of Python and MongoDB, the system ensures a scalable, flexible, and real-world applicable environment for supply chain analysis, profit tracking, market monitoring, and collusion detection.
+The system operates end-to-end, from data fetching and shop simulation to feature extraction and model training. The dataset is stored in **MongoDB Atlas**, processed using **Python**, and analyzed through **scikit-learn** models.
 
 ---
 
-## 🚀 Key Features
+## 🎯 Project Objectives
 
-- **Dynamic Product Handling:** Efficiently add, update, and track multiple products and raw materials.
-- **Profit Calculation:** Calculates and manages daily profit margins for manufacturers and distributors.
-- **Shop Management:** Simulates real-world shopping markets including profit assignments and fraudulent behaviors.
-- **Collusion Detection:** Identifies leader-follower behaviors and price-fixing patterns with fallback options.
-- **Fraud Detection:** Detects anomalies and shops applying extra profits.
-- **Production Rates:** Adjust profit margins based on production scale (low, medium, high).
-- **Feature Engineering:** Prepares datasets for model training and shop behavior classification.
-- **Model Training:** Machine learning integration for future prediction and anomaly scoring.
-- **Historical Data Management:** Handles missing data smartly by interpolating weekend or holiday gaps.
+* **Simulate realistic shop behavior** using manufacturer/product dynamics.
+* **Generate both normal and collusive shops** with overlapping patterns.
+* **Engineer behavioral features** that represent profit variability, price consistency, manufacturer dependencies, etc.
+* **Train machine learning models** to classify collusive shops and group them by similarity.
+* **Evaluate model predictions** against ground truth clusters.
 
 ---
 
-## 🛠️ Prerequisites
+## 🛠️ System Architecture
 
-- **Python 3.11+**
-- **MongoDB Atlas Account** (or local MongoDB instance)
-- Python Libraries:
-  - `pymongo`
-  - `yfinance`
-  - `selenium`
-  - `scikit-learn`
-  - `pandas`
-  - `numpy`
-  - `matplotlib`
+### Main Components
 
-You can install the libraries using:
+| Stage | Script                          | Description                                                                                          |
+| ----- | ------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| 1     | `Al_GD_Cop_fetching.py`         | Fetch commodity prices (Gold, Copper, etc.) from Yahoo Finance and store in MongoDB.                 |
+| 2     | `EUR_TRY_Fetching.py`           | Fetch currency exchange rates (EUR/TRY, USD/TRY) and store in MongoDB.                               |
+| 3     | `RandomShopGenerator.py`        | Create simulated shops, either normal or collusion-based, based on cached manufacturer/product data. |
+| 4     | `labeling.py`                   | Process test sets and produce ground-truth collusion groups.                                         |
+| 5     | `feature_engineering.py`        | Extract detailed shop-level features and pairwise similarities.                                      |
+| 6     | `model_training.py`             | Train classification model using extracted features.                                                 |
+| 7     | `CollusionTraining.py`          | Apply model to new test data and evaluate performance.                                               |
+| 8     | `generate_similarity_matrix.py` | (Optional) Compute detailed pairwise shop similarity metrics.                                        |
+
+---
+
+## 🔄 End-to-End Pipeline
+
+### Step-by-step execution:
 
 ```bash
-pip install pymongo yfinance selenium scikit-learn pandas numpy matplotlib
+# Step 1: Fetch commodity & currency data
+python Al_GD_Cop_fetching.py
+python EUR_TRY_Fetching.py
+
+# Step 2: Simulate shops
+python RandomShopGenerator.py
+
+# Step 3: Label collusion groups
+python labeling.py
+
+# Step 4: Extract features
+python feature_engineering.py
+
+# Step 5: Train model
+python model_training.py
+
+# Step 6: Evaluate model on new data
+python CollusionTraining.py
 ```
 
 ---
 
-## 🏗️ Project Structure
+## 📊 Feature Engineering
 
+The `feature_engineering.py` script generates two major outputs:
+
+* `shop_features2.csv`: A file containing feature vectors per shop
+* `shop_similarity_matrixTest1.csv`: Pairwise similarity metrics
+
+### Extracted Features:
+
+* `price_change_count`
+* `product_price_diff`
+* `product_price_variance`
+* `price_change_frequency`
+* `profit_percentage_variability`
+* `product_price_consistency`
+* `manufacturer_count`
+* `avg_profit_pct`, `profit_pct_std`
+* `is_collusion`, `collusion_group`
+
+### Key Functions:
+
+```python
+def extract_product_price_history(shop_path):
+    """Extracts profit history of products from a shop JSON."""
+    # Reads product pricing behavior per shop per day
+    ...
+
+
+def compute_product_price_diff(product_history):
+    """Computes standard deviation of product profits."""
+    ...
+
+
+def compute_product_price_consistency(shop_id, product_history, all_shop_profits):
+    """Measures profit price similarity of a shop compared to others."""
+    ...
+
+
+def extract_features(args):
+    """Combines all metrics into a final feature vector."""
+    ...
 ```
-MongoDBProject/
-├── build/
-│   ├── Al_GD_Cop_fetching.py
-│   ├── EUR_TRY_Fetching.py
-│   ├── Others_Fetching.py
-│   ├── asgari.py
-│   ├── electric.py
-│   ├── dogalgaz.py
-│   ├── Cheater.py
-│   ├── CheaterWithDateInterval.py
-│   ├── CollusionDetection.py
-│   ├── CollusionShop.py
-│   ├── NewCollusionShop.py
-│   ├── DataRetrieval.py
-│   ├── DataUpdater.py
-│   ├── DeleteData.py
-│   ├── Distributor.py
-│   ├── Manufacturer.py
-│   ├── MongoDbConnect.py
-│   ├── Production.py
-│   ├── ProductsCollection.py
-│   ├── Shops.py
-│   ├── Shop.py
-│   ├── FastUpdateMan.py
-│   ├── FraudDetection.py
-│   ├── FraudDetectionWithProfit.py
-│   ├── FeatureEngineering.py
-│   ├── ShopFeatureEngineering.py
-│   ├── ModelTraining.py
-│   ├── Utils.py
-│   ├── Tests.py
-├── README.md                        
+
+---
+
+## 🤖 Model Training
+
+Implemented in `model_training.py` using `RandomForestClassifier`.
+
+```python
+from sklearn.ensemble import RandomForestClassifier
+model = RandomForestClassifier(n_estimators=100, random_state=42)
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+```
+
+### Evaluation Functions:
+
+```python
+from sklearn.metrics import classification_report, accuracy_score
+print("Accuracy:", accuracy_score(y_test, y_pred))
+print(classification_report(y_test, y_pred))
+```
+
+Visualizations:
+
+```python
+import seaborn as sns
+sns.heatmap(confusion_matrix(y_test, y_pred), annot=True)
 ```
 
 ---
 
-## 📝 How to Use
+## 📈 Model Evaluation
 
-### 1. Fetching Raw Material Data
-- `asgari.py`, `electric.py`, `dogalgaz.py`
-- `Al_GD_Cop_fetching.py`, `EUR_TRY_Fetching.py`, `Others_Fetching.py`
+`CollusionTraining.py` loads the trained model and applies it to new data.
 
-**Note:** Weekend/holiday gaps are automatically filled.
+```python
+model = joblib.load('collusion_model3.pkl')
+y_pred = model.predict(X_new_test)
+print(classification_report(y_true, y_pred))
+```
 
-### 2. Product Model Creation
-- `Production.py`
-- Use `insert_daily_costs()` to insert costs into the database.
+### Additional Cluster Metrics:
 
-### 3. Manufacturer & Distributor Databases
-- `Manufacturer.py` and `Distributor.py`
-
-### 4. Shops and Market Simulation
-- `Shops.py`
-- `Cheater.py`, `CheaterWithDateInterval.py`
-
-### 5. Collusion & Fraud Detection
-- `CollusionDetection.py`, `CollusionShop.py`, `NewCollusionShop.py`
-- `FraudDetection.py`, `FraudDetectionWithProfit.py`
-
-### 6. Feature Engineering & Model Training
-- `FeatureEngineering.py`, `ShopFeatureEngineering.py`
-- `ModelTraining.py`
+```python
+from sklearn.metrics import adjusted_rand_score, normalized_mutual_info_score
+print("ARI:", adjusted_rand_score(y_true, y_pred))
+print("NMI:", normalized_mutual_info_score(y_true, y_pred))
+```
 
 ---
 
-## 🎯 Project Goals
+## 📂 Output Artifacts
 
-- Full supply chain and market behavior simulation.
-- Fraud and collusion detection models.
-- Real-time detection systems foundation.
-
----
-
-## 🔮 Future Improvements
-
-- **Real-Time Market Monitoring Dashboard**
-- **Anomaly Scoring Systems**
-- **Deep Learning based Fraud Detection**
-- **Cross-Manufacturer Supply Chain Analysis**
+| File                                       | Description                        |
+| ------------------------------------------ | ---------------------------------- |
+| `shop_features2.csv`                       | Final dataset used for ML training |
+| `collusion_groupsTest1.csv`                | Labeled ground-truth shop clusters |
+| `predicted_vs_actual_collusion_groups.csv` | Evaluation output                  |
+| `collusion_model3.pkl`                     | Trained classifier                 |
 
 ---
 
-## 📌 Final Thoughts
+## 📌 Requirements
 
-This project builds a comprehensive, scalable system designed for academic, regulatory, and commercial uses.
+```txt
+yfinance
+pymongo
+pandas
+numpy
+scikit-learn
+matplotlib
+seaborn
+tqdm
+joblib
+```
 
-> "Control the market by understanding it first."  — **Emre Analan**
+Install via:
+
+```bash
+pip install -r requirements.txt
+```
+
+---
+
+## 📬 Author
+
+**Emre Analan**
+GitHub: [@emreanalan](https://github.com/emreanalan)
+
+---
+
+## 📜 License
+
+MIT License. Feel free to use, distribute, and modify with attribution.
