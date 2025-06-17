@@ -299,9 +299,9 @@ def generate_collusion_shops(group_map):
 
 
 
-all_shops = list(range(101, 201))
+all_shops = list(range(1, 401))
 random.shuffle(all_shops)
 
 # İlk 200 tanesi normal, kalan 200 tanesi collusion olarak ayrılır
-generate_shop_documents(all_shops[:40], is_collusion=False)
-generate_shop_documents(all_shops[40:], is_collusion=True)
+generate_shop_documents(all_shops[:200], is_collusion=False)
+generate_shop_documents(all_shops[200:], is_collusion=True)
