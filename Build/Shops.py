@@ -199,7 +199,7 @@ def db_shop_dateInterval(manufacturer_name, shop_name, profit_percentage, start_
 # db_shop("HomeELectricMan", "MyElectrician", 5)
 # db_shop("HomeELectricMan", "HisElectrician", 5)
 
-db_shop_dateInterval("ELectricMan", "FraudShop", 5, start_date="2025-02-01", end_date="2025-03-31")
+# db_shop_dateInterval("ELectricMan", "FraudShop", 5, start_date="2025-02-01", end_date="2025-03-31")
 # db_shop_dateInterval("ToyMan", "FraudShop", 5, start_date="2025-02-01", end_date="2025-02-28")
 # db_shop_dateInterval("ToyMan", "FraudShop", 5, start_date="2025-04-02", end_date="2025-04-20")
 # db_shop_dateInterval("CableMan", "FraudShop", 5, start_date="2025-03-02", end_date="2025-03-31")

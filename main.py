@@ -46,6 +46,6 @@ dynamicHandler.main_window = backend.main_window  # DynamicHandler ana pencereyi
 collusionHandler.main_window = backend.main_window
 FraudHandler.main_window = backend.main_window
 profitCalculationHandler.main_window = backend.main_window
-
+mlHandler.main_window = backend.main_window
 
 sys.exit(app.exec())

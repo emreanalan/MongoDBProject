@@ -1,5 +1,3 @@
-# QTSynchronizers/CollusionDetectionMLQTSynchronizer.py
-
 from PySide6.QtCore import QObject, Slot, Property, QStringListModel
 import pandas as pd
 from sklearn.model_selection import train_test_split
@@ -62,7 +60,39 @@ class CollusionDetectionMLQTSynchronizer(QObject):
             for line in report.splitlines():
                 self.appendOutput(line.strip())
 
+            # === Ek çıktılar ===
+
+            # Test sonuçları DataFrame
+            # Test sonuçları DataFrame'e shop_id eklenerek
+            test_results = X_test.copy()
+            test_results['predicted_collusion_group'] = y_pred
+            test_results['actual_collusion_group'] = y_test
+
+            # shop_id'yi orijinal df'den eşleştirerek al
+            original_df = pd.read_csv("Build/Cvss/shop_features2.csv")
+            test_results['shop_id'] = original_df.iloc[X_test.index]['shop_id'].values
+
+            # Sütun sırasını ayarla
+            test_results = test_results[['shop_id', 'actual_collusion_group', 'predicted_collusion_group']]
+
+            # === Yazdır ===
+            self.appendOutput("")
+            self.appendOutput("📊 Tahmin Edilen Collusion Grupları ve İçlerindeki Mağazalar:")
+
+            grouped = test_results.groupby('predicted_collusion_group')
+            for group, group_df in grouped:
+                count = len(group_df)
+                self.appendOutput(f"Group {group} (Total Shops: {count}):")
+                self.appendOutput("    shop_id     actual_group     predicted_group")
+
+                for _, row in group_df.iterrows():
+                    self.appendOutput(
+                        f"    Shop {int(row['shop_id']):<5}     {int(row['actual_collusion_group']):^14}     {int(row['predicted_collusion_group']):^16}")
+
+                self.appendOutput("--------------------------------------------------")
+
             print("✅ ML modeli başarıyla çalıştı.")
+
         except Exception as e:
             self.appendOutput(f"❌ Hata oluştu: {str(e)}")
 
