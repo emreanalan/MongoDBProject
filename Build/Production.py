@@ -7,8 +7,8 @@ from datetime import datetime, timedelta
 client = pymongo.MongoClient(
     "mongodb+srv://emreanlan550:emreanlan@cluster0.od7u9.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
 )
-db = client["DataSet"]
-
+# db = client["DataSet"]
+db = client["Final_Project"]
 
 collections = {
     "Aluminum": db["Aluminum/TRY"],
@@ -120,41 +120,41 @@ def insert_daily_costs(product_name, materials,
 
 
 # Preload datasets
-print("Fetching market data...")
-gold_data = fetch_data("Gold")
-copper_data = fetch_data("Copper")
-aluminum_data = fetch_data("Aluminum")
-silver_data = fetch_data("Silver")
-usd_try_data = fetch_data("USD_TRY")
-eur_try_data = fetch_data("EUR_TRY")
-ham_petrol_data = fetch_data("Ham_Petrol_Fiyati")
-electricity_price = fetch_fixed_price(collections["Elektrik_Ucreti"], 2025)
-asgari_ucret_price = fetch_fixed_price(collections["Asgari_Ucret"], 2025)
-dogalgaz_price = fetch_fixed_price(collections["DogalGaz_Ucreti"], 2025)
-
-print("Starting insertion...")
+# print("Fetching market data...")
+# gold_data = fetch_data("Gold")
+# copper_data = fetch_data("Copper")
+# aluminum_data = fetch_data("Aluminum")
+# silver_data = fetch_data("Silver")
+# usd_try_data = fetch_data("USD_TRY")
+# eur_try_data = fetch_data("EUR_TRY")
+# ham_petrol_data = fetch_data("Ham_Petrol_Fiyati")
+# electricity_price = fetch_fixed_price(collections["Elektrik_Ucreti"], 2025)
+# asgari_ucret_price = fetch_fixed_price(collections["Asgari_Ucret"], 2025)
+# dogalgaz_price = fetch_fixed_price(collections["DogalGaz_Ucreti"], 2025)
+#
+# print("Starting insertion...")
 
 # Create 500 products
-for i in range(419, 501):
-    product_name = f"Product {i}"
-    materials = {
-        "Aluminum 1Kg": round(random.uniform(0, 0.5), 3) if random.random() > 0.3 else 0,
-        "Copper 1Kg": round(random.uniform(0, 0.3), 3) if random.random() > 0.3 else 0,
-        "Gold 1Kg": round(random.uniform(0, 0.05), 3) if random.random() > 0.5 else 0,
-        "Silver 1Kg": round(random.uniform(0, 0.05), 3) if random.random() > 0.5 else 0,
-        "Ham_Petrol_Fiyati 1L": round(random.uniform(0, 2), 2),
-        "Elektrik_Ucreti 1kW": round(random.uniform(0, 10), 2),
-        "Asgari_Ucret 1 iş günü": round(random.uniform(0, 1), 2),
-        "Dogal_Gaz 100m^3": round(random.uniform(0, 0.05), 3),
-        "USD": round(random.uniform(0, 5), 2) if random.random() > 0.5 else 0,
-        "EUR": round(random.uniform(0, 5), 2) if random.random() > 0.5 else 0
-    }
-    insert_daily_costs(product_name, materials,
-                       gold_data, copper_data, aluminum_data, silver_data,
-                       usd_try_data, eur_try_data, ham_petrol_data,
-                       electricity_price, asgari_ucret_price, dogalgaz_price)
-
-print("✅ Finished inserting 500 products.")
+# for i in range(419, 501):
+#     product_name = f"Product {i}"
+#     materials = {
+#         "Aluminum 1Kg": round(random.uniform(0, 0.5), 3) if random.random() > 0.3 else 0,
+#         "Copper 1Kg": round(random.uniform(0, 0.3), 3) if random.random() > 0.3 else 0,
+#         "Gold 1Kg": round(random.uniform(0, 0.05), 3) if random.random() > 0.5 else 0,
+#         "Silver 1Kg": round(random.uniform(0, 0.05), 3) if random.random() > 0.5 else 0,
+#         "Ham_Petrol_Fiyati 1L": round(random.uniform(0, 2), 2),
+#         "Elektrik_Ucreti 1kW": round(random.uniform(0, 10), 2),
+#         "Asgari_Ucret 1 iş günü": round(random.uniform(0, 1), 2),
+#         "Dogal_Gaz 100m^3": round(random.uniform(0, 0.05), 3),
+#         "USD": round(random.uniform(0, 5), 2) if random.random() > 0.5 else 0,
+#         "EUR": round(random.uniform(0, 5), 2) if random.random() > 0.5 else 0
+#     }
+#     insert_daily_costs(product_name, materials,
+#                        gold_data, copper_data, aluminum_data, silver_data,
+#                        usd_try_data, eur_try_data, ham_petrol_data,
+#                        electricity_price, asgari_ucret_price, dogalgaz_price)
+#
+# print("✅ Finished inserting 500 products.")
 
 
 # copperCable_materials = {
